@@ -1,4 +1,4 @@
-baseURL = 'http://example.org/'
+baseURL = 'https://min.io'
 languageCode = 'en-us'
-title = 'My New Hugo Site'
+title = 'MinIO KES Documentation'
 theme = 'hugo-geekdoc'
