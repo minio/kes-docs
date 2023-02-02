@@ -1,17 +1,10 @@
-{{ if default true .Site.Params.GeekdocSearch }}
-  <div class="gdoc-search flex align-center">
-    <svg class="gdoc-icon gdoc_search"><use xlink:href="#gdoc_search"></use></svg>
-    <input
-      type="text"
-      id="gdoc-search-input"
-      class="gdoc-search__input"
-      placeholder="{{ i18n "form_placeholder_search" }}"
-      aria-label="{{ i18n "form_placeholder_search" }}"
-      maxlength="64"
-      data-site-base-url="{{ .Site.BaseURL }}"
-      data-site-lang="{{ .Site.Language.Lang }}"
-    />
-    <div class="gdoc-search__spinner spinner hidden"></div>
-    <ul id="gdoc-search-results" class="gdoc-search__list"></ul>
-  </div>
-{{ end }}
+<div class="relative left-0 right-0 mx-auto flex w-full max-w-xl items-center rm:fixed rm:top-24">
+	<svg class="absolute left-3 top-3.5 text-black" width="15" height="15">
+		<use xlink:href="/img/svg-sprite.svg#search"></use>
+	</svg>
+	<input type="text" id="search-input" class="peer rounded bg-white px-3 h-11 w-full pl-9 focus:outline-none text-sm valid:rounded-br-none
+	valid:rounded-bl-none text-black placeholder:text-muted" placeholder="{{ i18n "form_placeholder_search" }}" data-site-base-url="{{ .Site.BaseURL }}"
+	data-site-lang="{{ .Site.Language.Lang }}" required />
+
+	<ul id="search-results" class="absolute top-full left-0 hidden w-full rounded-bl rounded-br bg-slate-200 p-3 text-sm text-muted peer-valid:block"></ul>
+</div>

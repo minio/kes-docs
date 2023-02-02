@@ -2,3 +2,242 @@ baseURL = 'https://min.io'
 languageCode = 'en-us'
 title = 'MinIO KES Documentation'
 theme = 'hugo-geekdoc'
+
+[params]
+    logo = '/img/logo.svg'
+    footerText = 'This work is licensed under a Creative Commons Attribution 4.0 International License. 2020-Present, MinIO, Inc.'
+
+[menu]
+    # Main menu
+    [[menu.main]]
+        name = 'Product'
+        pre = ''
+        url = '/ '
+        weight = 1
+        [menu.main.params]
+            dropdown = true
+            wide = true
+        [[menu.main]]
+            parent = 'Product'
+            name = 'Multi-Cloud'
+            weight = 11
+            [[menu.main]]
+                parent = 'Multi-Cloud'
+                name = 'MinIO for Kubernetes'
+                url = '/product/kubernetes'
+                weight = 111
+            [[menu.main]]
+                parent = 'Multi-Cloud'
+                name = 'MinIO for VMware Tanzu'
+                url = '/product/private-cloud-vmware-tanzu'
+                weight = 112
+            [[menu.main]]
+                parent = 'Multi-Cloud'
+                name = 'MinIO for OpenShift'
+                url = '/product/private-cloud-red-hat-openshift'
+                weight = 113
+            [[menu.main]]
+                parent = 'Multi-Cloud'
+                name = 'MinIO for SUSE Rancher'
+                url = '/product/multicloud-suse-rancher'
+                weight = 114
+            [[menu.main]]
+                parent = 'Multi-Cloud'
+                name = 'MinIO for Amazon Elastic Kubernetes Service'
+                url = '/product/multicloud-elastic-kubernetes-service'
+                weight = 115
+            [[menu.main]]
+                parent = 'Multi-Cloud'
+                name = 'MinIO for Azure Kubernetes Service'
+                url = '/product/multicloud-azure-kubernetes-service'
+                weight = 116
+            [[menu.main]]
+                parent = 'Multi-Cloud'
+                name = 'MinIO for Google Kubernetes Engine'
+                url = '/product/multicloud-google-kubernetes-service'
+                weight = 117
+        [[menu.main]]
+            parent = 'Product'
+            name = 'Features'
+            weight = 12
+            [[menu.main]]
+                parent = 'Features'
+                name = 'Multi-Site Replication'
+                url = '/product/active-data-replication-for-object-storage'
+                weight = 121
+            [[menu.main]]
+                parent = 'Features'
+                name = 'Global Identity and Access Management'
+                url = '/product/identity-and-access-management'
+                weight = 122
+            [[menu.main]]
+                parent = 'Features'
+                name = 'Encryption'
+                url = '/product/enterprise-object-storage-encryption'
+                weight = 123
+            [[menu.main]]
+                parent = 'Features'
+                name = 'Bucket & Object Immutability'
+                url = '/product/data-immutability-for-object-storage'
+                weight = 124
+            [[menu.main]]
+                parent = 'Features'
+                name = 'Bucket & Object Versioning'
+                url = '/product/object-versioning-bucket-versioning'
+                weight = 125
+            [[menu.main]]
+                parent = 'Features'
+                name = 'Data Life Cycle Management & Tiering'
+                url = '/product/automated-data-tiering-lifecycle-management'
+                weight = 126
+            [[menu.main]]
+                parent = 'Features'
+                name = 'Automated Data Management Interfaces'
+                url = '/product/automated-cloud-data-management-interface'
+                weight = 127
+            [[menu.main]]
+                parent = 'Features'
+                name = 'Monitoring'
+                url = '/product/object-storage-performance-monitoring'
+                weight = 128
+            [[menu.main]]
+                parent = 'Features'
+                name = 'Scalability'
+                url = '/product/scalable-object-storage'
+                weight = 129
+            [[menu.main]]
+                parent = 'Features'
+                name = 'AWS S3 Compatibility'
+                url = '/product/s3-compatibility'
+                weight = 130
+        [[menu.main]]
+            parent = 'Product'
+            name = 'Others'
+            weight = 13
+            [[menu.main]]
+                parent = 'Others'
+                name = 'Hybrid Cloud Object Storage'
+                url = '/hybrid-cloud-storage'
+                pre = 'hybrid-cloud'
+                weight = 131
+                [[menu.main]]
+                    parent = 'Hybrid Cloud Object Storage'
+                    name = 'Overview'
+                    url = '/hybrid-cloud-storage#overview'
+                    weight = 1311
+                [[menu.main]]
+                    parent = 'Hybrid Cloud Object Storage'
+                    name = 'Architecture'
+                    url = '/hybrid-cloud-storage#architecture'
+                    weight = 1312
+            [[menu.main]]
+                parent = 'Others'
+                name = 'Baremetal'
+                url = '/product/overview'
+                pre = 'baremetal'
+                weight = 132
+                    [[menu.main]]
+                    identifier = 'baremetal-overview'
+                    parent = 'Baremetal'
+                    name = 'Overview'
+                    url = '/product/overview#features'
+                    weight = 1321
+                [[menu.main]]
+                    identifier = 'baremetal-architecture'
+                    parent = 'Baremetal'
+                    name = 'Architecture'
+                    url = '/product/overview#architecture'
+                    weight = 1322
+            [[menu.main]]
+                parent = 'Others'
+                name = 'Erasure Code Calculator'
+                url = '/product/erasure-code-calculator'
+                pre = 'ecc'
+                weight = 133
+            [[menu.main]]
+                parent = 'Others'
+                name = 'Reference Hardware'
+                url = '/product/reference-hardware'
+                pre = 'ref-hardware'
+                weight = 134
+    [[menu.main]]
+        name = 'Solutions'
+        pre = ''
+        url = '/ '
+        weight = 2
+        [menu.main.params]
+            dropdown = true
+    [[menu.main]]
+            parent = 'Solutions'
+            name = 'Integrations'
+            pre = 'Browse our vast portfolio of integrations'
+            url = '/product/integrations'
+            weight = 21
+    [[menu.main]]
+            parent = 'Solutions'
+            name = 'SQL Server'
+            pre = 'Discover how to pair SQL Server 2022 with MinIO to run queries on your data on any cloud - without having to move it.'
+            url = '/solutions/sqlserver'
+            weight = 22
+    [[menu.main]]
+            parent = 'Solutions'
+            name = 'Commvault'
+            pre = 'Learn how Commvault and MinIO are partnered to deliver performance at scale for mission critical backup and restore workloads.'
+            url = '/solutions/commvault'
+            weight = 23
+    [[menu.main]]
+            parent = 'Solutions'
+            name = 'Snowflake'
+            pre = 'Query and analyze multiple data sources, including streaming data, residing on MinIO with the Snowflake Data Cloud. No need to move the data, just query using SnowSQL.'
+            url = '/solutions/snowflake'
+            weight = 24
+    [[menu.main]]
+            parent = 'Solutions'
+            name = 'Splunk'
+            pre = 'Find out how MinIO is delivering performance at scale for Splunk SmartStores.'
+            url = '/solutions/optimize-splunk-smartstore-performance'
+            weight = 25
+    [[menu.main]]
+            parent = 'Solutions'
+            name = 'Veeam'
+            pre = 'Learn how MinIO and Veeam have partnered to drive performance and scalability for a variety of backup use cases.'
+            url = '/solutions/veeam'
+            weight = 26
+    [[menu.main]]
+            parent = 'Solutions'
+            name = 'HDFS Migration'
+            pre = 'Modernize and simplify your big data storage infrastructure with high-performance, Kubernetes-native object storage from MinIO.'
+            url = '/solutions/hdfs-migration'
+            weight = 27
+    [[menu.main]]
+            parent = 'Solutions'
+            name = 'VMware'
+            pre = 'Discover how MinIO integrates with VMware across the portfolio from the Persistent Data platform to TKGI and how we support their Kubernetes ambitions.'
+            url = '/solutions/vmware'
+            weight = 28
+    [[menu.main]]
+        name = 'Docs'
+        pre = ''
+        url = '/ '
+        weight = 3
+    [[menu.main]]
+        name = 'Blog'
+        pre = ''
+        url = '/ '
+        weight = 4
+    [[menu.main]]
+        name = 'Resources'
+        pre = ''
+        url = '/ '
+        weight = 5
+    [[menu.main]]
+        name = 'Partner'
+        pre = ''
+        url = '/ '
+        weight = 6
+    [[menu.main]]
+        name = 'Pricing'
+        pre = ''
+        url = '/ '
+        weight = 7
+    [[menu.main]]
