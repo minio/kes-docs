@@ -1,17 +1,15 @@
 <nav class="text-sm">
-	<h2 class="font-bold text-md mb-6">{{ i18n "nav_navigation" }}</h2>
+	<h2 class="mb-6 text-md font-bold">{{ i18n "nav_navigation" }}</h2>
 
 	{{ $current := . }}
-    {{ template "tree-nav" dict "sect" .Site.Home.Sections "current" $current }}
+	{{ template "tree-nav" dict "sect" .Site.Home.Sections "current" $current }}
 
-    <!-- templates -->
-    {{ define "tree-nav" }}
-      	{{ $current := .current }}
-
-      	<ul class="mb-6">
+	{{ define "tree-nav" }}
+		{{ $current := .current }}
+		<ul class="mb-6">
 			{{ $sortBy := (default "title" .current.Site.Params.GeekdocFileTreeSortBy | lower) }}
 			{{ range .sect.GroupBy "Weight" }}
-          		{{ $rangeBy := .ByTitle }}
+				{{ $rangeBy := .ByTitle }}
 
 				{{ if eq $sortBy "title" }}
 					{{ $rangeBy = .ByTitle }}
@@ -47,35 +45,37 @@
 						{{ $isAncestor := .IsAncestor $current }}
 						{{ $id := substr (sha1 .Permalink) 0 8 }}
 						{{ $doCollapse := and $isParent (or .Params.GeekdocCollapseSection (default false .Site.Params.GeekdocCollapseAllSections)) }}
-
-              			<li>
-                  			{{ if or .Content  }}
+						<li>
+							{{ if or .Content }}
 								<a
 									href="{{ .RelPermalink }}"
-									class="{{- if eq $current . }}text-theme-red font-medium {{ else }}text-muted{{- end }} py-1.5 block hover:text-black"
+									class="{{- if eq $current . }}
+										text-theme-red font-medium
+									{{ else }}
+										text-muted
+									{{- end }} block py-1.5 hover:text-black"
 								>
 									{{ partial "utils/title" . }}
 								</a>
-                  			{{ else }}
-                    			<span class="block font-medium text-black pb-1 mb-2 border-b border-gray-200/50">{{ partial "utils/title" . }}</span>
-                  			{{ end }}
-                  		{{ if $doCollapse }}
-                    <svg class="gdoc-icon toggle gdoc_keyboard_arrow_left">
-                      <use xlink:href="#gdoc_keyboard_arrow_left"></use>
-                    </svg>
-                    <svg class="gdoc-icon toggle gdoc_keyboard_arrow_down">
-                      <use xlink:href="#gdoc_keyboard_arrow_down"></use>
-                    </svg>
-                  {{ end }}
-                
+							{{ else }}
+								<span class="mb-2 block border-b border-gray-200/50 pb-1 font-medium text-black">{{ partial "utils/title" . }}</span>
+							{{ end }}
+							{{ if $doCollapse }}
+								<svg class="gdoc-icon toggle gdoc_keyboard_arrow_left">
+									<use xlink:href="#gdoc_keyboard_arrow_left"></use>
+								</svg>
+								<svg class="gdoc-icon toggle gdoc_keyboard_arrow_down">
+									<use xlink:href="#gdoc_keyboard_arrow_down"></use>
+								</svg>
+							{{ end }}
 
-                {{ if $isParent }}
-                  {{ template "tree-nav" dict "sect" .Pages "current" $current }}
-                {{ end }}
-              </li>
-            {{ end }}
-          {{ end }}
-        {{ end }}
-      </ul>
-    {{ end }}
+							{{ if $isParent }}
+								{{ template "tree-nav" dict "sect" .Pages "current" $current }}
+							{{ end }}
+						</li>
+					{{ end }}
+				{{ end }}
+			{{ end }}
+		</ul>
+	{{ end }}
 </nav>

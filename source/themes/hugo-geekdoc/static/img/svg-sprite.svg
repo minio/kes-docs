@@ -70,4 +70,8 @@
 		<path d="M44.26 12.728c5.903 8.844 5.017 20.636-2.951 28.595h0L54 54 41.309 41.324c-7.722 7.709-19.803 8.94-28.924 2.948m-6.493-6.486C-.178 28.73.95 16.663 8.593 8.887S28.295-.24 37.472 5.653M4.415 51.642L51.639 4.474" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
 		</path>
 	</symbol>
+	<!-- Chevron down -->
+	<symbol id="chevron-down" viewBox="0 0 9 5">
+		<path d="M8.071.135a.562.562 0 1 1 .733.855L4.866 4.365a.562.562 0 0 1-.732 0L.196.99A.562.562 0 1 1 .93.135L4.5 3.197 8.071.135z" fill="currentColor" fill-rule="evenodd" />
+	</symbol>
 </svg>
