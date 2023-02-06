@@ -1,10 +1,7 @@
 {{ define "main" }}
-  {{ partial "page-header" . }}
-
-  <article
-    class="prose"
-  >
-    <h1>{{ partial "utils/title" . }}</h1>
-    {{ partial "utils/content" . }}
-  </article>
+	{{ partial "page-header" . }}
+	<article>
+		<h1>{{ partial "utils/title" . }}</h1>
+		{{ partial "utils/content" . }}
+	</article>
 {{ end }}
