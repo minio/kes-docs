@@ -1,6 +1,6 @@
-<header class="header relative z-10 bg-[#031733] pb-10 text-md">
+<header class="header relative z-10 flex-shrink-0 bg-[#031733] text-md nrm:pb-10" id="header">
 	<div class="container relative mx-auto">
-		<div class="flex h-12 items-center border-white/25 nrm:border-b">
+		<div class="flex h-12 items-center border-white/25 nrm:mb-2 nrm:border-b">
 			<svg class="text-theme-red" width="100" height="15">
 				<use xlink:href="/img/svg-sprite.svg#minio-logo"></use>
 			</svg>
@@ -11,47 +11,61 @@
 
 			<a target="_blank" rel="noreferrer noopener" class="ml-auto text-sm text-white rm:hidden" href="https://subnet.min.io/">Customer Login</a>
 
-			<button type="button" class="grid h-7 w-7 place-content-center rounded hover:bg-white/10 nrm:hidden">
+			<button id="nav-toggle" type="button" class="grid h-7 w-7 place-content-center rounded text-white hover:bg-white/10 nrm:hidden">
 				<svg class="pointer-events-none" width="17" height="13">
 					<use xlink:href="/img/svg-sprite.svg#menu"></use>
 				</svg>
 			</button>
 
-			<div class="bottom-0 right-6 hidden nrm:absolute">
+			<div class="bottom-0 right-6 flex nrm:absolute">
 				<button
 					type="button"
 					class="ml-2 grid h-7 w-7 place-content-center rounded bg-white pt-px text-black hover:opacity-90"
 					id="toggle-read-mode"
 				></button>
+
+				<button
+					type="button"
+					class="ml-2 grid h-7 w-7 place-content-center rounded bg-white pt-px text-black hover:opacity-90"
+					id="toggle-dark-mode"
+				></button>
 			</div>
 		</div>
 
 		<nav
-			class="items-star relative flex gap-10 rm:fixed rm:right-0 rm:top-0 rm:z-10 rm:hidden rm:h-full rm:w-80 rm:overflow-auto rm:bg-white rm:p-3 nrm:mb-8"
+			class="relative items-center gap-9 rm:fixed rm:right-0 rm:top-0 rm:z-10 rm:hidden rm:h-full rm:w-80 rm:overflow-auto rm:bg-white rm:p-3 nrm:mb-8 nrm:flex"
 			id="top-navigation"
 		>
 			{{ range .Site.Menus.main }}
-				<div class="{{ if not (.Params.Wide) }}relative{{ end }} group">
+				<!-- prettier-ignore -->
+				<div class="{{ if not (.Params.Wide) }}relative {{ end }}{{ if eq .Name "Download" }}ml-auto {{ end }}group">
 					<!-- prettier-ignore -->
 					{{ if .HasChildren }}
 					<span class="relative flex items-center py-2 text-white rm:text-black cursor-pointer rm:px-3">
 					{{ else }}
-					<a class="relative flex items-center py-2 text-white rm:text-black rounded rm:px-3 rm:hover:bg-gray-100"
-						href="{{ .URL }}">
+						{{ if eq .Name "Download" }}
+							<a class="py-1 px-4 flex border border-theme-red transition-colors duration-300 hover:bg-theme-red text-white rm:text-black rounded rm:px-3 rm:hover:bg-gray-100 justify-center rm:mx-3 rm:mt-4 rm:py-1.5"
+								href="{{ .URL }}">
+						{{ else }}
+							<a class="relative py-2 flex text-white rm:text-black rounded rm:px-3 rm:hover:bg-gray-100"
+								href="{{ .URL }}">
+						{{ end }}
 					{{ end }}
 					<span class="rm:font-medium">{{ .Name }}</span>
 					{{ if .Params.Dropdown }}
-						<i
-							class="absolute left-0 right-0 bottom-0 mx-auto inline-block h-0 w-0 border-x-[4px] border-b-[3px] border-l-transparent border-b-white border-r-transparent opacity-0 group-hover:opacity-100 rm:hidden"
-						></i>
-						<svg class="mt-1 ml-2" width="9" height="5">
-							<use xlink:href="/img/svg-sprite.svg#chevron-down"></use>
-						</svg>
-					{{ else }}
+					<i
+						class="absolute left-0 right-0 bottom-0 mx-auto inline-block h-0 w-0 border-x-[4px] border-b-[3px] border-l-transparent border-b-white border-r-transparent opacity-0 group-hover:opacity-100 rm:hidden"
+					></i>
+					<svg class="mt-1 ml-2" width="9" height="5">
+						<use xlink:href="/img/svg-sprite.svg#chevron-down"></use>
+					</svg>
+				{{ else }}
+					{{ if not (eq .Name "Download") }}
 						<i
 							class="transition-[opacity, bottom] absolute bottom-0 left-0 h-px w-full bg-white opacity-0 duration-300 group-hover:bottom-1.5 group-hover:opacity-100 rm:hidden"
 						></i>
 					{{ end }}
+				{{ end }}
 					<!-- prettier-ignore -->
 					{{ if .HasChildren }}
 					</span>
@@ -60,64 +74,64 @@
 					{{ end }}
 
 					{{ if .HasChildren }}
-						<div
-							class="{{ if .Params.Wide }}
-								w-full nrm:flex nrm:p-10
-							{{ else }}
-								scrollbar nrm:p-5 nrm:w-[24rem]
-							{{ end }} pointer-events-none left-0 top-full z-[1] mb-5 gap-5 overflow-y-auto rounded-md bg-white group-hover:pointer-events-auto group-hover:opacity-100 nrm:absolute nrm:max-h-[calc(100vh_-_7.5rem)] nrm:opacity-0 nrm:shadow-lg"
-						>
-							{{ if .Params.Wide }}
-								{{ range .Children }}
-									{{ $productChild := . }}
-									<div class="nrm:w-4/12">
-										<span class="block h-6 px-3 text-xs uppercase text-muted rm:mt-3">
-											{{ if not (eq $productChild.Name "Others") }}
+					<div
+						class="{{ if .Params.Wide }}
+							w-full nrm:flex nrm:p-10
+						{{ else }}
+							scrollbar nrm:p-5 nrm:w-[24rem]
+						{{ end }} pointer-events-none left-0 top-full z-[1] mb-5 gap-5 overflow-y-auto rounded-md bg-white group-hover:pointer-events-auto group-hover:opacity-100 nrm:absolute nrm:max-h-[calc(100vh_-_7.5rem)] nrm:opacity-0 nrm:shadow-lg"
+					>
+						{{ if .Params.Wide }}
+							{{ range .Children }}
+								{{ $productChild := . }}
+								<div class="nrm:w-4/12">
+									<span class="block h-6 px-3 text-xs uppercase text-muted rm:mt-3">
+										{{ if not (eq $productChild.Name "Others") }}
 
-												{{ .Name }}
-											{{ else }}
-												<i class="relative -bottom-1 block h-px bg-gray-100 nrm:hidden"></i>
-											{{ end }}
-										</span>
-										{{ range .Children }}
-
-											{{ if .HasChildren }}
-
-												<div class="flex items-start rounded py-2 px-3 hover:bg-gray-100">
-													<img class="mr-3 rm:hidden" src="/img/icons/{{ .Pre }}.svg" alt="{{ .Name }}" />
-													<div class="flex-1">
-														<a class="block text-heading rm:text-sm nrm:font-medium" href="{{ .URL }}">{{ .Name }}</a>
-														{{ range .Children }}
-															<a class="mt-1 block px-3 text-sm text-muted hover:underline rm:hidden" href="{{ .URL }}"
-																>{{ .Name }}</a
-															>
-														{{ end }}
-													</div>
-												</div>
-											{{ else }}
-												<a
-													class="flex items-center rounded px-3 py-2 text-heading hover:bg-gray-100 rm:text-sm nrm:font-medium"
-													href="{{ .URL }}"
-												>
-													{{ if eq $productChild.Name "Others" }}
-														<img class="mr-3 rm:hidden" src="/img/icons/{{ .Pre }}.svg" alt="{{ .Name }}" />
-													{{ end }}
-													{{ .Name }}
-												</a>
-											{{ end }}
+											{{ .Name }}
+										{{ else }}
+											<i class="relative -bottom-1 block h-px bg-gray-100 nrm:hidden"></i>
 										{{ end }}
-									</div>
-								{{ end }}
-							{{ else }}
-								{{ range .Children }}
-									<a class="block rounded px-3 py-2 hover:bg-gray-100" href="{{ .URL }}">
-										<span class="block text-heading rm:text-sm nrm:font-medium">{{ .Name }}</span>
-										<span class="mt-1 block text-sm text-muted rm:hidden">{{ .Pre }}</span>
-									</a>
-								{{ end }}
+									</span>
+									{{ range .Children }}
+
+										{{ if .HasChildren }}
+
+											<div class="flex items-start rounded py-2 px-3 hover:bg-gray-100">
+												<img class="mr-3 rm:hidden" src="/img/icons/{{ .Pre }}.svg" alt="{{ .Name }}" />
+												<div class="flex-1">
+													<a class="block text-heading rm:text-sm nrm:font-medium" href="{{ .URL }}">{{ .Name }}</a>
+													{{ range .Children }}
+														<a class="mt-1 block px-3 text-sm text-muted hover:underline rm:hidden" href="{{ .URL }}"
+															>{{ .Name }}</a
+														>
+													{{ end }}
+												</div>
+											</div>
+										{{ else }}
+											<a
+												class="flex items-center rounded px-3 py-2 text-heading hover:bg-gray-100 rm:text-sm nrm:font-medium"
+												href="{{ .URL }}"
+											>
+												{{ if eq $productChild.Name "Others" }}
+													<img class="mr-3 rm:hidden" src="/img/icons/{{ .Pre }}.svg" alt="{{ .Name }}" />
+												{{ end }}
+												{{ .Name }}
+											</a>
+										{{ end }}
+									{{ end }}
+								</div>
 							{{ end }}
-						</div>
-					{{ end }}
+						{{ else }}
+							{{ range .Children }}
+								<a class="block rounded px-3 py-2 hover:bg-gray-100" href="{{ .URL }}">
+									<span class="block text-heading rm:text-sm nrm:font-medium">{{ .Name }}</span>
+									<span class="mt-1 block text-sm text-muted rm:hidden">{{ .Pre }}</span>
+								</a>
+							{{ end }}
+						{{ end }}
+					</div>
+				{{ end }}
 				</div>
 			{{ end }}
 		</nav>

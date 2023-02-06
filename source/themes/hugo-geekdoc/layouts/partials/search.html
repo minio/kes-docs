@@ -1,10 +1,17 @@
-<div class="relative left-0 right-0 mx-auto flex w-full max-w-xl items-center rm:fixed rm:top-24">
-	<svg class="absolute left-3 top-3.5 text-black" width="15" height="15">
+<div class="relative left-0 right-0 mx-auto flex w-full max-w-xl items-center rm:fixed rm:top-24 rm:hidden">
+	<svg class="absolute left-4 top-3.5 text-black" width="14" height="14">
 		<use xlink:href="/img/svg-sprite.svg#search"></use>
 	</svg>
-	<input type="text" id="search-input" class="peer rounded bg-white px-3 h-11 w-full pl-9 focus:outline-none text-sm valid:rounded-br-none
-	valid:rounded-bl-none text-black placeholder:text-muted" placeholder="{{ i18n "form_placeholder_search" }}" data-site-base-url="{{ .Site.BaseURL }}"
-	data-site-lang="{{ .Site.Language.Lang }}" required />
+	<input
+		type="text"
+		id="search-input"
+		class="peer h-11 w-full rounded bg-white px-3 pl-10 text-sm text-black placeholder:text-muted
+	valid:rounded-br-none valid:rounded-bl-none focus:outline-none"
+		placeholder="{{ i18n "form_placeholder_search" }}"
+		data-site-base-url="{{ .Site.BaseURL }}"
+		data-site-lang="{{ .Site.Language.Lang }}"
+		required
+	/>
 
-	<ul id="search-results" class="absolute top-full left-0 hidden w-full rounded-bl rounded-br bg-slate-200 p-3 text-sm text-muted peer-valid:block"></ul>
+	<ul id="search-results" class="absolute top-full left-0 hidden w-full rounded-bl rounded-br bg-[#edf1f3] p-3 text-sm text-muted peer-valid:block"></ul>
 </div>

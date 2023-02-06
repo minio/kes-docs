@@ -1,8 +1,12 @@
-import { readMode } from "./readMode";
+import { header } from "./header";
 import { siteSearch } from "./search";
+import { sidebar } from "./sidebar";
 
 // Search
 siteSearch();
 
-// Read mode
-readMode();
+// Header
+header();
+
+// Sidebar
+sidebar();

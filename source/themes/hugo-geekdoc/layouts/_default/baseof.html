@@ -2,19 +2,24 @@
 <html lang="{{ .Site.Language.Lang }}">
 	<head>
 		{{ partial "head/meta" . }}
-		<title>{{- if eq .Kind "home" -}} {{ .Site.Title }} {{- else -}} {{ printf "%s | %s" (partial "utils/title" .) .Site.Title }} {{- end -}}</title>
+		<title>{{- if eq .Kind "home" -}}{{ .Site.Title }}{{- else -}}{{ printf "%s | %s" (partial "utils/title" .) .Site.Title }}{{- end -}}</title>
 
-		{{ partial "head/favicons" . }} 
-		{{ partial "head/rel-me" . }} 
-		{{ partial "head/microformats" . }} 
-		{{ partial "head/others" . }} 
+		{{ partial "head/favicons" . }}
+		{{ partial "head/rel-me" . }}
+		{{ partial "head/microformats" . }}
+		{{ partial "head/others" . }}
 		{{ partial "head/custom" . }}
 	</head>
 
-	<body class="bg-white font-sans leading-relaxed text-black antialiased" itemscope itemtype="https://schema.org/WebPage">
+	<body
+		class="flex flex-col bg-white font-sans leading-relaxed text-black antialiased rm:h-screen rm:overflow-hidden"
+		itemscope
+		itemtype="https://schema.org/WebPage"
+	>
 		{{ partial "site-header" . }}
-		<main class="container flex items-start">
-			<aside class="w-72 flex-shrink-0 bg-gray-100 p-7">{{ partial "menu" . }}</aside>
+		<main class="container flex flex-1 items-start rm:overflow-auto">
+			{{ partial "menu" . }}
+
 
 			<div class="flex-1 p-7">
 				{{ template "main" . }}
@@ -22,7 +27,7 @@
 				{{ partial "site-footer" . }}
 			</div>
 		</main>
-		
+
 		{{ partial "foot" . }}
 	</body>
 </html>
