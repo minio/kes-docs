@@ -24,12 +24,6 @@ module.exports = {
 			"5xl": "3rem",
 			"6xl": "4rem",
 		},
-		container: {
-			padding: "1.75rem",
-			width: {
-				"2xl": "1000px",
-			},
-		},
 		extend: {
 			colors: {
 				gray: {
@@ -58,6 +52,9 @@ module.exports = {
 				body: "#4b4b4b",
 				muted: "#727272",
 				heading: "#000000",
+			},
+			maxWidth: {
+				container: "1400px",
 			},
 			typography: {
 				DEFAULT: {
