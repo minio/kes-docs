@@ -17,11 +17,11 @@
 		itemtype="https://schema.org/WebPage"
 	>
 		{{ partial "site-header" . }}
-		<main class="container flex flex-1 items-start rm:overflow-auto">
+		<main class="relative mx-auto flex max-w-container flex-1 items-start rm:overflow-auto">
 			{{ partial "menu" . }}
 
 
-			<div class="prose flex-1 p-7">
+			<div class="flex-1 p-7">
 				{{ template "main" . }}
 
 				{{ partial "site-footer" . }}

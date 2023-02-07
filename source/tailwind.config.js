@@ -3,6 +3,7 @@ const plugin = require("tailwindcss/plugin");
 
 module.exports = {
 	content: ["./themes/hugo-geekdoc/**/*.{html,js}"],
+	darkMode: "class",
 	theme: {
 		fontFamily: {
 			sans: ["Inter"],
@@ -44,8 +45,8 @@ module.exports = {
 					900: "#111111",
 				},
 				theme: {
-					red: "#c72e49"
-				}
+					red: "#c72e49",
+				},
 			},
 			borderRadius: {
 				DEFAULT: "0.1875rem",
@@ -58,7 +59,32 @@ module.exports = {
 				muted: "#727272",
 				heading: "#000000",
 			},
-			lineHeight: {},
+			typography: {
+				DEFAULT: {
+					css: {
+						maxWidth: "100%",
+						color: "#4b4b4b",
+						h1: {
+							fontSize: "1.75rem",
+						},
+						h2: {
+							fontSize: "1.5rem",
+						},
+						h3: {
+							fontSize: "1.25rem",
+						},
+						h4: {
+							fontSize: "1rem",
+						},
+						h5: {
+							fontSize: "1rem",
+						},
+						h6: {
+							fontSize: "0.1rem",
+						},
+					},
+				},
+			},
 		},
 	},
 	corePlugins: {
@@ -69,6 +95,6 @@ module.exports = {
 			addVariant("rm", ":merge(html.read-mode) &");
 			addVariant("nrm", ":merge(html:not(.read-mode)) &");
 		}),
-		require('@tailwindcss/typography')
+		require("@tailwindcss/typography"),
 	],
 };

@@ -47,18 +47,3 @@
 		}
 	}
 }
-
-// Container
-.container {
-	padding: 0 1.5rem;
-	width: 100%;
-}
-
-:root {
-	&:not(.read-mode) {
-		.container {
-			max-width: 1400px;
-			margin: 0 auto;
-		}
-	}
-}

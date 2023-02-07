@@ -1,4 +1,4 @@
-// Get theme colors
+// Get Breakpoints
 @function breakpoints($key) {
 	@return map-get($breakpoints, $key);
 }
@@ -30,28 +30,5 @@
 	&::-webkit-scrollbar {
 		display: none;
 		width: 0;
-	}
-}
-
-// Dark/Light Theme
-@mixin theme-switch($map) {
-	:root {
-		&:not(.dark-mode) {
-			@each $property, $value in $map {
-				$light: nth($value, 1);
-				$dark: nth($value, 2);
-
-				#{$property}: #{$light};
-			}
-		}
-
-		&.dark-mode {
-			@each $property, $value in $map {
-				$light: nth($value, 1);
-				$dark: nth($value, 2);
-
-				#{$property}: #{$dark};
-			}
-		}
 	}
 }
