@@ -1,44 +1,77 @@
-<nav>
-  {{ partial "search" . }}
+<aside class="scrollbar sticky top-0 w-72 flex-shrink-0 overflow-auto bg-light-100 p-7 dark:bg-dark-100 nrm:2xl:ml-7" id="sidebar">
+	<nav class="text-sm">
+		<h2 class="mb-6 text-md font-bold text-heading">{{ i18n "nav_navigation" }}</h2>
 
+		{{ $current := . }}
+		{{ template "tree-nav" dict "sect" .Site.Home.Sections "current" $current }}
 
-  <section class="gdoc-nav--main">
-    <h2>{{ i18n "nav_navigation" }}</h2>
-    {{ if .Site.Params.GeekdocMenuBundle }}
-      {{ partial "menu-bundle" (dict "current" . "source" .Site.Data.menu.main.main) }}
-    {{ else }}
-      {{ partial "menu-filetree" . }}
-    {{ end }}
-  </section>
+		{{ define "tree-nav" }}
+			{{ $current := .current }}
+			<ul class="mb-6">
+				{{ $sortBy := (default "title" .current.Site.Params.GeekdocFileTreeSortBy | lower) }}
+				{{ range .sect.GroupBy "Weight" }}
+					{{ $rangeBy := .ByTitle }}
 
-  {{ if and (in (slice "posts" "tags") .Section) (default false .Site.Params.GeekdocTagsToMenu) }}
-    <section class="gdoc-nav--tags">
-      <h2>{{ i18n "nav_tags" }}</h2>
-      <ul class="gdoc-nav__list">
-        {{ $currentPage := .RelPermalink }}
-        {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
-          {{ with $.Site.GetPage (printf "/tags/%s" $name) }}
-            <li>
-              <a
-                class="gdoc-nav__entry{{- if eq $currentPage .RelPermalink }}
-                  {{- printf " is-active" }}
-                {{- end }}"
-                href="{{ .RelPermalink }}"
-              >
-                {{ partial "utils/title" . }}
-              </a>
-            </li>
-          {{ end }}
-        {{ end }}
-      </ul>
-    </section>
-  {{ end }}
+					{{ if eq $sortBy "title" }}
+						{{ $rangeBy = .ByTitle }}
+					{{ else if eq $sortBy "linktitle" }}
+						{{ $rangeBy = .ByLinkTitle }}
+					{{ else if eq $sortBy "date" }}
+						/watch
+						{{ $rangeBy = .ByDate }}
+					{{ else if eq $sortBy "publishdate" }}
+						{{ $rangeBy = .ByPublishDate }}
+					{{ else if eq $sortBy "expirydate" }}
+						{{ $rangeBy = .ByExpiryDate }}
+					{{ else if eq $sortBy "lastmod" }}
+						{{ $rangeBy = .ByLastmod }}
+					{{ else if eq $sortBy "title_reverse" }}
+						{{ $rangeBy = .ByTitle.Reverse }}
+					{{ else if eq $sortBy "linktitle_reverse" }}
+						{{ $rangeBy = .ByLinkTitle.Reverse }}
+					{{ else if eq $sortBy "date_reverse" }}
+						{{ $rangeBy = .ByDate.Reverse }}
+					{{ else if eq $sortBy "publishdate_reverse" }}
+						{{ $rangeBy = .ByPublishDate.Reverse }}
+					{{ else if eq $sortBy "expirydate_reverse" }}
+						{{ $rangeBy = .ByExpiryDate.Reverse }}
+					{{ else if eq $sortBy "lastmod_reverse" }}
+						{{ $rangeBy = .ByLastmod.Reverse }}
+					{{ end }}
 
-
-  <section class="gdoc-nav--more">
-    {{ if .Site.Data.menu.more.more }}
-      <h2>{{ i18n "nav_more" }}</h2>
-      {{ partial "menu-bundle" (dict "current" . "source" .Site.Data.menu.more.more) }}
-    {{ end }}
-  </section>
-</nav>
+					{{ range $rangeBy }}
+						{{ if not .Params.GeekdocHidden }}
+							{{ $numberOfPages := (add (len .Pages) (len .Sections)) }}
+							{{ $isParent := and (ne $numberOfPages 0) (not .Params.GeekdocFlatSection) }}
+							{{ $isCurrent := eq $current . }}
+							{{ $isAncestor := .IsAncestor $current }}
+							{{ $id := substr (sha1 .Permalink) 0 8 }}
+							{{ $doCollapse := and $isParent (or .Params.GeekdocCollapseSection (default false .Site.Params.GeekdocCollapseAllSections)) }}
+							<li>
+								{{ if or .Content }}
+									<a
+										href="{{ .RelPermalink }}"
+										class="{{- if eq $current . }}
+											text-theme-red dark:text-heading font-medium
+										{{ else }}
+											text-muted hover:text-black dark:hover:text-body
+										{{- end }} block py-1.5"
+									>
+										{{ partial "utils/title" . }}
+									</a>
+								{{ else }}
+									<span class="mb-2 block border-b border-light-400 pb-1 font-medium text-body dark:border-dark-300">
+										{{ partial "utils/title" . }}
+									</span>
+								{{ end }}
+								{{ if $isParent }}
+									{{ template "tree-nav" dict "sect" .Pages "current" $current }}
+								{{ end }}
+							</li>
+						{{ end }}
+					{{ end }}
+				{{ end }}
+			</ul>
+		{{ end }}
+	</nav>
+</aside>

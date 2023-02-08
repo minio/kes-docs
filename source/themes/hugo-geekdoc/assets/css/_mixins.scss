@@ -1,0 +1,46 @@
+// Get Breakpoints
+@function breakpoints($key) {
+	@return map-get($breakpoints, $key);
+}
+
+// Breakpoints
+@mixin breakpoint-min($bp) {
+	@media (min-width: $bp) {
+		@content;
+	}
+}
+
+@mixin breakpoint-max($bp) {
+	@media (max-width: ($bp - 1)) {
+		@content;
+	}
+}
+
+@mixin breakpoint-between($lower, $upper) {
+	@media (min-width: $lower) and (max-width: ($upper - 1)) {
+		@content;
+	}
+}
+
+// Dark/Light Theme
+@mixin theme-switch($map) {
+	:root {
+		&:not(.dark) {
+			@each $property, $value in $map {
+				$light: nth($value, 1);
+				$dark: nth($value, 2);
+
+				#{$property}: #{$light};
+			}
+		}
+
+		&.dark {
+			@each $property, $value in $map {
+				$light: nth($value, 1);
+				$dark: nth($value, 2);
+
+				#{$property}: #{$dark};
+			}
+		}
+	}
+}

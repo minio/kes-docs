@@ -1,60 +1,32 @@
 <!DOCTYPE html>
-<html
-  lang="{{ .Site.Language.Lang }}"
-  class="color-toggle-hidden"
-  {{ if default false .Site.Params.GeekdocDarkModeCode }}code-theme="dark"{{ end }}
->
-  <head>
-    {{ partial "head/meta" . }}
-    <title>
-      {{- if eq .Kind "home" -}}
-        {{ .Site.Title }}
-      {{- else -}}
-        {{ printf "%s | %s" (partial "utils/title" .) .Site.Title }}
-      {{- end -}}
-    </title>
+<html lang="{{ .Site.Language.Lang }}">
+	<head>
+		{{ partial "head/meta" . }}
+		<title>{{- if eq .Kind "home" -}}{{ .Site.Title }}{{- else -}}{{ printf "%s | %s" (partial "utils/title" .) .Site.Title }}{{- end -}}</title>
 
-    {{ partial "head/favicons" . }}
-    {{ partial "head/rel-me" . }}
-    {{ partial "head/microformats" . }}
-    {{ partial "head/others" . }}
-    {{ partial "head/custom" . }}
-  </head>
+		{{ partial "head/favicons" . }}
+		{{ partial "head/rel-me" . }}
+		{{ partial "head/microformats" . }}
+		{{ partial "head/others" . }}
+		{{ partial "head/custom" . }}
+	</head>
 
-  <body itemscope itemtype="https://schema.org/WebPage">
-    {{ partial "svg-icon-symbols" . }}
+	<body
+		class="flex flex-col bg-white font-sans leading-relaxed text-body antialiased rm:h-screen rm:overflow-hidden dark:bg-dark-0"
+		itemscope
+		itemtype="https://schema.org/WebPage"
+	>
+		{{ partial "site-header" . }}
+		{{ partial "platform-menu" . }}
+		<main class="relative mx-auto flex w-full flex-1 items-start rm:overflow-auto nrm:max-w-container">
+			{{ partial "menu" . }}
+			<div class="flex-1 p-7">
+				{{ template "main" . }}
 
+				{{ partial "site-footer" . }}
+			</div>
+		</main>
 
-    <div
-      class="wrapper {{ if default false .Site.Params.GeekdocDarkModeDim }}dark-mode-dim{{ end }}"
-    >
-      <input type="checkbox" class="hidden" id="menu-control" />
-      <input type="checkbox" class="hidden" id="menu-header-control" />
-      {{ $navEnabled := default true .Page.Params.GeekdocNav }}
-      {{ partial "site-header" (dict "Root" . "MenuEnabled" $navEnabled) }}
-
-
-      <main class="container flex flex-even">
-        {{ if $navEnabled }}
-          <aside class="gdoc-nav">
-            {{ partial "menu" . }}
-          </aside>
-        {{ end }}
-
-
-        <div class="gdoc-page">
-          {{ template "main" . }}
-
-
-          <div class="gdoc-page__footer flex flex-wrap justify-between">
-            {{ partial "menu-nextprev" . }}
-          </div>
-        </div>
-      </main>
-
-      {{ partial "site-footer" . }}
-    </div>
-
-    {{ partial "foot" . }}
-  </body>
+		{{ partial "foot" . }}
+	</body>
 </html>
