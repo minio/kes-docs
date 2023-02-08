@@ -1,0 +1,92 @@
+:root:not(.dark) {
+  --body-bg: #ffffff;
+  --link-color: #006da0;
+  --link-hover-color: #015378;
+  --text-color: #000000;
+  --text-muted-color: #5c5c5c;
+  --headings-color: #000000;
+  --theme-light-bg: #e8eaec;
+  --theme-light-hover-bg: #d9dde2;
+  --header-bg: #031733; }
+
+:root.dark {
+  --body-bg: #19202a;
+  --link-color: #85b3ee;
+  --link-hover-color: #99c0f4;
+  --text-color: #a2adc0;
+  --text-muted-color: #697995;
+  --headings-color: #e3eeef;
+  --theme-light-bg: #273140;
+  --theme-light-hover-bg: #2e394a;
+  --header-bg: #19202a; }
+
+@font-face {
+  font-family: "Menlo";
+  src: url("../fonts/menlo/Menlo-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap; }
+
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter/Inter-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap; }
+
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter/Inter-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap; }
+
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter/Inter-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding: 1rem; }
+
+* {
+  box-sizing: border-box; }
+
+:root:not(.dark) {
+  --scrollbar-bg: #dedede;
+  --scrollbar-hover-bg: #c6c6c6; }
+
+:root .dark {
+  --scrollbar-bg: red;
+  --scrollbar-hover-bg: blue; }
+
+.scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-bg) transparent; }
+  .scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-bg); }
+  .scrollbar:hover {
+    scrollbar-color: var(--scrollbar-hover-bg) transparent; }
+    .scrollbar:hover::-webkit-scrollbar-thumb {
+      background-color: var(--scrollbar-bg); }
+  .scrollbar::-webkit-scrollbar {
+    width: 11px;
+    height: 11px; }
+  .scrollbar::-webkit-scrollbar-track {
+    background-color: transparent; }
+  .scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 1rem;
+    border: 3px solid transparent;
+    background-clip: content-box; }
+    .scrollbar::-webkit-scrollbar-thumb:hover {
+      background-color: var(--scrollbar-hover-bg); }
+
+.hide-scrollbar {
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none; }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+    width: 0; }
