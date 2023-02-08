@@ -22,13 +22,25 @@
 	}
 }
 
-// Hide Scrollbars
-@mixin hide-scrollbars {
-	overflow: -moz-scrollbars-none;
-	-ms-overflow-style: none;
+// Dark/Light Theme
+@mixin theme-switch($map) {
+	:root {
+		&:not(.dark) {
+			@each $property, $value in $map {
+				$light: nth($value, 1);
+				$dark: nth($value, 2);
 
-	&::-webkit-scrollbar {
-		display: none;
-		width: 0;
+				#{$property}: #{$light};
+			}
+		}
+
+		&.dark {
+			@each $property, $value in $map {
+				$light: nth($value, 1);
+				$dark: nth($value, 2);
+
+				#{$property}: #{$dark};
+			}
+		}
 	}
 }

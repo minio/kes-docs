@@ -1,0 +1,32 @@
+<div class="relative z-[1] bg-light-100 text-md font-medium shadow-lg shadow-black/10 dark:bg-dark-100">
+	<nav class="hide-scrollbar mx-auto flex h-12 w-full items-center gap-8 overflow-x-auto whitespace-nowrap px-5 nrm:max-w-container md:px-7">
+		{{ range .Site.Menus.platform }}
+			<a href="{{ .URL }}" class="group inline-flex items-center text-muted hover:text-body [&.active]:text-body">
+				{{ if eq .Name "Linux" }}
+					<span class="relative mr-2 grid h-5 w-5 place-content-center">
+						<svg class="absolute h-full w-full group-[&.active]:hidden">
+							<use xlink:href="/img/svg-sprite.svg#{{ .Pre }}-logo-inactive"></use>
+						</svg>
+						<svg class="absolute hidden h-full w-full group-[&.active]:block">
+							<use xlink:href="/img/svg-sprite.svg#{{ .Pre }}-logo"></use>
+						</svg>
+					</span>
+				{{ else }}
+					<span class="mr-2 grid h-5 w-5 place-content-center group-[&.active]:text-[{{ .Params.ActiveFill }}]">
+						<!-- TW classes for active icon fill (Do not remove this) -->
+						<!-- 
+                            group-[&.active]:text-[#1a6fd3]
+                            group-[&.active]:text-[#2497ed]
+                            group-[&.active]:text-[#959595]
+                            group-[&.active]:text-[#0076d2]
+                        -->
+						<svg class="h-full w-full">
+							<use xlink:href="/img/svg-sprite.svg#{{ .Pre }}-logo"></use>
+						</svg>
+					</span>
+				{{ end }}
+				{{ .Name }}
+			</a>
+		{{ end }}
+	</nav>
+</div>

@@ -1,0 +1,24 @@
+// CSS custom properties for dark/light themes.
+// Each property contains 2 values: first is for light theme, second is for dark theme.
+// These values used as arbitary in Tailwind utility classes.
+$theme-properties: (
+	// Body
+	--body-bg: $white $dark-0,
+
+	// Text
+	--link-color: #006da0 #85b3ee,
+	--link-hover-color: #015378 #99c0f4,
+	--text-color: $black $text-dark-color,
+	--text-muted-color: #5c5c5c #697995,
+	--headings-color: $black #e3eeef,
+
+	// Theme
+	--theme-light-bg: $light-300 $dark-200,
+	--theme-light-hover-bg: $light-500 $dark-300,
+
+	// Header
+	--header-bg: #031733 $dark-0
+);
+
+// Activate dark/light themes
+@include theme-switch($theme-properties);

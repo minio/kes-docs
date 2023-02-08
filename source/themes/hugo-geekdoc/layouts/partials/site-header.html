@@ -1,15 +1,17 @@
-<header class="header relative z-10 flex-shrink-0 bg-[#031733] text-md nrm:pb-10" id="header">
-	<div class="relative mx-auto max-w-container px-5 md:px-7">
-		<div class="flex h-12 items-center border-white/25 nrm:mb-2 nrm:border-b">
-			<svg class="text-theme-red" width="100" height="15">
+<header class="header relative z-10 flex-shrink-0 bg-[#031733] text-md nrm:pb-10 dark:bg-dark-0" id="header">
+	<div class="relative mx-auto w-full px-5 nrm:max-w-container md:px-7">
+		<div class="flex h-12 items-center border-white/25 nrm:mb-2 nrm:border-b dark:border-[#273140]">
+			<svg class="text-theme-red dark:text-white" width="100" height="15">
 				<use xlink:href="/img/svg-sprite.svg#minio-logo"></use>
 			</svg>
 
-			<div class="nrm:hdden ml-5 text-sm font-medium text-white">Documentation</div>
+			<div class="ml-5 text-sm font-medium text-white nrm:hidden">Documentation</div>
 
 			<i class="ml-auto"></i>
 
-			<a target="_blank" rel="noreferrer noopener" class="ml-auto text-sm text-white rm:hidden" href="https://subnet.min.io/">Customer Login</a>
+			<a target="_blank" rel="noreferrer noopener" class="ml-auto text-sm text-white rm:hidden dark:text-body" href="https://subnet.min.io/">
+				Customer Login
+			</a>
 
 			<button id="nav-toggle" type="button" class="grid h-7 w-7 place-content-center rounded text-white hover:bg-white/10 nrm:hidden">
 				<svg class="pointer-events-none" width="17" height="13">
@@ -20,14 +22,13 @@
 			<div class="bottom-0 right-6 flex nrm:absolute">
 				<button
 					type="button"
-					class="ml-2 grid h-7 w-7 place-content-center rounded bg-white pt-px text-black hover:opacity-90"
-					id="toggle-read-mode"
+					class="ml-2 grid h-7 w-7 place-content-center rounded border bg-white pt-px text-body hover:opacity-90 dark:border-slate-500 dark:bg-dark-0"
+					id="toggle-dark-mode"
 				></button>
-
 				<button
 					type="button"
-					class="ml-2 grid h-7 w-7 place-content-center rounded bg-white pt-px text-black hover:opacity-90"
-					id="toggle-dark-mode"
+					class="ml-2 grid h-7 w-7 place-content-center rounded border bg-white pt-px text-body hover:opacity-90 dark:border-slate-500 dark:bg-dark-0"
+					id="toggle-read-mode"
 				></button>
 			</div>
 		</div>
@@ -41,28 +42,28 @@
 				<div class="{{ if not (.Params.Wide) }}relative {{ end }}{{ if eq .Name "Download" }}ml-auto {{ end }}group">
 					<!-- prettier-ignore -->
 					{{ if .HasChildren }}
-					<span class="relative flex items-center py-2 text-white rm:text-black cursor-pointer rm:px-3">
+					<span class="relative flex items-center py-2 text-white dark:text-body cursor-pointer rm:px-3">
 					{{ else }}
 						{{ if eq .Name "Download" }}
-							<a class="py-1 px-4 flex border border-theme-red transition-colors duration-300 hover:bg-theme-red text-white rm:text-black rounded rm:px-3 rm:hover:bg-gray-100 justify-center rm:mx-3 rm:mt-4 rm:py-1.5"
+							<a class="py-1 px-4 flex border border-theme-red dark:border-slate-500 transition-colors duration-300 hover:bg-theme-red dark:hover:bg-slate-50/5 dark:hover:text-heading text-white dark:text-body rounded rm:px-3 justify-center rm:mx-3 rm:mt-4 rm:py-1.5"
 								href="{{ .URL }}">
 						{{ else }}
-							<a class="relative py-2 flex text-white rm:text-black rounded rm:px-3 rm:hover:bg-gray-100"
+							<a class="relative py-2 flex text-white dark:text-body rounded rm:px-3 rm:hover:bg-light-100"
 								href="{{ .URL }}">
 						{{ end }}
 					{{ end }}
 					<span class="rm:font-medium">{{ .Name }}</span>
 					{{ if .Params.Dropdown }}
 					<i
-						class="absolute left-0 right-0 bottom-0 mx-auto inline-block h-0 w-0 border-x-[4px] border-b-[3px] border-l-transparent border-b-white border-r-transparent opacity-0 group-hover:opacity-100 rm:hidden"
+						class="absolute left-0 right-0 bottom-0 mx-auto inline-block h-0 w-0 border-x-[4px] border-b-[3px] border-l-transparent border-b-white border-r-transparent opacity-0 group-hover:opacity-100 rm:hidden dark:border-b-dark-100"
 					></i>
-					<svg class="mt-1 ml-2" width="9" height="5">
+					<svg class="mt-1 ml-2 rm:hidden" width="9" height="5">
 						<use xlink:href="/img/svg-sprite.svg#chevron-down"></use>
 					</svg>
 				{{ else }}
 					{{ if not (eq .Name "Download") }}
 						<i
-							class="transition-[opacity, bottom] absolute bottom-0 left-0 h-px w-full bg-white opacity-0 duration-300 group-hover:bottom-1.5 group-hover:opacity-100 rm:hidden"
+							class="transition-[opacity, bottom] absolute bottom-0.5 left-0 h-px w-full bg-current opacity-0 duration-300 group-hover:bottom-2 group-hover:opacity-100 rm:hidden"
 						></i>
 					{{ end }}
 				{{ end }}
@@ -79,7 +80,7 @@
 							w-full nrm:flex nrm:p-10
 						{{ else }}
 							scrollbar nrm:p-5 nrm:w-[24rem]
-						{{ end }} pointer-events-none left-0 top-full z-[1] mb-5 gap-5 overflow-y-auto rounded-md bg-white group-hover:pointer-events-auto group-hover:opacity-100 nrm:absolute nrm:max-h-[calc(100vh_-_7.5rem)] nrm:opacity-0 nrm:shadow-lg"
+						{{ end }} pointer-events-none left-0 top-full z-10 mb-5 gap-5 overflow-y-auto rounded-md bg-white group-hover:pointer-events-auto group-hover:opacity-100 nrm:absolute nrm:max-h-[calc(100vh_-_7.5rem)] nrm:opacity-0 nrm:shadow-lg dark:bg-dark-100"
 					>
 						{{ if .Params.Wide }}
 							{{ range .Children }}
@@ -87,22 +88,21 @@
 								<div class="nrm:w-4/12">
 									<span class="block h-6 px-3 text-xs uppercase text-muted rm:mt-3">
 										{{ if not (eq $productChild.Name "Others") }}
-
 											{{ .Name }}
 										{{ else }}
-											<i class="relative -bottom-1 block h-px bg-gray-100 nrm:hidden"></i>
+											<i class="relative -bottom-1 block h-px bg-light-100 nrm:hidden"></i>
 										{{ end }}
 									</span>
 									{{ range .Children }}
-
 										{{ if .HasChildren }}
-
-											<div class="flex items-start rounded py-2 px-3 hover:bg-gray-100">
-												<img class="mr-3 rm:hidden" src="/img/icons/{{ .Pre }}.svg" alt="{{ .Name }}" />
+											<div class="flex items-start rounded py-2 px-3 hover:bg-light-100">
+												<svg class="mr-3 h-8 w-8 rm:hidden">
+													<use xlink:href="/img/svg-sprite.svg#{{ .Pre }}"></use>
+												</svg>
 												<div class="flex-1">
 													<a class="block text-heading rm:text-sm nrm:font-medium" href="{{ .URL }}">{{ .Name }}</a>
 													{{ range .Children }}
-														<a class="mt-1 block px-3 text-sm text-muted hover:underline rm:hidden" href="{{ .URL }}"
+														<a class="mt-1 block pr-3 text-sm text-muted hover:underline rm:hidden" href="{{ .URL }}"
 															>{{ .Name }}</a
 														>
 													{{ end }}
@@ -110,11 +110,13 @@
 											</div>
 										{{ else }}
 											<a
-												class="flex items-center rounded px-3 py-2 text-heading hover:bg-gray-100 rm:text-sm nrm:font-medium"
+												class="flex items-center rounded px-3 py-2 text-body hover:bg-light-100 rm:text-sm nrm:font-medium dark:hover:bg-dark-200"
 												href="{{ .URL }}"
 											>
 												{{ if eq $productChild.Name "Others" }}
-													<img class="mr-3 rm:hidden" src="/img/icons/{{ .Pre }}.svg" alt="{{ .Name }}" />
+													<svg class="mr-3 h-8 w-8 rm:hidden">
+														<use xlink:href="/img/svg-sprite.svg#{{ .Pre }}"></use>
+													</svg>
 												{{ end }}
 												{{ .Name }}
 											</a>
@@ -124,8 +126,8 @@
 							{{ end }}
 						{{ else }}
 							{{ range .Children }}
-								<a class="block rounded px-3 py-2 hover:bg-gray-100" href="{{ .URL }}">
-									<span class="block text-heading rm:text-sm nrm:font-medium">{{ .Name }}</span>
+								<a class="block rounded px-3 py-2 hover:bg-light-100 dark:hover:bg-dark-200" href="{{ .URL }}">
+									<span class="block text-body rm:text-sm nrm:font-medium">{{ .Name }}</span>
 									<span class="mt-1 block text-sm text-muted rm:hidden">{{ .Pre }}</span>
 								</a>
 							{{ end }}

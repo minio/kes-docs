@@ -32,7 +32,7 @@ export const header = () => {
 	const renderDarkModeBtn = () => {
 		const DM_ICON = isDarkModeActive ? iconSprite("sun", 17, 17) : iconSprite("moon", 21, 21);
 		localStorage.setItem("dark-mode", isDarkModeActive);
-		ROOT.classList.toggle("dark-mode", isDarkModeActive);
+		ROOT.classList.toggle("dark", isDarkModeActive);
 		DM_ELEM.innerHTML = DM_ICON;
 	};
 

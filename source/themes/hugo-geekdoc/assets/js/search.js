@@ -106,7 +106,7 @@ const createLinks = (pages, target, showDesc) => {
 
 		a.href = page.href;
 		entry.textContent = page.title;
-		a.setAttribute("class", "text-black py-2 px-3 block hover:bg-slate-500/10 focus:outline-none focus:bg-slate-300/80 rounded");
+		a.setAttribute("class", "text-body py-2 px-3 block hover:bg-slate-500/10 dark:hover:bg-dark-100/50 focus:outline-none focus:bg-slate-300/80 rounded");
 
 		if (showDesc === true) {
 			const desc = a.appendChild(document.createElement("span"));

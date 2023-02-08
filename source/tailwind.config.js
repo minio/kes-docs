@@ -26,17 +26,21 @@ module.exports = {
 		},
 		extend: {
 			colors: {
-				gray: {
-					50: "#FCFCFC",
-					100: "#F7F7F7",
-					200: "#dedede",
-					300: "#c6c6c6",
-					400: "#adadad",
-					500: "#949494",
-					600: "#7c7c7c",
-					700: "#636363",
-					800: "#4a4a4a",
-					900: "#111111",
+				light: {
+					0: "#ffffff",
+					100: "#F5F5F5",
+					200: "#EFF0F1",
+					300: "#E8EAEC",
+					400: "#E1E3E6",
+					500: "#D9DDE2",
+				},
+				dark: {
+					0: "#19202A",
+					100: "#212936",
+					200: "#273140",
+					300: "#2E394A",
+					400: "#59667A",
+					500: "#8A93A4",
 				},
 				theme: {
 					red: "#c72e49",
@@ -48,10 +52,13 @@ module.exports = {
 			fontSize: {
 				md: "0.9375rem",
 			},
+			backgroundColor: {
+				header: "var(--header-bg)",
+			},
 			textColor: {
-				body: "#4b4b4b",
-				muted: "#727272",
-				heading: "#000000",
+				body: "var(--text-color)",
+				muted: "var(--text-muted-color)",
+				heading: "var(--headings-color)",
 			},
 			maxWidth: {
 				container: "1400px",
@@ -60,7 +67,7 @@ module.exports = {
 				DEFAULT: {
 					css: {
 						maxWidth: "100%",
-						color: "#4b4b4b",
+						color: "var(--text-color)",
 						h1: {
 							fontSize: "1.75rem",
 						},

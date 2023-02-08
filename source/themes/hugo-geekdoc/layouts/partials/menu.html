@@ -1,6 +1,6 @@
-<aside class="scrollbar sticky top-0 w-72 flex-shrink-0 overflow-auto bg-gray-100 p-7 2xl:ml-7" id="sidebar">
+<aside class="scrollbar sticky top-0 w-72 flex-shrink-0 overflow-auto bg-light-100 p-7 dark:bg-dark-100 nrm:2xl:ml-7" id="sidebar">
 	<nav class="text-sm">
-		<h2 class="mb-6 text-md font-bold">{{ i18n "nav_navigation" }}</h2>
+		<h2 class="mb-6 text-md font-bold text-heading">{{ i18n "nav_navigation" }}</h2>
 
 		{{ $current := . }}
 		{{ template "tree-nav" dict "sect" .Site.Home.Sections "current" $current }}
@@ -52,25 +52,18 @@
 									<a
 										href="{{ .RelPermalink }}"
 										class="{{- if eq $current . }}
-											text-theme-red font-medium
+											text-theme-red dark:text-heading font-medium
 										{{ else }}
-											text-muted hover:text-black
+											text-muted hover:text-black dark:hover:text-body
 										{{- end }} block py-1.5"
 									>
 										{{ partial "utils/title" . }}
 									</a>
 								{{ else }}
-									<span class="mb-2 block border-b border-gray-200/50 pb-1 font-medium text-black">{{ partial "utils/title" . }}</span>
+									<span class="mb-2 block border-b border-light-400 pb-1 font-medium text-body dark:border-dark-300">
+										{{ partial "utils/title" . }}
+									</span>
 								{{ end }}
-								{{ if $doCollapse }}
-									<svg class="gdoc-icon toggle gdoc_keyboard_arrow_left">
-										<use xlink:href="#gdoc_keyboard_arrow_left"></use>
-									</svg>
-									<svg class="gdoc-icon toggle gdoc_keyboard_arrow_down">
-										<use xlink:href="#gdoc_keyboard_arrow_down"></use>
-									</svg>
-								{{ end }}
-
 								{{ if $isParent }}
 									{{ template "tree-nav" dict "sect" .Pages "current" $current }}
 								{{ end }}

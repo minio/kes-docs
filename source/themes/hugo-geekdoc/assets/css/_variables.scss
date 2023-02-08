@@ -1,3 +1,23 @@
+// Colors
+$white: #ffffff;
+$black: #000000;
+$theme-red: #c72e49;
+
+// Gray shades light
+$light-100: #f5f5f5;
+$light-200: #eff0f1;
+$light-300: #e8eaec;
+$light-400: #e1e3e6;
+$light-500: #d9dde2;
+
+// Gray shades dark
+$dark-0: #19202a;
+$dark-100: #212936;
+$dark-200: #273140;
+$dark-300: #2e394a;
+$dark-400: #59667a;
+$dark-500: #8a93a4;
+
 // Breakpoints
 $breakpoints: (
 	xs: 0,
@@ -6,3 +26,7 @@ $breakpoints: (
 	lg: 992px,
 	xl: 1280px,
 );
+
+// Text
+$text-dark-color: #a2adc0;
+$headings-dark-color: #e3eeef;
