@@ -40,7 +40,7 @@ export const sidebar = () => {
 		};
 
 		const SIDEBAR_BACKDROP = document.createElement("div");
-		SIDEBAR_BACKDROP.setAttribute("class", "fixed left-0 top-0 w-full h-full z-10 bg-black/50 lg:hidden z-[9] cursor-pointer");
+		SIDEBAR_BACKDROP.setAttribute("class", "fixed left-0 top-0 w-full h-full bg-black/25 dark:bg-[#10151c40] lg:hidden z-20 cursor-pointer");
 		SIDEBAR_BACKDROP.onclick = () => {
 			closeSidebar();
 		};

@@ -18,7 +18,7 @@ export const header = () => {
 	};
 
 	const backdrop = document.createElement("div");
-	backdrop.setAttribute("class", "fixed left-0 top-0 w-full h-full z-10 bg-black/50 cursor-pointer");
+	backdrop.setAttribute("class", "fixed left-0 top-0 w-full h-full z-10 bg-black/25 dark:bg-[#10151c40] cursor-pointer");
 	backdrop.onclick = () => {
 		closeNav();
 	};
