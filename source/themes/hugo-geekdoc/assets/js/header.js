@@ -1,25 +1,37 @@
 import { setSidebarHeight } from "./sidebar";
 import { iconSprite } from "./utils";
 const ROOT = document.documentElement;
+const BODY = document.body;
 
 export const header = () => {
 	// -----------------------------------------------
 	// Toggle top navigation on mobile and read mode
 	// -----------------------------------------------
-	const NAV_TOGGLE_ELEM = document.getElementById("nav-toggle");
+	const NAV_OPEN_ELEM = document.getElementById("nav-toggle");
+	const NAV_CLOSE_ELEM = document.getElementById("nav-close");
 	const TOP_NAV_ELEM = document.getElementById("top-navigation");
 
-	const backdrop = document.createElement("div");
-	backdrop.setAttribute("class", "fixed left-0 top-0 w-full h-full z-10 bg-black bg-opacity-50");
-	backdrop.onclick = () => {
+	const closeNav = () => {
 		TOP_NAV_ELEM.classList.add("rm:hidden");
 		backdrop.remove();
+		BODY.classList.remove("h-screen", "overflow-hidden");
 	};
 
-	if (NAV_TOGGLE_ELEM) {
-		NAV_TOGGLE_ELEM.addEventListener("click", () => {
+	const backdrop = document.createElement("div");
+	backdrop.setAttribute("class", "fixed left-0 top-0 w-full h-full z-10 bg-black/50 cursor-pointer");
+	backdrop.onclick = () => {
+		closeNav();
+	};
+
+	if (TOP_NAV_ELEM) {
+		NAV_OPEN_ELEM.addEventListener("click", () => {
+			BODY.classList.add("h-screen", "overflow-hidden");
 			TOP_NAV_ELEM.classList.remove("rm:hidden");
-			NAV_TOGGLE_ELEM.insertAdjacentElement("afterend", backdrop);
+			NAV_OPEN_ELEM.insertAdjacentElement("afterend", backdrop);
+		});
+
+		NAV_CLOSE_ELEM.addEventListener("click", () => {
+			closeNav();
 		});
 	}
 
@@ -49,7 +61,7 @@ export const header = () => {
 	// Read mode
 	// -----------------------------------------------
 	const RM_ELEM = document.getElementById("toggle-read-mode");
-	var isReadModeActive = JSON.parse(localStorage.getItem("read-mode")) || false;
+	let isReadModeActive = JSON.parse(localStorage.getItem("read-mode")) || false;
 
 	const renderReadModeBtn = () => {
 		localStorage.setItem("read-mode", isReadModeActive);
@@ -69,4 +81,20 @@ export const header = () => {
 
 		renderReadModeBtn();
 	}
+
+	const resize = () => {
+		if (window.innerWidth < 1280) {
+			ROOT.classList.add("read-mode");
+		} else {
+			if (!isReadModeActive) {
+				ROOT.classList.remove("read-mode", !isReadModeActive);
+			}
+		}
+
+		// re-set sidebar scroll height
+		setSidebarHeight();
+	};
+
+	resize();
+	window.addEventListener("resize", resize);
 };
