@@ -98,6 +98,7 @@ module.exports = {
 		plugin(function ({ addVariant }) {
 			addVariant("rm", ":merge(html.read-mode) &");
 			addVariant("nrm", ":merge(html:not(.read-mode)) &");
+			addVariant("drm", ":merge(html.read-mode.dark) &");
 		}),
 		require("@tailwindcss/typography"),
 	],

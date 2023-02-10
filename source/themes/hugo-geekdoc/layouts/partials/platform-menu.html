@@ -1,9 +1,9 @@
 <div class="relative z-[1] bg-light-100 text-md font-medium shadow-lg shadow-black/10 dark:bg-dark-100">
-	<nav class="hide-scrollbar mx-auto flex h-12 w-full items-center gap-8 overflow-x-auto whitespace-nowrap px-5 nrm:max-w-container md:px-7">
+	<nav class="hide-scrollbar mx-auto flex h-12 w-full items-center gap-8 overflow-x-auto whitespace-nowrap px-5 nrm:max-w-container lg:px-7">
 		{{ range .Site.Menus.platform }}
-			<a href="{{ .URL }}" class="group inline-flex items-center text-muted hover:text-body [&.active]:text-body">
+			<a href="{{ .URL }}" class="group inline-flex items-center text-muted hover:text-body [&.active]:text-heading">
 				{{ if eq .Name "Linux" }}
-					<span class="relative mr-2 grid h-5 w-5 place-content-center">
+					<span class="relative mr-2 hidden h-5 w-5 place-content-center md:grid">
 						<svg class="absolute h-full w-full group-[&.active]:hidden">
 							<use xlink:href="/img/svg-sprite.svg#{{ .Pre }}-logo-inactive"></use>
 						</svg>
@@ -12,7 +12,7 @@
 						</svg>
 					</span>
 				{{ else }}
-					<span class="mr-2 grid h-5 w-5 place-content-center group-[&.active]:text-[{{ .Params.ActiveFill }}]">
+					<span class="mr-2 hidden h-5 w-5 place-content-center group-[&.active]:text-[{{ .Params.ActiveFill }}] md:grid">
 						<!-- TW classes for active icon fill (Do not remove this) -->
 						<!-- 
                             group-[&.active]:text-[#1a6fd3]
@@ -28,5 +28,13 @@
 				{{ .Name }}
 			</a>
 		{{ end }}
+		<button
+			type="button"
+			class="search-toggle ml-auto hidden h-8 w-8 place-content-center rounded text-body hover:bg-light-300 nrm:hidden dark:border-slate-500 dark:hover:bg-dark-300 lg:grid"
+		>
+			<svg class="h-4 w-4">
+				<use xlink:href="/img/svg-sprite.svg#search"></use>
+			</svg>
+		</button>
 	</nav>
 </div>

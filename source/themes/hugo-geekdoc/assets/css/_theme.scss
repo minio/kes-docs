@@ -2,9 +2,6 @@
 // Each property contains 2 values: first is for light theme, second is for dark theme.
 // These values used as arbitary in Tailwind utility classes.
 $theme-properties: (
-	// Body
-	--body-bg: $white $dark-0,
-
 	// Text
 	--link-color: #006da0 #85b3ee,
 	--link-hover-color: #015378 #99c0f4,
@@ -12,12 +9,12 @@ $theme-properties: (
 	--text-muted-color: #5c5c5c #697995,
 	--headings-color: $black #e3eeef,
 
-	// Theme
-	--theme-light-bg: $light-300 $dark-200,
-	--theme-light-hover-bg: $light-500 $dark-300,
-
 	// Header
-	--header-bg: #031733 $dark-0
+	--header-bg: #031733 $dark-0,
+
+	// Scrollbar
+	--scrollbar-bg: #dedede $dark-300,
+	--scrollbar-hover-bg: #c6c6c6 lighten($dark-300, 5%)
 );
 
 // Activate dark/light themes

@@ -1,54 +1,71 @@
-<header class="header relative z-10 flex-shrink-0 bg-[#031733] text-md nrm:pb-10 dark:bg-dark-0" id="header">
-	<div class="relative mx-auto w-full px-5 nrm:max-w-container md:px-7">
+<header class="header relative z-10 flex-shrink-0 bg-[#031733] text-md nrm:pb-5 dark:bg-dark-0" id="header">
+	<div class="relative mx-auto w-full px-5 nrm:max-w-container lg:px-7">
 		<div class="flex h-12 items-center border-white/25 nrm:mb-2 nrm:border-b dark:border-[#273140]">
-			<svg class="text-theme-red dark:text-white" width="100" height="15">
+			<svg class="flex-shrink-0 text-theme-red dark:text-heading" width="100" height="15">
 				<use xlink:href="/img/svg-sprite.svg#minio-logo"></use>
 			</svg>
 
-			<div class="ml-5 text-sm font-medium text-white nrm:hidden">Documentation</div>
+			<div class="ml-5 hidden text-sm font-medium text-white nrm:hidden dark:text-heading sm:block">Documentation</div>
 
 			<i class="ml-auto"></i>
 
-			<a target="_blank" rel="noreferrer noopener" class="ml-auto text-sm text-white rm:hidden dark:text-body" href="https://subnet.min.io/">
+			<a
+				target="_blank"
+				rel="noreferrer noopener"
+				class="ml-auto text-sm text-white hover:opacity-80 rm:hidden dark:text-body"
+				href="https://subnet.min.io/"
+			>
 				Customer Login
 			</a>
 
-			<button id="nav-toggle" type="button" class="grid h-7 w-7 place-content-center rounded text-white hover:bg-white/10 nrm:hidden">
+			<button
+				id="nav-toggle"
+				type="button"
+				class="grid h-8 w-8 place-content-center rounded text-white hover:bg-white/10 nrm:hidden dark:text-body dark:hover:bg-dark-100"
+			>
 				<svg class="pointer-events-none" width="17" height="13">
 					<use xlink:href="/img/svg-sprite.svg#menu"></use>
 				</svg>
 			</button>
 
-			<div class="bottom-0 right-6 flex nrm:absolute">
+			<div class="bottom-5 right-6 flex nrm:absolute">
 				<button
 					type="button"
-					class="ml-2 grid h-7 w-7 place-content-center rounded border bg-white pt-px text-body hover:opacity-90 dark:border-slate-500 dark:bg-dark-0"
+					class="ml-2 grid h-8 w-8 place-content-center rounded border bg-white pt-px text-body hover:opacity-90 dark:border-slate-500 dark:bg-dark-0"
 					id="toggle-dark-mode"
 				></button>
 				<button
 					type="button"
-					class="ml-2 grid h-7 w-7 place-content-center rounded border bg-white pt-px text-body hover:opacity-90 dark:border-slate-500 dark:bg-dark-0"
+					class="ml-2 hidden h-8 w-8 place-content-center rounded border bg-white pt-px text-body hover:opacity-90 dark:border-slate-500 dark:bg-dark-0 xl:grid"
 					id="toggle-read-mode"
 				></button>
 			</div>
 		</div>
 
 		<nav
-			class="relative items-center gap-9 rm:fixed rm:right-0 rm:top-0 rm:z-10 rm:hidden rm:h-full rm:w-80 rm:overflow-auto rm:bg-white rm:p-3 nrm:mb-8 nrm:flex"
+			class="relative items-center gap-9 rm:fixed rm:right-0 rm:top-0 rm:z-10 rm:hidden rm:h-full rm:w-80 rm:overflow-auto rm:bg-white rm:p-3 nrm:mb-8 nrm:flex drm:bg-dark-100"
 			id="top-navigation"
 		>
+			<div class="flex justify-end nrm:hidden">
+				<button id="nav-close" class="grid h-6 w-6 place-content-center rounded text-muted hover:bg-light-300 dark:hover:bg-dark-200">
+					<svg class="h-2 w-2">
+						<use xlink:href="/img/svg-sprite.svg#close"></use>
+					</svg>
+				</button>
+			</div>
+
 			{{ range .Site.Menus.main }}
 				<!-- prettier-ignore -->
 				<div class="{{ if not (.Params.Wide) }}relative {{ end }}{{ if eq .Name "Download" }}ml-auto {{ end }}group">
 					<!-- prettier-ignore -->
 					{{ if .HasChildren }}
-					<span class="relative flex items-center py-2 text-white dark:text-body cursor-pointer rm:px-3">
+					<span class="relative flex items-center py-2 text-white dark:text-body dark:hover:text-heading rm:text-heading cursor-pointer rm:px-3">
 					{{ else }}
 						{{ if eq .Name "Download" }}
-							<a class="py-1 px-4 flex border border-theme-red dark:border-slate-500 transition-colors duration-300 hover:bg-theme-red dark:hover:bg-slate-50/5 dark:hover:text-heading text-white dark:text-body rounded rm:px-3 justify-center rm:mx-3 rm:mt-4 rm:py-1.5"
+							<a class="py-1 px-4 flex rounded justify-center text-white rm:text-heading rm:hover:text-white dark:text-body border border-theme-red transition-colors duration-300 dark:border-slate-500 hover:bg-theme-red hover:text-white dark:hover:bg-dark-200 rm:px-3 rm:mx-3 rm:my-4 rm:py-1.5"
 								href="{{ .URL }}">
 						{{ else }}
-							<a class="relative py-2 flex text-white dark:text-body rounded rm:px-3 rm:hover:bg-light-100"
+							<a class="relative py-2 flex text-white dark:text-body dark:hover:text-heading rm:text-heading rounded rm:px-3 rm:hover:bg-light-100 drm:hover:bg-dark-200"
 								href="{{ .URL }}">
 						{{ end }}
 					{{ end }}
@@ -79,8 +96,8 @@
 						class="{{ if .Params.Wide }}
 							w-full nrm:flex nrm:p-10
 						{{ else }}
-							scrollbar nrm:p-5 nrm:w-[24rem]
-						{{ end }} pointer-events-none left-0 top-full z-10 mb-5 gap-5 overflow-y-auto rounded-md bg-white group-hover:pointer-events-auto group-hover:opacity-100 nrm:absolute nrm:max-h-[calc(100vh_-_7.5rem)] nrm:opacity-0 nrm:shadow-lg dark:bg-dark-100"
+							nrm:p-5 nrm:w-[24rem]
+						{{ end }} scrollbar pointer-events-none left-0 top-full z-10 mb-5 gap-5 overflow-y-auto rounded-md bg-white group-hover:pointer-events-auto group-hover:opacity-100 nrm:absolute nrm:max-h-[calc(100vh_-_7.5rem)] nrm:opacity-0 nrm:shadow-lg dark:bg-dark-100"
 					>
 						{{ if .Params.Wide }}
 							{{ range .Children }}
@@ -90,17 +107,17 @@
 										{{ if not (eq $productChild.Name "Others") }}
 											{{ .Name }}
 										{{ else }}
-											<i class="relative -bottom-1 block h-px bg-light-100 nrm:hidden"></i>
+											<i class="relative -bottom-1 block h-px bg-light-100 nrm:hidden dark:bg-dark-200"></i>
 										{{ end }}
 									</span>
 									{{ range .Children }}
 										{{ if .HasChildren }}
-											<div class="flex items-start rounded py-2 px-3 hover:bg-light-100">
+											<div class="flex items-start rounded py-2 px-3 hover:bg-light-100 dark:hover:bg-dark-200">
 												<svg class="mr-3 h-8 w-8 rm:hidden">
 													<use xlink:href="/img/svg-sprite.svg#{{ .Pre }}"></use>
 												</svg>
 												<div class="flex-1">
-													<a class="block text-heading rm:text-sm nrm:font-medium" href="{{ .URL }}">{{ .Name }}</a>
+													<a class="block text-body rm:text-sm nrm:font-medium" href="{{ .URL }}">{{ .Name }}</a>
 													{{ range .Children }}
 														<a class="mt-1 block pr-3 text-sm text-muted hover:underline rm:hidden" href="{{ .URL }}"
 															>{{ .Name }}</a
@@ -138,7 +155,7 @@
 			{{ end }}
 		</nav>
 
-		<h2 class="mb-8 text-center text-4xl font-bold text-white rm:hidden">Documentation</h2>
+		<h2 class="mb-3 text-center text-4xl font-bold text-white rm:hidden">Documentation</h2>
 
 		{{ partial "search" . }}
 	</div>

@@ -4,6 +4,8 @@ import { FlexSearch } from "flexsearch/dist/flexsearch.compact";
 import { Validator } from "@cfworker/json-schema";
 import { iconSprite } from "./utils";
 
+const input = document.querySelector("#search-input");
+
 const init = (input, searchConfig) => {
 	input.removeEventListener("focus", init);
 
@@ -169,7 +171,7 @@ const flattenHits = (results) => {
 };
 
 const urlPath = (rawURL) => {
-	var parser = document.createElement("a");
+	let parser = document.createElement("a");
 	parser.href = rawURL;
 
 	return parser.pathname;
@@ -188,7 +190,6 @@ const combineURLs = (baseURL, relativeURL) => {
 };
 
 export const siteSearch = () => {
-	const input = document.querySelector("#search-input");
 	const results = document.querySelector("#search-results");
 	const basePath = urlPath(input ? input.dataset.siteBaseUrl : "");
 	const lang = input ? input.dataset.siteLang : "";
@@ -233,4 +234,30 @@ export const siteSearch = () => {
 			});
 		}
 	});
+
+	// Clear search
+	const ROOT = document.documentElement;
+	const SEARCH_ELEM = document.getElementById("search");
+	const SEARCH_TOGGLE_ELEMS = document.querySelectorAll(".search-toggle");
+	const searchClear = document.querySelectorAll(".search-clear");
+
+	if (SEARCH_ELEM) {
+		searchClear.forEach((elem) => {
+			elem.addEventListener("click", () => {
+				if (ROOT.classList.contains("read-mode")) {
+					SEARCH_ELEM.classList.add("rm:hidden");
+					input.value = "";
+				} else {
+					input.value = "";
+				}
+			});
+		});
+
+		SEARCH_TOGGLE_ELEMS.forEach((elem) => {
+			elem.addEventListener("click", () => {
+				SEARCH_ELEM.classList.remove("rm:hidden");
+				input.focus();
+			});
+		});
+	}
 };

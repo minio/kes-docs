@@ -1,5 +1,16 @@
-<aside class="scrollbar sticky top-0 w-72 flex-shrink-0 overflow-auto bg-light-100 p-7 dark:bg-dark-100 nrm:2xl:ml-7" id="sidebar">
+<aside
+	class="scrollbar fixed top-0 left-0 z-30 hidden min-h-full w-72 flex-shrink-0 overflow-auto bg-light-100 p-7 dark:bg-dark-100 lg:sticky lg:z-0 lg:block lg:min-h-0 nrm:2xl:ml-7"
+	id="sidebar"
+>
 	<nav class="text-sm">
+		<div class="-mt-3 -mr-3 flex justify-end lg:hidden">
+			<button id="sidebar-close" class="grid h-6 w-6 place-content-center rounded text-muted hover:bg-light-300 dark:hover:bg-dark-200">
+				<svg class="h-2 w-2">
+					<use xlink:href="/img/svg-sprite.svg#close"></use>
+				</svg>
+			</button>
+		</div>
+
 		<h2 class="mb-6 text-md font-bold text-heading">{{ i18n "nav_navigation" }}</h2>
 
 		{{ $current := . }}

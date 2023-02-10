@@ -12,15 +12,16 @@
 	</head>
 
 	<body
-		class="flex flex-col bg-white font-sans leading-relaxed text-body antialiased rm:h-screen rm:overflow-hidden dark:bg-dark-0"
+		class="flex flex-col bg-white font-sans leading-relaxed text-body antialiased dark:bg-dark-0 rm:lg:h-screen rm:lg:overflow-hidden"
 		itemscope
 		itemtype="https://schema.org/WebPage"
 	>
 		{{ partial "site-header" . }}
 		{{ partial "platform-menu" . }}
+		{{ partial "mobile-action-header" . }}
 		<main class="relative mx-auto flex w-full flex-1 items-start rm:overflow-auto nrm:max-w-container">
 			{{ partial "menu" . }}
-			<div class="flex-1 p-7">
+			<div class="min-w-0 flex-1 p-5 lg:p-7">
 				{{ template "main" . }}
 
 				{{ partial "site-footer" . }}
