@@ -5,3 +5,5 @@ node_modules
 resources
 public
 .vscode
+source/package-lock.json
+source/node_modules/.package-lock.json
