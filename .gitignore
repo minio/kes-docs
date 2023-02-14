@@ -1,9 +1,9 @@
 .hugo_build.lock
 .linkcheckignore
 *.tar.gz
-node_modules
 resources
 public
 .vscode
-source/package-lock.json
-source/node_modules/.package-lock.json
+node_modules
+**/.DS_Store
+themes/minio-kes-docs/assets/css/utilities.css
