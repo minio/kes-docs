@@ -94,61 +94,69 @@
 					{{ if .HasChildren }}
 					<div
 						class="{{ if .Params.Wide }}
-							w-full nrm:flex nrm:p-10
+							w-full
 						{{ else }}
-							nrm:p-5 nrm:w-[24rem]
-						{{ end }} scrollbar pointer-events-none left-0 top-full z-10 mb-5 gap-5 overflow-y-auto rounded-md bg-white group-hover:pointer-events-auto group-hover:opacity-100 nrm:absolute nrm:max-h-[calc(100vh_-_7.5rem)] nrm:opacity-0 nrm:shadow-lg dark:bg-dark-100"
+							nrm:w-[24rem]
+						{{ end }} pointer-events-none left-0 top-full z-10 mb-5 rounded-md bg-white group-hover:pointer-events-auto group-hover:opacity-100 nrm:absolute nrm:opacity-0 nrm:shadow-lg dark:bg-dark-100"
 					>
-						{{ if .Params.Wide }}
-							{{ range .Children }}
-								{{ $productChild := . }}
-								<div class="nrm:w-4/12">
-									<span class="block h-6 px-3 text-xs uppercase text-muted rm:mt-3">
-										{{ if not (eq $productChild.Name "Others") }}
-											{{ .Name }}
-										{{ else }}
-											<i class="relative -bottom-1 block h-px bg-light-100 nrm:hidden dark:bg-dark-200"></i>
-										{{ end }}
-									</span>
-									{{ range .Children }}
-										{{ if .HasChildren }}
-											<div class="flex items-start rounded py-2 px-3 hover:bg-light-100 dark:hover:bg-dark-200">
-												<svg class="mr-3 h-8 w-8 rm:hidden">
-													<use xlink:href="/img/svg-sprite.svg#{{ .Pre }}"></use>
-												</svg>
-												<div class="flex-1">
-													<a class="block text-body rm:text-sm nrm:font-medium" href="{{ .URL }}">{{ .Name }}</a>
-													{{ range .Children }}
-														<a class="mt-1 block pr-3 text-sm text-muted hover:underline rm:hidden" href="{{ .URL }}"
-															>{{ .Name }}</a
-														>
-													{{ end }}
-												</div>
-											</div>
-										{{ else }}
-											<a
-												class="flex items-center rounded px-3 py-2 text-body hover:bg-light-100 rm:text-sm nrm:font-medium dark:hover:bg-dark-200"
-												href="{{ .URL }}"
-											>
-												{{ if eq $productChild.Name "Others" }}
+						<div
+							class="{{ if .Params.Wide }}
+								nrm:flex nrm:p-7
+							{{ else }}
+								nrm:p-5
+							{{ end }}scrollbar gap-5 overflow-y-auto nrm:max-h-[calc(100vh_-_7.5rem)]"
+						>
+							{{ if .Params.Wide }}
+								{{ range .Children }}
+									{{ $productChild := . }}
+									<div class="nrm:w-4/12">
+										<span class="mt-1 block h-6 px-3 text-xs uppercase text-muted rm:mt-3">
+											{{ if not (eq $productChild.Name "Others") }}
+												{{ .Name }}
+											{{ else }}
+												<i class="relative -bottom-1 block h-px bg-light-100 nrm:hidden dark:bg-dark-200"></i>
+											{{ end }}
+										</span>
+										{{ range .Children }}
+											{{ if .HasChildren }}
+												<div class="flex items-start rounded py-2 px-3 hover:bg-light-100 dark:hover:bg-dark-200">
 													<svg class="mr-3 h-8 w-8 rm:hidden">
 														<use xlink:href="/img/svg-sprite.svg#{{ .Pre }}"></use>
 													</svg>
-												{{ end }}
-												{{ .Name }}
-											</a>
+													<div class="flex-1">
+														<a class="block text-body rm:text-sm nrm:font-medium" href="{{ .URL }}">{{ .Name }}</a>
+														{{ range .Children }}
+															<a class="mt-1 block pr-3 text-sm text-muted hover:underline rm:hidden" href="{{ .URL }}"
+																>{{ .Name }}</a
+															>
+														{{ end }}
+													</div>
+												</div>
+											{{ else }}
+												<a
+													class="flex items-center rounded px-3 py-2 text-body hover:bg-light-100 rm:text-sm nrm:font-medium dark:hover:bg-dark-200"
+													href="{{ .URL }}"
+												>
+													{{ if eq $productChild.Name "Others" }}
+														<svg class="mr-3 h-8 w-8 rm:hidden">
+															<use xlink:href="/img/svg-sprite.svg#{{ .Pre }}"></use>
+														</svg>
+													{{ end }}
+													{{ .Name }}
+												</a>
+											{{ end }}
 										{{ end }}
-									{{ end }}
-								</div>
+									</div>
+								{{ end }}
+							{{ else }}
+								{{ range .Children }}
+									<a class="block rounded px-3 py-2 hover:bg-light-100 dark:hover:bg-dark-200" href="{{ .URL }}">
+										<span class="block text-body rm:text-sm nrm:font-medium">{{ .Name }}</span>
+										<span class="mt-1 block text-sm text-muted rm:hidden">{{ .Pre }}</span>
+									</a>
+								{{ end }}
 							{{ end }}
-						{{ else }}
-							{{ range .Children }}
-								<a class="block rounded px-3 py-2 hover:bg-light-100 dark:hover:bg-dark-200" href="{{ .URL }}">
-									<span class="block text-body rm:text-sm nrm:font-medium">{{ .Name }}</span>
-									<span class="mt-1 block text-sm text-muted rm:hidden">{{ .Pre }}</span>
-								</a>
-							{{ end }}
-						{{ end }}
+						</div>
 					</div>
 				{{ end }}
 				</div>
