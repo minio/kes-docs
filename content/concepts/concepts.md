@@ -1,132 +1,144 @@
 ---
 title: Concepts
 date: 2023-02-08
+lastmod: :git
 draft: false
+toc: true
 ---
 
-The Concepts section helps you learn about how KES works. In particular, it contains information about the general architecture, authentication as well as authorization and other important topics. The Concepts page
-explains various aspects from a conceptual point of view. If you're looking for more concrete documentation
-checkout the [Configuration Guide](https://github.com/minio/kes/wiki/Configuration).
+This page gives a high-level overview of how KES works. 
+It contains information about KES components, general architecture, and access controls. 
 
- 1. **[Components](#components)**
- 2. **[Architecture](#architecture)**
- 3. **[Access Control](#access-control)**
-    1. **[Certificates](#certificates)**
-    2. **[Authentication](#authentication)**
-    3. **[Authorization](#authorization)**
-    4. **[Policies](#policies)**
+If you're looking for more concrete documentation, look at the [Configuration Guide]({{< relref "/tutorials/configuration.md" >}}).
+
+- [Components](#components)
+- [Architecture](#architecture)
+- [Access Control](#access-control)
+  - [Certificates](#certificates)
+  - [Authentication](#authentication)
+    - [Disabling Authentication During Testing](#disabling-authentication-during-testing)
+  - [Authorization](#authorization)
+  - [Policies](#policies)
+    - [Policy-Identity Relation](#policy-identity-relation)
+    - [The *root* Identity](#the-root-identity)
 
 ## Components
 
-Let's start with one application instance and one KES server. The application connects to the KES server via
-[TLS](https://en.wikipedia.org/wiki/Transport_Layer_Security), and then, uses the KES server API to perform
-operations - like creating a new cryptographic key. The KES server talks to a central key-management system
-(KMS).
+Consider a basic setup with one application instance and one KES server. 
 
+The application connects to the KES server via [TLS](https://en.wikipedia.org/wiki/Transport_Layer_Security).
+Then, the application uses the KES server API to perform operations like creating a new cryptographic key. 
+The KES server talks to a central key-management system (KMS).
+
+```goat
+ .-----------.     .----------.     .-----.
+| Application +<->+ KES Server +<->+  KMS  |
+ '-----------'     '----------'     '-----'
 ```
-     ┌─────────────┐             ┌────────────┐              ┌─────────┐
-     │ Application ├─────────────┤ KES Server ├──────────────┤   KMS   │
-     └─────────────┘             └────────────┘              └─────────┘
-```
 
-The central KMS contains all the state - including the cryptographic keys. So, for any stateful operation, like
-creating a cryptographic master key, the KES server has to reach out to the KMS. Any stateless operation, like 
-generating a new data encryption key (DEK), can be handled by the KES server directly without any interaction
-with the central KMS. It turns out that the majority of key-management operations are stateless - including
-encryption, decryption and key derivation.  
+The central KMS contains all of the state information, including the cryptographic keys. 
+For any stateful operation, like creating a cryptographic master key, the KES server reaches out to the KMS. 
 
-***
+The KES server directly handles stateless operations, like generating a new data encryption key (DEK), requiring no interaction with the central KMS. 
+As the majority of key-management operations are stateless, the KES server handles the load, including operations for encryption, decryption, and key derivation.  
 
 ## Architecture
 
-In the previous [Components](#Components) section there was just one KES client talking to one KES server.
-However, once the application workload passes a certain threshold, there is not really an alternative to adding
-more application instances. If all these instances would talk to a traditional KMS directly, e.g. a dedicated
-server or hardware appliance,  they eventually exceed the KMS capabilities. 
+Larger workloads demand larger resources, requiring more application instances. 
+If all these instances would talk to a traditional KMS directly, e.g. a dedicated server or hardware appliance, they eventually exceed the KMS capabilities. 
 
-For example with [Kubernetes](https://kubernetes.io/) it has become relatively easy to automatically add or remove resources based on the current workload. A hardware security appliance may protect cryptographic keys very well but usually cannot scale (automatically). Even if the appliance supports some kind of clustering then scaling means buying more expensive hardware.
+[Kubernetes](https://kubernetes.io/) automatically adds or removes resources based on the current workload. 
+However, a hardware security appliance designed to protect cryptographic keys typically cannot automatically scale up. 
+For those appliances that support clustering, scaling means buying more expensive hardware.
 
-In contrast, KES is designed to scale horizontally with the application.
+In contrast, KES scales horizontally with the application.
 
+```goat
+ .----------.
++  .---------+--.          .----------.         .--------------.
+ '+  .-----------+--.<--->+  .---------+-+<--->+   KMS Server   +
+   '+  .-------------+-+   '+ KES Servers |     '--------------'
+     '+   KES Clients   +    '-----------'  
+       '---------------'
 ```
-    ┌────────────┐
-    │ ┌──────────┴─┬─────╮          ┌────────────┐
-    └─┤ ┌──────────┴─┬───┴──────────┤ ┌──────────┴─┬─────────────────╮
-      └─┤ ┌──────────┴─┬─────┬──────┴─┤ KES Server ├─────────────────┤
-        └─┤ KES Client ├─────╯        └────────────┘            ┌────┴────┐
-          └────────────┘                                        │   KMS   │
-                                                                └─────────┘
-```
 
-The KES server decouples the application from the KMS / Key Store and can handle almost all application requests on its own. It only has to talk to the Key Store when creating or deleting a cryptographic key. Similarly, the KES server only uses the KMS to encrypt resp. decrypt the cryptographic keys stored at resp. fetched from the Key
-Store. Therefore, the KES server reduces the load on the KMS / Key Store up to several orders of magnitude.
+The KES server decouples the application from the KMS / Key Store and can handle almost all application requests on its own. 
+It only has to talk to the Key Store when creating or deleting a cryptographic key. 
 
-***
+Similarly, the KES server only uses the KMS to encrypt or decrypt the cryptographic keys stored at or fetched from the Key Store. 
+Therefore, the KES server reduces the load on the KMS / Key Store up to several orders of magnitude.
 
 ## Access Control
 
-In general, all KES server operations require authentication and authorization. However, KES uses the same application-independent mechanism for both: TLS - i.e. mutual TLS authentication (mTLS).
+In general, all KES server operations require authentication and authorization. 
+However, KES uses the same application-independent mechanism for both: mutual TLS authentication (mTLS).
 
-```                 
-            ┌──────────────┐                   ┌──────────────┐
-            │  KES Client  ├───────────────────┤  KES Server  |
-            └──────────────┘        TLS        └──────────────┘
-                 (🗝️,📜)             🔒              (📜,🔑)
+```goat               
+ .------------.                 .------------.
+|  KES Client  +<------------->+  KES Server  |
+ '------------'       TLS       '------------'
+     (🗝️, 📜)           🔒           (📜, 🔑)
 ```                                    
 
-Therefore, a KES client needs a private key / public key pair and a [X.509 certificate](https://en.wikipedia.org/wiki/Public_key_certificate). Here, we explicitly distinguish the public key from the certificate to explain how authentication and authorization works:
+The KES client needs a private key / public key pair and a [X.509 certificate](https://en.wikipedia.org/wiki/Public_key_certificate). 
+In the following section, we explicitly distinguish the public key from the certificate to explain how authentication and authorization works.
 
 ### Certificates
-KES relies on mutual TLS (mTLS) for authentication. Therefore, each KES client and KES server needs a
-private key / certificate pair. So, in case of one KES client and one KES server you will end up with two
-private key / certificate pairs.
+KES relies on mutual TLS (mTLS) for authentication. 
+Both the KES client and the KES server need their own private key / certificate pair. 
 
-By default, each mTLS peer has to trust the issuer of the peer's certificate. So, the client has to trust the
-issuer of the server certificate and the server has to trust the issuer of the client certificate.
-If the client and server certificates have been issued by the same entity - e.g. the same certificate authority (CA) - then both, the client and the server, only have to trust this single entity.
+By default, each mTLS peer has to trust the issuer of the peer's certificate. 
+This means that the client must trust the issuer of the server's certificate and the server must trust the issuer of the client's certificate.
+If the same authority issued both the client's certificate and the server's certificate then the client and the server each only have to trust a single entity.
+If different authorities issued the client's certificate and the server's certificate, then the client and the server must each trust both authorities.
 
-Further, a certificate also describes in which cases a particular public key can be used via the [`Extended Key Usage`](https://tools.ietf.org/html/rfc5280#section-4.2.1.12) extension. In case of mTLS the client certificate
-has to have an Extended Key Usage containing `Client Authentication` and the server certificate has to
-have an Extended Key Usage containing `Server Authentication`. If your setup is not working as expected it might
-be worth checking that the certificates contain the correct Extended Key Usage values.
+With the [`Extended Key Usage`](https://tools.ietf.org/html/rfc5280#section-4.2.1.12) extension, the certificate describes the valid use cases for a particular public key. 
+In case of mTLS the client certificate must have an Extended Key Usage containing `Client Authentication`.
+Similarly, the server certificate has to have an Extended Key Usage containing `Server Authentication`. 
+If your setup is not working as expected, check that the certificates contain the correct Extended Key Usage values.
+
 > ProTip: You can view a certificate in a human-readable format via:
 > ```sh
 > openssl x509 -noout -text -in <your-certificate.cert>
 > ```
 
 ### Authentication
-In general, a KES server only accepts TLS connections from clients that can present a valid and authentic TLS certificate (📜) during the TLS handshake. By valid we mean a well-formed and e.g. not expired certificate. By authentic we refer to a certificate that has been issued, and therefore cryptographically signed, by a CA that the KES server trusts.
+In general, a KES server only accepts TLS connections from clients that can present a valid and authentic TLS certificate (📜) during the TLS handshake.
 
-Now, when a KES client tries to establish a connection to the KES server the TLS protocol will ensure that:
- - The KES client actually has the private key (🗝️) that corresponds to the public key in the 
+- A *valid* certificate means that the certificate is both well-formed and not expired.
+- An *authentic* certificate means KES trusts the certificate authority that signed and issued the certificate .
+
+When a KES client tries to establish a connection to the KES server, the TLS protocol checks that:
+ - The KES client has the private key (🗝️) that corresponds to the public key in the 
    certificate (📜) presented by the client.
- - The certificate presented by a client has been issued by a CA that the KES server trusts.
+ - The certificate presented by a client was issued by a Certificate Authority (CA) that the KES server trusts.
 
-**=>** *If the TLS handshake succeeds then the KES server considers the request as authentic.*
+**=>** *If the TLS handshake succeeds then the KES server considers the request authentic.*
 
-> It is possible to skip the certificate verification - for example during testing or development. To do so,
-> start the KES server with the `--auth=off` option. Then clients still have to provide a certificate
-> but the server will not verify whether the certificate has been issued by a trusted CA. Instead, the
-> client can present a self-signed certificate.  
-> **Please note that CA-issued certificates are highly recommended for production deployments and
-> `--auth=off` should only be used for testing or development.**
+#### Disabling Authentication During Testing
+
+It is possible to skip the certificate verification during testing or development.
+
+1. Start the KES server with the `--auth=off` option. 
+2. Then clients still provide a certificate, but the server does not verify whether the certificate has been issued by a trusted CA. 
+   Instead, the client can present a self-signed certificate.  
+
+**CA-issued certificates are highly recommended for production deployments. Only use `--auth=off` for testing or development.**
 
 ### Authorization 
 
-Once the KES server has considered a client request as authentic, it checks whether the client is actually
-authorized to perform the request operation - e.g. create a new secret key. Therefore, the server verifies that
-the request complies to the policy associated to the client. So, KES relies on a role and policy-based authorization model.
+After determining the authenticity of a request, the KES server checks the client's authorization to perform the requested operation.
+KES relies on a role and policy-based authorization model.
+The authorization check compares the request to the policy associated to the client.
 
-To associate clients to policies the KES server again relies on TLS - i.e. on the client certificate (📜).
-More precisely, the KES server computes an **identity** from the certificate: **`🆔 ═ H(📜)`**. Technically,
-the *identity function* (**H**) could be any unique mapping. KES uses a cryptographic hash of the client's public key as *identity function*: **`🆔 ═ SHA-256(📜.PublicKey)`**.
+When the KES server receives an authentic client request, it computes the client _identity_ from the _client certificate_ using the client's _public key_.
+After computing the identity, the KES server checks whether the identity has an associated named _policy_. 
+If such an identity-policy mapping exists, the KES server validates that the request complies with the policy. 
+Otherwise, the server rejects the request. 
 
-So, when the KES server receives an authentic client request, it computes the client identity (🆔) from the
-client certificate (📜) and checks whether this identity is associated to a named policy. If such an identity-policy mapping exists, the KES server validates that the request complies to the policy. Otherwise, the server
-rejects the request. 
-
-**=>** *The KES server considers a request as authorized if the following two statements hold:*
- - *A policy associated to the identity (🆔), computed from the client certificate (📜), exists.*
+**=>** *The KES server considers a request as authorized if the following statements are true:*
+ - *An identity successfully computed from the client's certificate.*
+ - *A policy associated to the identity exists.*
  - *The associated policy explicitly allows the operation that the request wants to perform.*
 
 ### Policies
@@ -141,12 +153,13 @@ In general, policy patterns have the following format:
 /<API-version>/<API>/<operation>/[<argument0>/<argument1>/...]>
 ```
 For example:
-```
-/v1/key/create/my-key
- │   │     │      │
- └─┐ └───┐ └────┐ └──────┐
-   │     │      │        │
-Version API Operation Argument
+```goat
+`/v1/key/create/my-key
+   ^   ^   ^         ^
+   |    \   \         \
+   |     \   \         \
+   v      v   v         v
+ Version API Operation Argument
 ```
 
 Each allow/deny rule is specified as [glob](https://en.wikipedia.org/wiki/Glob_(programming)) pattern.
