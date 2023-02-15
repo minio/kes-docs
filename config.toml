@@ -10,7 +10,7 @@ theme = 'minio-kes-docs'
 [markup]
   [markup.tableOfContents]
     startLevel = 2
-    endLevel = 4
+    endLevel = 3
 
 [menu]
     # Main menu

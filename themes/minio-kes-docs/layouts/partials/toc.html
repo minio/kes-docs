@@ -27,9 +27,13 @@
 			</div>
 			<div
 				id="toc-dropdown"
-				class="absolute left-0 top-full z-[1] hidden w-full rounded-bl rounded-br border border-t-0 border-light-300 bg-light-300/50 text-sm backdrop-blur-md dark:border-dark-300 dark:bg-dark-0/75 lg:relative lg:block lg:border-none lg:bg-transparent [&.active]:block [&_a:hover]:text-body [&_a]:block [&_a]:py-0.5 [&_a]:text-muted"
+				class="absolute left-0 top-full z-[1] hidden w-full rounded-bl rounded-br border border-t-0 border-light-300 bg-light-300/50 text-sm backdrop-blur-md dark:border-dark-300 dark:bg-dark-0/75 lg:relative lg:block lg:border-none lg:bg-transparent [&.active]:block"
 			>
-				<div class="scrollbar h-full max-h-44 overflow-auto py-2 pl-4 lg:max-h-full">
+				<div
+					class="scrollbar h-full max-h-44 overflow-auto py-2 px-4 lg:max-h-full lg:pl-8 [&_a:hover]:text-body [&_a]:block [&_a]:py-0.5 [&_a]:text-muted [&_ul_ul]:ml-3"
+				>
+					<i class="absolute left-0.5 top-0 bottom-0 my-3.5 ml-4 hidden w-[2px] rounded bg-light-200 dark:bg-dark-200 lg:block"></i>
+
 					{{ .TableOfContents }}
 				</div>
 			</div>
