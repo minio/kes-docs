@@ -25,11 +25,9 @@
 	>
 		{{ partial "site-header" . }}
 		{{ partial "platform-menu" . }}
-		{{ partial
-			"mobile-action-header" .
-		}}
-		<main class="relative mx-auto flex w-full flex-1 items-start rm:overflow-auto nrm:max-w-container">
+		<main class="relative mx-auto w-full flex-1 items-start nrm:max-w-container lg:flex rm:lg:overflow-auto">
 			{{ partial "menu" . }}
+			{{ partial "toc" . }}
 			<div class="min-w-0 flex-1 p-5 lg:p-7">
 				{{ template "main" . }}
 				{{ partial "site-footer" . }}

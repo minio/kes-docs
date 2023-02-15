@@ -7,6 +7,11 @@ theme = 'minio-kes-docs'
     logo = '/img/logo.svg'
     footerText = 'This work is licensed under a Creative Commons Attribution 4.0 International License. 2020-Present, MinIO, Inc.'
 
+[markup]
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 4
+
 [menu]
     # Main menu
     [[menu.main]]
