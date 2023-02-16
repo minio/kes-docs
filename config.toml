@@ -6,6 +6,7 @@ theme = 'minio-hugo-docs'
 [params]
     logo = '/img/logo.svg'
     footerText = 'This work is licensed under a Creative Commons Attribution 4.0 International License. 2020-Present, MinIO, Inc.'
+    homeLink = '/'
 
 [markup]
   [markup.tableOfContents]

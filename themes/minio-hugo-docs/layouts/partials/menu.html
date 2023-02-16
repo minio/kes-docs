@@ -11,7 +11,9 @@
 			</button>
 		</div>
 
-		<h2 class="mb-6 text-md font-bold text-heading">{{ i18n "nav_navigation" }}</h2>
+		<h2 class="mb-6 text-md font-bold text-heading">
+			<a class="hover:opacity-75" href="{{ .Site.Params.homeLink }}">{{ i18n "nav_title" }}</a>
+		</h2>
 
 		{{ $current := . }}
 		{{ template "tree-nav" dict "sect" .Site.Home.Sections "current" $current }}

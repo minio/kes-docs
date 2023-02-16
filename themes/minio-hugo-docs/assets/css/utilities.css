@@ -1637,6 +1637,9 @@ video {
 .hover\:opacity-90:hover {
   opacity: 0.9;
 }
+.hover\:opacity-75:hover {
+  opacity: 0.75;
+}
 .focus\:bg-slate-300\/80:focus {
   background-color: rgb(203 213 225 / 0.8);
 }

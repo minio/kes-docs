@@ -1,7 +1,7 @@
 ---
 edit_page: Edit page
 
-nav_navigation: MinIO KES Documentation
+nav_title: MinIO KES Documentation
 nav_tags: Tags
 nav_more: More
 nav_top: Back to top
@@ -12,8 +12,7 @@ error_page_title: Lost? Don't worry
 error_message_title: Lost?
 error_message_code: Error 404
 error_message_text: >
-    Seems like what you are looking for can't be found. Don't worry, we can
-    bring you back to the <a class="gdoc-error__link" href="{{ . }}">homepage</a>.
+    Seems like what you are looking for can't be found. Don't worry, we can bring you back to the <a class="gdoc-error__link" href="{{ . }}">homepage</a>.
 
 button_toggle_dark: Toggle Dark/Light/Auto mode
 button_nav_open: Open Navigation
@@ -35,8 +34,7 @@ posts_count:
 posts_tagged_with: All posts tagged with '{{ . }}'
 
 footer_build_with: >
-    Built with <a href="https://gohugo.io/" class="gdoc-footer__link">Hugo</a> and
-    <svg class="gdoc-icon gdoc_heart"><use xlink:href="#gdoc_heart"></use></svg>
+    Built with <a href="https://gohugo.io/" class="gdoc-footer__link">Hugo</a> and <svg class="gdoc-icon gdoc_heart"><use xlink:href="#gdoc_heart"></use></svg>
 footer_legal_notice: Legal Notice
 footer_privacy_policy: Privacy Policy
 footer_content_license_prefix: >
