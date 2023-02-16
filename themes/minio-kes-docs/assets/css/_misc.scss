@@ -1,17 +1,3 @@
-:root {
-	// TODO: Configure PostCSS to access TW color palette
-	&:not(.dark) {
-		--scrollbar-bg: #dedede;
-		--scrollbar-hover-bg: #c6c6c6;
-	}
-
-	// TODO: Dark mode scrollbar
-	.dark {
-		--scrollbar-bg: red;
-		--scrollbar-hover-bg: blue;
-	}
-}
-
 // Scrollbar
 .scrollbar {
 	scrollbar-width: thin;

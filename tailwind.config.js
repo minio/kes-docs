@@ -7,7 +7,7 @@ module.exports = {
 	theme: {
 		fontFamily: {
 			sans: ["Inter"],
-			mono: ["Menlo", "Courier New"],
+			mono: ["Courier New", "Courier", "monospace"],
 		},
 		fontSize: {
 			xxxs: 6 / 16 + "rem",
@@ -68,6 +68,15 @@ module.exports = {
 					css: {
 						maxWidth: "100%",
 						color: "var(--text-color)",
+						a: {
+							color: "var(--link-color)",
+							textDecoration: "none",
+							fontWeight: "400",
+							"&:hover": {
+								textDecoration: "underline",
+								color: "var(--link-color)",
+							},
+						},
 						h1: {
 							fontSize: "1.75rem",
 							fontWeight: "700",
@@ -107,9 +116,6 @@ module.exports = {
 				},
 			},
 		},
-	},
-	corePlugins: {
-		container: false,
 	},
 	plugins: [
 		plugin(function ({ addVariant }) {

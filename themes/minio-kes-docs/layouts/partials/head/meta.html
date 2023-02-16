@@ -7,8 +7,8 @@
 {{ $keywords := default .Site.Params.Keywords .Keywords }}
 
 {{- with partial "utils/description" . }}
-  <meta name="description" content="{{ trim (. | plainify) "\n" | safeHTML }}" />
+	<meta name="description" content="{{ trim (. | plainify) "\n" | safeHTML }}" />
 {{- end }}
 {{- with $keywords }}
-  <meta name="keywords" content="{{ delimit . "," }}" />
+	<meta name="keywords" content="{{ delimit . "," }}" />
 {{- end }}

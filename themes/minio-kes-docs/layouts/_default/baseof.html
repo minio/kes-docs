@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ .Site.Language.Lang }}">
+<html lang="{{ .Site.Language.Lang }}" class="scroll-pt-20 scroll-smooth lg:scroll-pt-4">
 	<head>
 		{{ partial "head/meta" . }}
 		<title>
@@ -15,7 +15,6 @@
 		{{ partial "head/favicons" . }}
 		{{ partial "head/microformats" . }}
 		{{ partial "head/others" . }}
-		{{ partial "head/custom" . }}
 	</head>
 
 	<body
@@ -25,7 +24,7 @@
 	>
 		{{ partial "site-header" . }}
 		{{ partial "platform-menu" . }}
-		<main class="relative mx-auto w-full flex-1 items-start nrm:max-w-container lg:flex rm:lg:overflow-auto">
+		<main class="relative mx-auto w-full flex-1 scroll-pt-4 items-start scroll-smooth nrm:max-w-container lg:flex rm:lg:overflow-auto">
 			{{ partial "menu" . }}
 			{{ partial "toc" . }}
 			<div class="min-w-0 flex-1 p-5 lg:p-7">
@@ -34,6 +33,6 @@
 			</div>
 		</main>
 
-		{{ partial "foot" . }}
+		{{ partial "scripts" . }}
 	</body>
 </html>

@@ -1,8 +1,8 @@
 {{ define "main" }}
 	<article>
-		<header class="gdoc-post__header">
-			<h1 class="gdoc-post__title">{{ partial "utils/title" . }}</h1>
-			<div class="align-center gdoc-post__meta gdoc-post__meta--head flex flex-wrap">
+		<header>
+			<h1>{{ partial "utils/title" . }}</h1>
+			<div class="align-center flex flex-wrap">
 				{{ partial "posts/metadata.html" . }}
 			</div>
 		</header>
