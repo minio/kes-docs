@@ -850,8 +850,8 @@ video {
   margin-bottom: 2em;
 }
 .prose :where(li):not(:where([class~="not-prose"] *)) {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
 }
 .prose :where(ol > li):not(:where([class~="not-prose"] *)) {
   padding-left: 0.375em;
@@ -1631,14 +1631,14 @@ video {
 .hover\:underline:hover {
   text-decoration-line: underline;
 }
+.hover\:opacity-75:hover {
+  opacity: 0.75;
+}
 .hover\:opacity-80:hover {
   opacity: 0.8;
 }
 .hover\:opacity-90:hover {
   opacity: 0.9;
-}
-.hover\:opacity-75:hover {
-  opacity: 0.75;
 }
 .focus\:bg-slate-300\/80:focus {
   background-color: rgb(203 213 225 / 0.8);
