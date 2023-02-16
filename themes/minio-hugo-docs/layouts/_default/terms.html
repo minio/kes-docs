@@ -1,0 +1,29 @@
+{{ define "main" }}
+	{{ range .Paginator.Pages.ByTitle }}
+		<article>
+			<header>
+				<h1>
+					<a href="{{ .RelPermalink }}">{{ partial "utils/title" . }}</a>
+				</h1>
+			</header>
+
+			<footer>
+				<span>
+					{{ $pageCount := len .Pages }}
+					<span>
+						{{ i18n "posts_count" $pageCount }}
+					</span>
+				</span>
+
+				<span class="align-center no-wrap flex">
+					<span>
+						{{ $latet := index .Pages.ByDate 0 }}
+						{{ with $latet }}
+							<a href="{{ .RelPermalink }}">{{ partial "utils/title" . }}</a>
+						{{ end }}
+					</span>
+				</span>
+			</footer>
+		</article>
+	{{ end }}
+{{ end }}

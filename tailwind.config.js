@@ -2,12 +2,12 @@
 const plugin = require("tailwindcss/plugin");
 
 module.exports = {
-	content: ["./themes/minio-kes-docs/**/*.{html,js}"],
+	content: ["./themes/minio-hugo-docs/**/*.{html,js}"],
 	darkMode: "class",
 	theme: {
 		fontFamily: {
 			sans: ["Inter"],
-			mono: ["Menlo", "Courier New"],
+			mono: ["Courier New", "Courier", "monospace"],
 		},
 		fontSize: {
 			xxxs: 6 / 16 + "rem",
@@ -68,6 +68,15 @@ module.exports = {
 					css: {
 						maxWidth: "100%",
 						color: "var(--text-color)",
+						a: {
+							color: "var(--link-color)",
+							textDecoration: "none",
+							fontWeight: "400",
+							"&:hover": {
+								textDecoration: "underline",
+								color: "var(--link-color)",
+							},
+						},
 						h1: {
 							fontSize: "1.75rem",
 							fontWeight: "700",
@@ -97,13 +106,20 @@ module.exports = {
 							marginBottom: "1.75em",
 							opacity: "0.5",
 						},
+						"code::before": {
+							content: '""',
+						},
+						"code::after": {
+							content: '""',
+						},
+						li: {
+							marginTop: "0.25em",
+							marginBottom: "0.25em",
+						},
 					},
 				},
 			},
 		},
-	},
-	corePlugins: {
-		container: false,
 	},
 	plugins: [
 		plugin(function ({ addVariant }) {

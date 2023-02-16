@@ -1,0 +1,13 @@
+{{ define "main" }}
+	<article>
+		<header>
+			<h1>{{ partial "utils/title" . }}</h1>
+			<div class="align-center flex flex-wrap">
+				{{ partial "posts/metadata.html" . }}
+			</div>
+		</header>
+		<section class="prose dark:prose-invert">
+			{{ partial "utils/content" . }}
+		</section>
+	</article>
+{{ end }}

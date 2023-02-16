@@ -1,0 +1,37 @@
+{{ define "main" }}
+	{{ range .Paginator.Pages }}
+		<article>
+			<header>
+				<h1>
+					<a href="{{ .RelPermalink }}">{{ partial "utils/title" . }}</a>
+				</h1>
+			</header>
+
+			<section>
+				{{ .Summary }}
+			</section>
+
+			<div>
+				{{ if .Truncated }}
+					<a class="flex-inline align-center" title="{{ i18n "posts_read_more" }}" href="{{ .RelPermalink }}">
+						{{ i18n "posts_read_more" }}
+					</a>
+				{{ end }}
+			</div>
+
+			<footer>
+				<div class="align-center flex flex-wrap">
+					{{ partial "posts/metadata.html" . }}
+				</div>
+			</footer>
+		</article>
+	{{ end }}
+{{ end }}
+
+{{ define "post-tag" }}
+	<span>
+		<a href="{{ .page.RelPermalink }}" title="{{ i18n "posts_tagged_with" .name }}">
+			{{ .name }}
+		</a>
+	</span>
+{{ end }}
