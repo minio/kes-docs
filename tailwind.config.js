@@ -97,6 +97,12 @@ module.exports = {
 							marginBottom: "1.75em",
 							opacity: "0.5",
 						},
+						"code::before": {
+							content: '""',
+						},
+						"code::after": {
+							content: '""',
+						},
 					},
 				},
 			},
