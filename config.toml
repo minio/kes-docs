@@ -1,7 +1,7 @@
 baseURL = 'https://min.io'
 languageCode = 'en-us'
 title = 'MinIO KES Documentation'
-theme = 'minio-kes-docs'
+theme = 'minio-hugo-docs'
 
 [params]
     logo = '/img/logo.svg'

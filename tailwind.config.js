@@ -2,7 +2,7 @@
 const plugin = require("tailwindcss/plugin");
 
 module.exports = {
-	content: ["./themes/minio-kes-docs/**/*.{html,js}"],
+	content: ["./themes/minio-hugo-docs/**/*.{html,js}"],
 	darkMode: "class",
 	theme: {
 		fontFamily: {
@@ -111,6 +111,10 @@ module.exports = {
 						},
 						"code::after": {
 							content: '""',
+						},
+						li: {
+							marginTop: "0.25em",
+							marginBottom: "0.25em",
 						},
 					},
 				},

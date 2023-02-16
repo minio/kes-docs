@@ -1,6 +1,6 @@
-name = "MinIO KES Docs"
+name = "MinIO Hugo Docs Theme"
 license = "Apache-2."
-description = "Hugo theme made for MinIO KES Documentation"
+description = "Hugo theme for MinIO Documentations"
 homepage = "https://min.io/"
 demosite = "https://min.io/"
 tags = ["minio", "minio-documentation", "minio kes", "kes"]
