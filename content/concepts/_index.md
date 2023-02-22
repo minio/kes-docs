@@ -3,24 +3,13 @@ title: Concepts
 date: 2023-02-08
 lastmod: :git
 draft: false
-toc: true
+tableOfContents: true
 ---
 
-This page gives a high-level overview of how KES works. 
+This section gives a high-level overview of how KES works. 
 It contains information about KES components, general architecture, and access controls. 
 
-If you're looking for more concrete documentation, look at the [Configuration Guide]({{< relref "/tutorials/configuration.md" >}}).
-
-- [Components](#components)
-- [Architecture](#architecture)
-- [Access Control](#access-control)
-  - [Certificates](#certificates)
-  - [Authentication](#authentication)
-    - [Disabling Authentication During Testing](#disabling-authentication-during-testing)
-  - [Authorization](#authorization)
-  - [Policies](#policies)
-    - [Policy-Identity Relation](#policy-identity-relation)
-    - [The *root* Identity](#the-root-identity)
+For more detailed documentation, see the [Configuration Guide]({{< relref "/tutorials/configuration.md" >}}).
 
 ## Components
 
@@ -143,16 +132,18 @@ Otherwise, the server rejects the request.
 
 ### Policies
 
-The KES server policies define whether a client request is allowed. A policy contains a set
-of allow and deny rules defining which API operations on which resources are allowed resp. explicitly
-denied. Overall, KES uses policy definitions that are designed to be human-readable and easy
-to reason about rather then providing the most flexibility.
+The KES server policies determine whether to allow a client request. 
+A policy contains a set of rules that define which API operations are allowed or denied on which resources. 
+KES uses policy definitions designed for human-readability and comprehension rather than flexibility.
 
 In general, policy patterns have the following format:
+
 ```
-/<API-version>/<API>/<operation>/[<argument0>/<argument1>/...]>
+/<API-version>/<API>/<operation>/[<argument0>/<argument1>/...]
 ```
+
 For example:
+
 ```goat
 `/v1/key/create/my-key
    ^   ^   ^         ^
@@ -162,8 +153,21 @@ For example:
  Version API Operation Argument
 ```
 
-Each allow/deny rule is specified as [glob](https://en.wikipedia.org/wiki/Glob_(programming)) pattern.
-So, a single rule can match an entire class of requests. Let's take a look at an example policy:
+Write each allow/deny rule as a [glob](https://en.wikipedia.org/wiki/Glob_(programming)) pattern.
+The glob pattern allows a single rule to match an entire class of requests. 
+
+A KES server evaluates a policy as follows:
+
+ 1. Evaluate all deny patterns. 
+    If any deny pattern matches, reject the request with a `prohibited by policy` error.
+ 2. Evaluate all allow patterns. 
+    If at least one allow pattern matches, KES accepts the request.
+ 3. If no allow pattern matches, reject the request with a `prohibited by policy` error.
+
+#### Policy Example
+
+Let's take a look at an example policy:
+
 ```yaml
 policy:
   my-policy:
@@ -176,50 +180,64 @@ policy:
     - /v1/key/*/my-key-internal*
 ```
 
-The `my-policy` contains four allow rules and one deny rule. A KES server will evaluate a policy as following:
- 1. Evaluate all deny patterns. If any deny pattern matches then reject the request with a `prohibited by policy` error.
- 2. Evaluate all allow patterns. If at least one allow pattern matches then KES will accept the request.
- 3. Reject the request with the same `prohibited by policy` error since no allow rule matches.
+The `my-policy` contains four allow rules and one deny rule. 
 
-In case of the `my-policy`, KES will allow creating a key named `my-key` but trying to create a key named `my-key2`
-will fail since no allow rule matches `/v1/key/create/my-key2`. However, generating new data encryption keys (DEKs)
-as well as decrypting encrypted (DEKs) using any key with a name prefix `my-key` is allowed. For example, both,
-`/v1/key/generate/my-key` and `/v1/key/generate/my-key2` would be allowed.
+KES processes the `deny` rule first.
+`my-policy` contains a deny rule that prevents any key API operation (`key/*/`) for all resources (i.e. keys) with a name prefix `my-key-internal`. 
+If a client submits any type of API operation using a key with that prefix, KES prohibits it.
+For example, KES would reject any of the following under this policy:
+- `/v1/key/create/my-key-internal`
+- `/v1/key/generate/my-key-internal` 
+- `/v1/key/generate/my-key-internal2`
 
-Further, `my-policy` contains a deny rule that prevents any key API operation (`key/*/`) for all resources (i.e. keys)
-with a name prefix `my-key-internal`. So, for example `/v1/key/create/my-key-internal`, `/v1/key/generate/my-key-internal`
-and `/v1/key/generate/my-key-internal2` would all be rejected.
+If the request does not match any `deny` pattern, KES evaluates the request against the `allow` rules.
 
-For more information about policies and more examples refer to: [Policy Configuration](https://github.com/minio/kes/wiki/Configuration#policy-configuration)  
-For a comprehensive overview over the KES server APIs refer to: [Server API](https://github.com/minio/kes/wiki/Server-API#api-overview)
+In case of the `my-policy`, KES allows requests under the policy to create a key named `my-key`. 
+If the user tries to create a key named `my-key2` or any other character combination, the request returns with the `prohibited by policy` error since no `allow` rule matches the request. 
 
-#### Policy-Identity Relation
+When the user requests to generate new data encryption keys (DEKs) or to decrypt encrypted (DEKs), the policy allows any key with a name prefix of `my-key`. 
+KES allows either `/v1/key/generate/my-key` or `/v1/key/generate/my-key2`, but prohibits `/v1/key/generate/key-to-generate1`.
 
-The policy-identity mapping is a one-to-many relation. So, there can be arbitrary many identities associated to
-the same policy. However, the same identity can only be associated to one policy at one point in time. But
-there is one important caveat here:
 
-The one-to-many relation only holds for one server. So, the same identity `A` can be associated to one policy `P`
-at the KES server `S1` but can also be associated to a different policy `Q` at the KES server `S2`. So, the two KES servers `S1` and `S2` have distinct and independent policy-identity sets.
+#### See Also
+- For more information about policies and more examples refer to: [Policy Configuration]({{< relref "/tutorials/configuration.md#policy-configuration" >}})  
+- For a comprehensive overview over the KES server APIs refer to: [Server API]({{< relref "Server-API#api-overview" >}})
 
-Further, you may recall that the KES server computes the client identity from its certificate:
-**`🆔 ═ SHA-256(📜.PublicKey)`**. However, when specifying the identity-policy mapping it is totally
-valid to associate an arbitrary identity value to a policy. So, the identity value does not need to be
-an actual SHA-256 hash value. It can be `"_"`, `"disabled"`, `"foobar123"` or literally any other value.
+### Policy-Identity Relation
+
+The policy-identity mapping is a one-to-many relation, meaning you may associate many identities to the same policy. 
+However, you can only associate an identity to one policy at a time on a KES server. 
+
+Multiple KES servers can each have their own policy-identify relationship sets. 
+For example, KES server `Server1` may associate identity `Ann` to the policy `Policy1` 
+KES server `Server2` can associate the same identity, `Ann` to a different policy, `Policy2`.  
+The two KES servers `Server1` and `Server2` have distinct and independent policy-identity relationships.
+
+### The *`root`* Identity
+
+As previously described, the KES server computes the client identity from its certificate. 
+This normally computes to a cryptographic SHA-256 value.
+However, when specifying the identity-policy mapping it is totally valid to associate an arbitrary identity value to a policy. 
+The associated identity can be `"_"`, `"disabled"`, `"foobar123"` or any other value.
 This is in particular useful for dealing with the special *root* identity.
 
-#### The *root* Identity
+The KES server has a special *`root`* identity that you **must** specify.
+You specify the *`root`* identify either by the KES [configuration file]({{< relref "/tutorials/configuration.md" >}}) or the `--root` CLI option. 
+In general, *`root`* acts like any other identity with the exception that it cannot be associated to a policy.
+Instead, *`root`* can perform arbitrary API operations.
 
-The KES server has a special *root* identity that **must** be specified - either via the configuration file or
-the `--root` CLI option. In general, *root* is like any other identity except that it cannot be associated to any policy but can perform arbitrary API operations.
+The *`root`* identity is especially useful for initial provisioning and management tasks.
 
-So, the *root* identity is especially useful for initial provisioning and management tasks. However, within centrally managed and/or automated deployments - like [Kubernetes](https://kubernetes.io/) - *root* is not necessary and only a security risk. If an attacker gains access to the *root's* private key and certificate it can perform arbitrary operations.
+Centrally managed or automated deployments, such as [Kubernetes](https://kubernetes.io/), do not require the *`root`* identity, which serves only as a security risk. 
+If an attacker gains access to the *`root`* identity's private key and certificate, the attacker can perform arbitrary operations.
 
-Even though a *root* identity must always be specified, it is possible to *effectively disable* it. This can be done by specifying a *root* identity value that **never** will be an actually (SHA-256) hash value - for example
-`--root=_` (underscore) or `--root=disabled`. Since **`🆔 ═ SHA-256(📜.PublicKey)`** will never be e.g.
-`disabled` it becomes impossible to perform an operation as *root*.
+Even though a *`root`* identity must always be specified, you can *effectively disable* it. 
+This can be done by specifying a *`root`* identity value that will **never** be an actual (SHA-256) hash value. 
+For example `--root=_` (underscore) or `--root=disabled`.
+Since KES does not ever compute a cryptographic identity to `_` or `disabled`, it becomes impossible to perform an operation as *`root`*.
 
-> Note that even though *root* can perform arbitrary API operation, it cannot change the *root* identity itself.
-> The *root* identity can only be specified/changed via the CLI or configuration file. So, an attacker cannot 
-> become the *root* identity by tricking the current *root*. The attacker either has to compromise *root's*
-> private key or change the initial server configuration.
+**Note:**
+Even though *`root`* can perform arbitrary API operations, it cannot change the *`root`* identity itself.
+The *`root`* identity can only be specified or changed through the CLI or the configuration file. 
+Therefore, an attacker cannot become the *`root`* identity by tricking the current *`root`*. 
+The attacker either has to compromise the *`root`* identity's private key or change the initial server configuration.

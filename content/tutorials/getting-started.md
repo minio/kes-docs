@@ -1,141 +1,137 @@
 ---
 title: Getting Started
 date: 2023-02-08
+lastmod: :git
 draft: false
+tableOfContents: true
 ---
 
-This is the Getting Started guide. Here we show how to setup a local KES server
-that stores keys in-memory.
+This Quickstart shows you how to setup a local KES server that stores keys in-memory.
 
-```
-                   ╔══════════════════════════════════════════╗
-┌────────────┐     ║   ┌────────────┐          ┌───────────┐  ║
-│ KES Client ├─────╫───┤ KES Server ├──────────┤ In-Memory │  ║
-└────────────┘     ║   └────────────┘          └───────────┘  ║
-                   ╚══════════════════════════════════════════╝
-```
+{{< admonition title="Not permanent" type="caution" >}}
+The in-memory key store will lose all state on restarts. 
+It should only be used for testing purposes.
+{{< /admonition >}}
 
-***The in-memory key store will loose all state on restarts. It should only be used for testing purposes.***
-
-***
-
-<details open="true"><summary><b>1. Generate KES Server Private Key & Certificate</b></summary>
-
-First, we need to generate a TLS private key and certificate for our KES server.
-A KES server can only be run with TLS - since [secure-by-default](https://en.wikipedia.org/wiki/Secure_by_default).
-Here we use self-signed certificates for simplicity.
-
-The following command generates a new TLS private key (`private.key`) and
-a self-signed X.509 certificate (`public.crt`) issued for the IP `127.0.0.1`
-and DNS name `localhost`: 
-
-```sh
-$ kes identity new --ip "127.0.0.1" localhost
-
-  Private key:  private.key
-  Certificate:  public.crt
-  Identity:     2e897f99a779cf5dd147e58de0fe55a494f546f4dcae8bc9e5426d2b5cd35680
+```goat
+                  +----------------------------------+
+ .----------.     |    .----------.     .---------.  |
+| KES Client +----+---+ KES Server +---+ In-Memory | |
+ '----------'     |    '----------'     '---------'  |
+                  +----------------------------------+
 ```
 
-> If you already have a TLS private key & certificate - e.g. from a WebPKI or internal
-> CA - you can use them instead. Remember to adjust the `tls` config section later on.
- 
-</details>
+## Quickstart
 
-<details><summary><b>2. Generate Client Credentials</b></summary>
+1. Generate KES Server Private Key & Certificate
 
-The client application needs some credentials to access the KES server. The following
-command generates a new TLS private/public key pair:
-```sh
-$ kes identity new --key=client.key --cert=client.crt MyApp
+   Generate a TLS private key and certificate for the KES server.
 
-  Private key:  client.key
-  Certificate:  client.crt
-  Identity:     02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b
-```
-
-The identity `02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b`
-is an unique fingerprint of the public key in `client.crt` and you can re-compute
-it anytime:
-```sh
-$ kes identity of client.crt
-
-  Identity:  02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b
-```
-
-</details>
-
-<details><summary><b>3. Configure KES Server</b></summary>
-
-Next, we can create the KES server configuration file: `config.yml`.
-Please, make sure that the identity in the policy section matches
-your `client.crt` identity.
-
-```yaml
-address: 0.0.0.0:7373 # Listen on all network interfaces on port 7373
-
-admin:
-  identity: 02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b # The client.crt identity
+   A KES server is [secure-by-default](https://en.wikipedia.org/wiki/Secure_by_default) and can only be run with TLS.
+   In this guide, we use self-signed certificates for simplicity.
    
-tls:
-  key: private.key    # The KES server TLS private key
-  cert: public.crt    # The KES server TLS certificate
-```
+   The following command generates a new TLS private key (`private.key`) and a self-signed X.509 certificate (`public.crt`) issued for the IP `127.0.0.1` and DNS name `localhost`: 
+   
+   ```sh
+   $ kes identity new --ip "127.0.0.1" localhost
+   
+     Private key:  private.key
+     Certificate:  public.crt
+     Identity:     2e897f99a779cf5dd147e58de0fe55a494f546f4dcae8bc9e5426d2b5cd35680
+   ```
+   
+   {{< admonition title="Existing Key & Certificate" type="note" >}}
+   If you already have a TLS private key & certificate, such as from a WebPKI or internal Certificate Authority, you can use them instead. 
+   Remember to adjust the `tls` config section.
+   {{< /admonition >}}
+ 
+2. Generate Client Credentials
 
-</details>
+   The client application needs credentials to access the KES server. 
+   The following command generates a new TLS private/public key pair:
 
-<details><summary><b>4. Start KES Server</b></summary>
+   ```sh
+   $ kes identity new --key=client.key --cert=client.crt MyApp
+   
+     Private key:  client.key
+     Certificate:  client.crt
+     Identity:     02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b
+   ```
+   
+   The identity `02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b` is a unique fingerprint of the public key in `client.crt`.
+   You can re-compute the fingerprint at anytime:
 
-Now, we can start a KES server instance:
-```
-$ kes server --config config.yml --auth off
-```
+   ```sh
+   $ kes identity of client.crt
+   
+     Identity:  02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b
+   ```
 
-</details>
+3. Configure KES Server
 
-### KES CLI Access
+   Create the KES server configuration file: `config.yml`.
+   Ensure the identity in the `policy` section matches your `client.crt` identity.
 
-<details><summary><b>1. Set <code>KES_SERVER</code> Endpoint</a></summary>
+   ```yaml
+   address: 0.0.0.0:7373 # Listen on all network interfaces on port 7373
+   
+   admin:
+     identity: 02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b # The client.crt identity
+      
+   tls:
+     key: private.key    # The KES server TLS private key
+     cert: public.crt    # The KES server TLS certificate
+   ```
 
-The KES CLI needs to know to which server it should talk to:
-```sh
-$ export KES_SERVER=https://127.0.0.1:7373
-```
+4. Start KES Server
 
-</details>
+   Start the KES server instance:
 
-<details><summary><b>2. Use Client Credentials</b></summary>
+   ```sh
+   $ kes server --config config.yml --auth off
+   ```
 
-Further, the KES CLI needs some access credentials to talk to a KES server:
-```sh
-$ export KES_CLIENT_CERT=client.crt
-```
-```sh
-$ export KES_CLIENT_KEY=client.key
-```
+## KES CLI Access
 
-</details>
+1. Set `KES_SERVER` endpoint
 
-<details><summary><b>3. Perform Operations</b></summary>
+   This variable tells the KES CLI which KES server to access.
 
-Now, we can perform any API operation. Since we are using the
-admin identity, we don't have to worry about policy permissions.
-```sh
-$ kes key create my-key-1
-```
+   ```sh
+   $ export KES_SERVER=https://127.0.0.1:7373
+   ```
 
-Then, we can use that key to generate a new data encryption key:
-```sh
-$ kes key dek my-key-1
-{
-  plaintext : UGgcVBgyQYwxKzve7UJNV5x8aTiPJFoR+s828reNjh0=
-  ciphertext: eyJhZWFkIjoiQUVTLTI1Ni1HQ00tSE1BQy1TSEEtMjU2IiwiaWQiOiIxMTc1ZjJjNDMyMjNjNjNmNjY1MDk5ZDExNmU3Yzc4NCIsIml2IjoiVHBtbHpWTDh5a2t4VVREV1RSTU5Tdz09Iiwibm9uY2UiOiJkeGl0R3A3bFB6S21rTE5HIiwiYnl0ZXMiOiJaaWdobEZrTUFuVVBWSG0wZDhSYUNBY3pnRWRsQzJqWFhCK1YxaWl2MXdnYjhBRytuTWx0Y3BGK0RtV1VoNkZaIn0=
-}
-```
+2. Use Client Credentials
 
-</details>
+   These variables tell the KES CLI which credentials to use to access to a KES server.
 
-### References
+   ```sh
+   $ export KES_CLIENT_CERT=client.crt
+   ```
+   ```sh
+   $ export KES_CLIENT_KEY=client.key
+   ```
 
- - [**Server API Doc**](https://github.com/minio/kes/wiki/Server-API)
- - [**Go SDK Doc**](https://pkg.go.dev/github.com/minio/kes)
+3. Perform Operations
+
+   Now, we can perform any API operation. 
+   Since we are using the admin identity, we do not have to worry about policy permissions.
+
+   ```sh
+   $ kes key create my-key-1
+   ```
+   
+   Then, we can use that key to generate a new data encryption key:
+
+   ```sh
+   $ kes key dek my-key-1
+   {
+     plaintext : UGgcVBgyQYwxKzve7UJNV5x8aTiPJFoR+s828reNjh0=
+     ciphertext: eyJhZWFkIjoiQUVTLTI1Ni1HQ00tSE1BQy1TSEEtMjU2IiwiaWQiOiIxMTc1ZjJjNDMyMjNjNjNmNjY1MDk5ZDExNmU3Yzc4NCIsIml2IjoiVHBtbHpWTDh5a2t4VVREV1RSTU5Tdz09Iiwibm9uY2UiOiJkeGl0R3A3bFB6S21rTE5HIiwiYnl0ZXMiOiJaaWdobEZrTUFuVVBWSG0wZDhSYUNBY3pnRWRsQzJqWFhCK1YxaWl2MXdnYjhBRytuTWx0Y3BGK0RtV1VoNkZaIn0=
+   }
+   ```
+
+## References
+
+- [**Server API Doc**]({{< relref "server-api" >}})
+- [**Go SDK Doc**](https://pkg.go.dev/github.com/minio/kes)

@@ -3,6 +3,7 @@ title: MinIO Key Encryption Service
 date: 2022-11-01
 lastmod: :git
 draft: false
+tableOfContents: true
 ---
 
 This site provides information about [MinIO](https://min.io?ref=kes-docs)'s Key Encryption Service (KES) project.
@@ -24,7 +25,7 @@ If you're new to KES you may want to start in one of the following pages:
 
 - Jump right in with the [Getting Started guide]({{< relref "/tutorials/getting-started" >}})
 - Review set up options with the [configuration guide]({{< relref "/tutorials/configuration.md" >}}) 
-- Learn how KES works at our [Concepts page]({{< relref "concepts/concepts.md" >}}).
+- Learn how KES works at our [Concepts page]({{< relref "concepts/_index.md" >}}).
 
 ***
 
@@ -44,7 +45,7 @@ If you're new to KES you may want to start in one of the following pages:
 ## Supported KMS Targets
  - [Hashicorp Vault]({{< relref "/integrations//hashicorp-vault-keystore.md" >}})
  - [Fortanix SDKMS]({{< relref "/integrations/fortanix-sdkms.md" >}})
- - [Thales CipherTrust Manager / Gemalto KeySecure]({{< relref "/integrations/gemalto-keysecure.md" >}})
+ - [Thales CipherTrust Manager (formerly Gemalto KeySecure)]({{< relref "/integrations/thales-ciphertrust.md" >}})
  - [AWS Secrets Manager]({{< relref "/integrations/aws-secrets-manager.md" >}})
  - [Google Cloud Secret Manager]({{< relref "/integrations/google-cloud-secret-manager.md" >}})
  - [Azure KeyVault]({{< relref "/integrations/azure-keyvault.md" >}})

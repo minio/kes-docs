@@ -18,7 +18,7 @@ The KES docs use [Hugo](https://www.gohogo.io) to generate static HTML pages.
 
 ## Prerequisites
 
-- Any [operation system that Hugo supports](https://gohugo.io/installation/)
+- Any [operating system that Hugo supports](https://gohugo.io/installation/)
 - [nodejs](https://nodejs.org/en/download/package-manager/) 14.5.0 or later
 - [Node Package Manager](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) installed (8.5.0 or later)
 - [Hugo installed](https://gohugo.io/installation/) (0.110.0 or later)

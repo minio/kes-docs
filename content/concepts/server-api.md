@@ -1,41 +1,43 @@
 ---
 title: KES API
 date: 2023-02-08
+lastmod: :git
 draft: false
+tableOfContents: true
 ---
 
 ## API Overview
 
-| [API](#Version)                                         |                                                             |
+| [**API**](#Version)                                     |                                                             |
 |:--------------------------------------------------------|:------------------------------------------------------------|
-| [`/version`](#Version)                                  | Get version information.                                    |
-| [`/v1/api`](#API)                                       | Get a list of supported API endpoints.                      |
-| [`/v1/metrics`](#Metrics)                               | Get server metrics in the Prometheus exposition format.     |
-| [`/v1/status`](#Status)                                 | Get server status information.                              |
-| [**Key API**](#Key-API)                                 |                                                             |
-| [`/v1/key/create`](#Create-Key)                         | Create a new cryptographic key.                             |
-| [`/v1/key/import`](#Import-Key)                         | Import a cryptographic key.                                 |
-| [`/v1/key/delete`](#Delete-Key)                         | Delete a cryptographic key.                                 |
-| [`/v1/key/list`](#List-Keys)                            | List cryptographic keys.                                    |
-| [`/v1/key/generate`](#Generate-Key)                     | Generate a new plain/encrypted data encryption key pair.    |
-| [`/v1/key/encrypt`](#Encrypt-Key)                       | Encrypt a (small) plaintext with a key.                     |
-| [`/v1/key/decrypt`](#Decrypt-Key)                       | Decrypt a (small) ciphertext with a key.                    |
-| [`/v1/key/bulk/decrypt`](#Bulk-Decrypt-Key)             | Decrypt a list of (small) ciphertexts with a key.           |
+| [`/version`](#version)                                  | Get version information.                                    |
+| [`/v1/api`](#api)                                       | Get a list of supported API endpoints.                      |
+| [`/v1/metrics`](#metrics)                               | Get server metrics in the Prometheus exposition format.     |
+| [`/v1/status`](#status)                                 | Get server status information.                              |
+| [**Key API**](#key-api)                                 |                                                             |
+| [`/v1/key/create`](#create-key)                         | Create a new cryptographic key.                             |
+| [`/v1/key/import`](#import-key)                         | Import a cryptographic key.                                 |
+| [`/v1/key/delete`](#delete-key)                         | Delete a cryptographic key.                                 |
+| [`/v1/key/list`](#list-keys)                            | List cryptographic keys.                                    |
+| [`/v1/key/generate`](#generate-key)                     | Generate a new plain/encrypted data encryption key pair.    |
+| [`/v1/key/encrypt`](#encrypt-key)                       | Encrypt a (small) plaintext with a key.                     |
+| [`/v1/key/decrypt`](#decrypt-ley)                       | Decrypt a (small) ciphertext with a key.                    |
+| [`/v1/key/bulk/decrypt`](#bulk-decrypt-key)             | Decrypt a list of (small) ciphertexts with a key.           |
 | [**Policy API**](#Policy-API)                           |                                                             |
-| [`/v1/policy/describe`](#Describe-Policy)               | Fetch information about a policy.                           |
-| [`/v1/policy/assign`](#Assign-Policy)                   | Assign a policy to an identity.                             |
-| [`/v1/policy/write`](#Write-Policy)                     | Create or overwrite a policy.                               |
-| [`/v1/policy/read`](#Read-Policy)                       | Fetch a policy.                                             |
-| [`/v1/policy/list`](#List-Policy)                       | List policies.                                              |
-| [`/v1/policy/delete`](#List-Policy)                     | Delete a policy.                                            |
-| [**Identity API**](#Identity-API)                       |                                                             |
-| [`/v1/identity/describe`](#Describe-Identity)           | Fetch information about an identity.                        |
-| [`/v1/identity/self/describe`](#Self-Describe-Identity) | Fetch information about the identity issuing the request.   |
-| [`/v1/identity/delete`](#Delete-Identity)               | Delete an identity.                                         |
-| [`/v1/identity/list`](#List-Identity)                   | List identities.                                            |
-| [**Log API**](#Log-API)                                 |                                                             |
-| [`/v1/log/audit`](#Audit-Log)                           | Subscribe to the audit log.                                 |
-| [`/v1/log/error`](#Error-Log)                           | Subscribe to the error log.                                 |
+| [`/v1/policy/describe`](#describe-policy)               | Fetch information about a policy.                           |
+| [`/v1/policy/assign`](#assign-policy)                   | Assign a policy to an identity.                             |
+| [`/v1/policy/write`](#write-policy)                     | Create or overwrite a policy.                               |
+| [`/v1/policy/read`](#read-policy)                       | Fetch a policy.                                             |
+| [`/v1/policy/list`](#list-policy)                       | List policies.                                              |
+| [`/v1/policy/delete`](#list-policy)                     | Delete a policy.                                            |
+| [**Identity API**](#identity-api)                       |                                                             |
+| [`/v1/identity/describe`](#describe-odentity)           | Fetch information about an identity.                        |
+| [`/v1/identity/self/describe`](#self-describe-identity) | Fetch information about the identity issuing the request.   |
+| [`/v1/identity/delete`](#delete-identity)               | Delete an identity.                                         |
+| [`/v1/identity/list`](#list-identity)                   | List identities.                                            |
+| [**Log API**](#log-api)                                 |                                                             |
+| [`/v1/log/audit`](#audit-log)                           | Subscribe to the audit log.                                 |
+| [`/v1/log/error`](#error-log)                           | Subscribe to the error log.                                 |
 
 
 ### Version
@@ -46,16 +48,13 @@ draft: false
 
 Get the KES server version information.
 
-<details><summary>Response Type</summary>
+#### Format
 
 ```
 {
     "version": string
 }
 ```
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -72,7 +71,6 @@ $ curl \
   "version": "0.18.0"
 }
 ```
-</details>
 
 ### API
 
@@ -82,7 +80,7 @@ $ curl \
 
 Get a list of API endpoints supported by the server.
 
-<details><summary>Response Type</summary>
+#### Format
 
 ```
 [
@@ -94,9 +92,6 @@ Get a list of API endpoints supported by the server.
   }
 ]
 ```
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -268,7 +263,6 @@ $ curl \
   }
 ]
 ```
-</details>
 
 ### Metrics
 
@@ -276,12 +270,12 @@ $ curl \
 |:--------:|:------------------------:|
 | `GET`    | `/v1/metrics`            |
 
-Get server metrics. For example, the total number of requests.
-The metrics are exposed in the [Prometheus exposition format](https://prometheus.io/docs/instrumenting/exposition_formats/).
+Get server metrics. 
 
-<details><summary>Response Type</summary>
+For example, the total number of requests.
+Metrics return in the [Prometheus exposition format](https://prometheus.io/docs/instrumenting/exposition_formats/).
 
-```
+```sh
 # TYPE kes_http_request_active gauge
 kes_http_request_active 0
 
@@ -318,9 +312,6 @@ kes_log_error_events 0
 # TYPE kes_system_up_time gauge
 kes_system_up_time 0
 ```
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -332,7 +323,7 @@ $ curl \
 ```
 
 #### Sample Response
-```
+```bash
 # HELP kes_http_request_active Number of active requests that are not finished, yet.
 # TYPE kes_http_request_active gauge
 kes_http_request_active 0
@@ -370,7 +361,6 @@ kes_log_error_events 59
 # TYPE kes_system_up_time gauge
 kes_system_up_time 837876.75
 ```
-</details>
 
 ### Status
 
@@ -378,13 +368,12 @@ kes_system_up_time 837876.75
 |:--------:|:------------------------:|:------------------:|
 | `GET`    | `/v1/status`             | `application/json` |
 
-Get the current status of the KES server. It returns 200 OK and a JSON document that describes
-status-related server information, like its uptime, if the KES server is up and ready to serve
-requests.
+Get the current status of the KES server. 
+If the server is up, the request returns `200 OK` and a JSON document that describes status-related server information.
 
-<details><summary>Response Type</summary>
+#### Format
 
-```
+```json
 {
     "version": string
     "uptime" : number       // in seconds
@@ -394,9 +383,6 @@ requests.
     }
 }
 ```
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -417,9 +403,6 @@ $ curl \
   }
 }
 ```
-</details>
-
-***
 
 ## Key API
 
@@ -431,9 +414,6 @@ $ curl \
 
 Create a new cryptographic key.
 
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -443,7 +423,6 @@ $ curl \
     --request POST \
     'https://play.min.io:7373/v1/key/create/my-key'
 ```
-</details>
 
 ### Import Key
 
@@ -453,16 +432,13 @@ $ curl \
 
 Import a cryptographic key into the KES server.
 
-<details><summary>Request Type</summary>
+#### Format
 
-```
+```json
 {
    "bytes": string   // base64-encoded byte-string
 }
 ```
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -473,7 +449,6 @@ $ curl \
     --data '{"bytes":"uNta318uv2GvEmMs5U4HiIWE/GtrpADR0cYZg+nhrkI="}' \
     'https://play.min.io:7373/v1/key/import/my-key'
 ```
-</details>
 
 ### Delete Key
 
@@ -483,11 +458,9 @@ $ curl \
 
 Delete a new cryptographic key.
 
-Please note that is a dangerous operations. Once a key has been deleted all
-data that has been encrypted with it cannot be decrypted anymore, and therefore,
-is lost.
-
-<details><summary>Example</summary>
+**Warning:** This is a dangerous operation. 
+You cannot decrypt any data encrypted by a key after deleting the key.
+This operation may cause data loss.
 
 #### Sample Request
 ```bash
@@ -497,7 +470,6 @@ $ curl \
     --request DELETE \
     'https://play.min.io:7373/v1/key/delete/my-key'
 ```
-</details>
 
 ### List Keys
 
@@ -506,11 +478,11 @@ $ curl \
 | `GET`    | `/v1/key/list/<pattern>`    | `application/x-ndjson` |
 
 List all key names that match the specified pattern.
-In particular, the pattern `*` lists all keys.
+The pattern `*` lists all keys.
 
-<details><summary>Response Type</summary>
+#### Format
 
-```
+```json
 {
    "name"      : string
    "created_at": string    // optional, time (RFC 3339) with sub-second precision
@@ -518,9 +490,6 @@ In particular, the pattern `*` lists all keys.
    "error"     : string    // optional
 }
 ```
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -543,7 +512,6 @@ $ curl \
   "name": "my-key2"
 }
 ```
-</details>
 
 ### Generate Key
 
@@ -551,36 +519,30 @@ $ curl \
 |:--------:|:---------------------------:|:------------------:|
 | `POST`   | `/v1/key/generate/<name>`   | `application/json` |
 
-Generate a new data encryption key (DEK). The DEK is a plaintext-ciphertext pair.
-The plaintext is randomly generated key that can be used for cryptographic operations.
-For example, encrypting some data.
-The ciphertext is the plaintext encrypted with the key (`<name>`) at the KES server.
-Since this key never leaves the KES server, only the KES server can decrypt the
-generated ciphertext.
+Generate a new data encryption key (DEK). 
 
-An application should use the plaintext DEK for a cryptographic operation and should
-remember the ciphertext DEK and which key (`<name>`) was used. 
+The DEK is a *plaintext-ciphertext* pair.
+The *plaintext* is a randomly generated key that can be used for cryptographic operations, such as encrypting data.
+The *ciphertext* is the plaintext encrypted with the key `<name>` at the KES server.
+Since this key never leaves the KES server, only the KES server can decrypt the generated *ciphertext*.
 
-<details><summary>Request Type</summary>
+An application should use the plaintext DEK for a cryptographic operation.
+The application should remember both the ciphertext DEK and which key `<name>` was used. 
 
-```
+#### Format
+
+```json
 {
    "context": string    // optional, base64-encoded byte-string
 }
 ```
-</details>
 
-<details><summary>Response Type</summary>
-
-```
+```json
 {
    "plaintext" : string    // base64-encoded byte-string
    "ciphertext": string    // base64-encoded byte-string
 }
 ```
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -599,7 +561,6 @@ $ curl \
   "ciphertext": "eyJhZWFkIjoiQUVTLTI1Ni1HQ00iLCJpdiI6ImJWbHRZVDdpUEtxUjNFYWpvaHp3cmc9PSIsIm5vbmNlIjoiSWxqaHBNcWViUUF5d1MxbyIsImJ5dGVzIjoiYlpNL1liU0E4ZSswVnFSUDhaR2UvdDJHQThrbzRBeXcwNGZBam1KWkIxKzk2OTg4VXYwcFJmRjEvS3poM1hGeCJ9"
 }
 ```
-</details>
 
 ### Encrypt Key
 
@@ -607,30 +568,24 @@ $ curl \
 |:--------:|:---------------------------:|:------------------:|
 | `POST`   | `/v1/key/encrypt/<name>`    | `application/json` |
 
-Decrypts and authenticates a (small) plaintext with the cryptographic key.
-The plaintext must not exceed 1 MB. The **Encrypt Key** endpoint is mainly
-used for wrapping small data. For example another cryptographic key.
+Decrypts and authenticates a small plaintext with the cryptographic key.
+The plaintext must not exceed 1 MB. 
+Use the **Encrypt Key** endpoint for wrapping small data, such as another cryptographic key. 
 
-<details><summary>Request Type</summary>
+#### Format
 
-```
+```json
 {
    "plaintext": string    // base64-encoded byte string
    "context"  : string    // optional, base64-encoded byte-string
 }
 ```
-</details>
 
-<details><summary>Response Type</summary>
-
-```
+```json
 {
    "ciphertext": string    // base64-encoded byte-string
 }
 ```
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -648,7 +603,6 @@ $ curl \
   "ciphertext": "eyJhZWFkIjoiQUVTLTI1Ni1HQ00tSE1BQy1TSEEtMjU2IiwiaXYiOiIwUXJ0alUvWDJtUEtUK3A1R3JwdktRPT0iLCJub25jZSI6ImpxOGliYXVxKzY0dEZBM0kiLCJieXRlcyI6Im1MQ21hdzVxQW9acXpwOTJoMjZuRTJWR01BVkdCTTlJalNtT05SYz0ifQ=="
 }
 ```
-</details>
 
 ### Decrypt Key
 
@@ -656,29 +610,22 @@ $ curl \
 |:--------:|:---------------------------:|:------------------:|
 | `POST`   | `/v1/key/decrypt/<name>`    | `application/json` |
 
-Decrypt a ciphertext with the cryptographic key. It returns the corresponding
-plaintext if and only if the ciphertext is authentic and has been produced by the named key.
+Decrypts a ciphertext with the cryptographic key. 
+Returns the corresponding plaintext if and only if the ciphertext is authentic and has been produced by the named key.
 
-<details><summary>Request Type</summary>
-
-```
+#### Format
+```json
 {
    "ciphertext": string    // base64-encoded byte string
    "context"   : string    // optional, base64-encoded byte-string
 }
 ```
-</details>
 
-<details><summary>Response Type</summary>
-
-```
+```json
 {
    "plaintext": string    // base64-encoded byte-string
 }
 ```
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -696,7 +643,6 @@ $ curl \
   "plaintext": "TIDXCHZxPr84r7ktggCCW7otoz5T4zsRENi4THCjXPo="
 }
 ```
-</details>
 
 ### Bulk Decrypt Key
 
@@ -704,12 +650,10 @@ $ curl \
 |:--------:|:--------------------------------:|:------------------:|
 | `POST`   | `/v1/key/bulk/decrypt/<name>`    | `application/json` |
 
-Decrypt a list of ciphertexts with the cryptographic key. It returns the corresponding
-plaintexts if and only if all ciphertexts are authentic and has been produced by the named key.
+Decrypt a list of ciphertexts with the cryptographic key. 
+Returns the corresponding plaintexts if and only if all ciphertexts are authentic and were produced by the named key.
 
-<details><summary>Request Type</summary>
-
-```
+```json
 [
   {
      "ciphertext": string    // base64-encoded byte string
@@ -717,20 +661,15 @@ plaintexts if and only if all ciphertexts are authentic and has been produced by
   }
 ]
 ```
-</details>
 
-<details><summary>Response Type</summary>
-
-```
+#### Format
+```json
 [
   {
     "plaintext": string    // base64-encoded byte-string
   }
 ]
 ```
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -753,9 +692,6 @@ $ curl \
   }
 ]
 ```
-</details>
-
-***
 
 ## Policy API
 
@@ -765,22 +701,16 @@ $ curl \
 |:--------:|:-------------------------------:|:------------------:|
 | `GET`    | `/v1/policy/describe/<policy>`  | `application/json` |
 
-Describes a policy by returning its metadata - e.g. who created the
-policy at which point in time.
+Describes a policy by returning its metadata.
+For example, retrieves who created the policy and when did they create it.
 
-<details><summary>Response Type</summary>
-
-```
+#### Format
+```json
 {
    "created_at": string    // RFC 3339 encoded timestamp
    "created_by": string    // KES identity
 }
 ```
-
-</details>
-
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -799,32 +729,26 @@ $ curl \
 }
 ```
 
-</details>
-
 ### Assign Policy
 
 | Method   | Path                            | Content-Type       |
 |:--------:|:-------------------------------:|:------------------:|
 | `POST`   | `/v1/policy/assign/<policy>`    | `application/json` |
 
-Assign a policy to an identity. An identity can have at most one policy
-while the same policy can be assigned to multiple identities.
+Assign a policy to an identity. 
+An identity can have at most one assigned policy.
+You can assign a policy to multiple identities.
 
-The assigned policy defines which API calls this identity can perform.
-It's not possible to assign a policy to the admin identity. Further,
-an identity cannot assign a policy to itself.
+The assigned policy defines which API calls an identity can perform.
+- You cannot assign a policy to the admin identity. 
+- An identity cannot assign a policy to itself.
 
-<details><summary>Request Type</summary>
-
-```
+#### Format
+```json
 {
    "identity": string    // KES identity
 }
 ```
-</details>
-
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -836,8 +760,6 @@ $ curl \
     'https://play.min.io:7373/v1/identity/assign/my-policy'
 ```
 
-</details>
-
 ### Write Policy
 
 | Method   | Path                        | Content-Type       |
@@ -846,17 +768,13 @@ $ curl \
 
 Create or update a policy at the KES server.
 
-<details><summary>Request Type</summary>
-
-```
+#### Format
+```json
 {
    "allow": [string]   // optional
    "deny" : [string]   // optional
 }
 ```
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -867,7 +785,6 @@ $ curl \
     --data '{"allow":["/v1/key/generate/my-key","/v1/key/decrypt/my-key"]}' \
     'https://play.min.io:7373/v1/policy/write/my-policy'
 ```
-</details>
 
 ### Read Policy
 
@@ -877,18 +794,13 @@ $ curl \
 
 Get a policy from the KES server.
 
-<details><summary>Response Type</summary>
-
-```
+#### Format
+```json
 {
    "allow": [string]   // optional
    "deny" : [string]   // optional
 }
 ```
-</details>
-
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -908,7 +820,6 @@ $ curl \
   ]
 }
 ```
-</details>
 
 ### List Policy
 
@@ -917,11 +828,10 @@ $ curl \
 | `GET`    | `/v1/policy/list/<pattern>` | `application/x-ndjson` |
 
 List all policy metadata that match the specified pattern.
-In particular, the pattern `*` lists all policy metadata.
+Use the pattern `*` to list all policy metadata.
 
-<details><summary>Response Type</summary>
-
-```
+#### Format
+```json
 {
    "name"      : string
    "created_at": string    // optional, time (RFC 3339) with sub-second precision
@@ -929,9 +839,6 @@ In particular, the pattern `*` lists all policy metadata.
    "error"     : string    // optional
 }
 ```
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -955,7 +862,6 @@ $ curl \
   "created_by": "3ecfcdf38fcbe141ae26a1030f81e96b753365a46760ae6b578698a97c59fd22"
 }
 ```
-</details>
 
 ### Delete Policy
 
@@ -963,11 +869,9 @@ $ curl \
 |:--------:|:----------------------------:|:------------------:|
 | `DELETE` | `/v1/policy/delete/<policy>` | `application/json` |
 
-Delete a policy from KES server.
+Delete a policy from the KES server.
 
-All identities that have been assigned to this policy will lose all authorization privileges.  
-
-<details><summary>Example</summary>
+**Caution:** All identities assigned to this policy  lose all authorization privileges.  
 
 #### Sample Request
 ```bash
@@ -977,9 +881,6 @@ $ curl \
     --request DELETE \
     'https://play.min.io:7373/v1/policy/delete/my-policy'
 ```
-</details>
-
-***
 
 ## Identity API
 
@@ -989,12 +890,12 @@ $ curl \
 |:--------:|:----------------------------------:|:------------------:|
 | `GET`    | `/v1/identity/describe/<identity>` | `application/json` |
 
-Describes an identity by returning its metadata - e.g. which policy
-is currently assigned and whether its an admin identity.
+Describes an identity by returning its metadata.
+For example, use this endpoint to determine the currently assigned policy or whether it is an admin identity.
 
-<details><summary>Response Type</summary>
+#### Format
 
-```
+```json
 {
    "policy"    : string    // Name of assigned policy. Empty if admin is true
    "admin"     : boolean   // True if the identity is an admin
@@ -1002,10 +903,6 @@ is currently assigned and whether its an admin identity.
    "created_by": string    // KES identity
 }
 ```
-
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -1026,25 +923,22 @@ $ curl \
 }
 ```
 
-</details>
-
 ### Self Describe Identity
 
 | Method   | Path                         | Content-Type       |
 |:--------:|:----------------------------:|:------------------:|
 | `GET`    | `/v1/identity/self/describe` | `application/json` |
 
-Describes the identity issuing the request. It infers the identity from
-the TLS client certificate used to authenticate. It returns the identity
-and policy information for the client identity.
+Describes the identity issuing the request. 
+It infers the identity from the TLS client certificate used to authenticate. 
+It returns the identity and policy information for the client identity.
 
-The self-describe API endpoint is publicly available and does not
-require any special permissions. Any client can query its own identity
-and policy information.
+The self-describe API endpoint is publicly available and does not require any special permissions. 
+Any client can query its own identity and policy information.
 
-<details><summary>Response Type</summary>
+#### Format
 
-```
+```json
 {
    "identity"   : string    // KES identity issuing the request
    "policy_name": string    // Name of assigned policy. Empty if admin is true
@@ -1057,10 +951,6 @@ and policy information.
    }
 }
 ```
-
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -1084,8 +974,6 @@ $ curl \
 }
 ```
 
-</details>
-
 ### Delete Identity
 
 | Method   | Path                             | Content-Type       |
@@ -1094,11 +982,8 @@ $ curl \
 
 Deletes an identity from the KES server.
 
-The client certificate that corresponds to the identity
-is no longer authorized to perform any API operations.
-The admin identity cannot be deleted.
-
-<details><summary>Example</summary>
+The client certificate that corresponds to the identity is no longer authorized to perform any API operations.
+You cannot delete the admin identity.
 
 #### Sample Request
 ```bash
@@ -1108,7 +993,6 @@ $ curl \
     --request DELETE \
     'https://play.min.io:7373/v1/identity/delete/a4eac2d875d60ef25b068965c4e850aac074028dc576f3699276c6ea0ae1828f'
 ```
-</details>
 
 ### List Identity
 
@@ -1117,11 +1001,10 @@ $ curl \
 | `GET`    | `/v1/identity/list/<pattern>` | `application/x-ndjson` |
 
 List all identity metadata hat match the specified pattern.
-In particular, the pattern `*` lists all identity metadata.
+Use the pattern `*` to list all identity metadata.
 
-<details><summary>Response Type</summary>
-
-```
+#### Format
+```json
 {
    "identity"  : string    // KES identity
    "policy"    : string
@@ -1130,9 +1013,6 @@ In particular, the pattern `*` lists all identity metadata.
    "error"     : string    // optional
 }
 ```
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -1156,9 +1036,6 @@ $ curl \
   "created_at": "2022-03-02T12:27:47.554596Z",
 }
 ```
-</details>
-
-***
 
 ## Log API
 
@@ -1168,11 +1045,10 @@ $ curl \
 |:--------:|:----------------------------:|:----------------------:|
 | `GET`    | `/v1/log/audit`              | `application/x-ndjson` |
 
-Connect to the KES server audit log such that all new audit events are streamed to the client.
+Connect to the KES server audit log such that all new audit events stream to the client.
 
-<details><summary>Response Type</summary>
-
-```
+#### Format
+```json
 {
     "time"    : string
     "request" : {
@@ -1186,9 +1062,6 @@ Connect to the KES server audit log such that all new audit events are streamed 
     }
 }
 ```
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
@@ -1205,7 +1078,6 @@ $ curl \
 {"time":"2020-02-06T16:52:18Z","request":{"path":"/v1/policy/list/*","identity":"dd46485bedc9ad2909d2e8f9017216eec4413bc5c64b236d992f7ec19c843c5f"},"response":{"code":200, "time":28088}}
 {"time":"2020-02-06T16:52:25Z","request":{"path":"/v1/identity/list/*","identity":"dd46485bedc9ad2909d2e8f9017216eec4413bc5c64b236d992f7ec19c843c5f"},"response":{"code":200, "time":16476}}
 ```
-</details>
 
 ### Error Log
 
@@ -1214,18 +1086,14 @@ $ curl \
 | `GET`    | `/v1/log/error`              | `application/x-ndjson` |
 
 
-Connect to the KES server error log such that all new error events are streamed to the client.
+Connect to the KES server error log such that all new error events stream to the client.
 
-<details><summary>Response Type</summary>
-
-```
+#### Format
+```json
 {
     "message": string
 }
 ```
-</details>
-
-<details><summary>Example</summary>
 
 #### Sample Request
 ```bash
