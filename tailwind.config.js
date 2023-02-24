@@ -113,8 +113,8 @@ module.exports = {
 							content: '""',
 						},
 						li: {
-							marginTop: "0.25em",
-							marginBottom: "0.25em",
+							marginTop: "0",
+							marginBottom: "0",
 						},
 					},
 				},
