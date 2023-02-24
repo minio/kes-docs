@@ -1,0 +1,22 @@
+{{ $title := default (.Get "title") }}
+{{ $classList := default "note" }}
+
+{{ if eq (.Get "type") "note" }}
+	{{ $classList = "text-[#1467c2] dark:text-blue-500 border-blue-500/20 bg-blue-500/10 selection:bg-blue-200 dark:selection:bg-blue-500/10" }}
+{{ else if eq (.Get "type") "tip" }}
+	{{ $classList = "text-green-600 border-green-500/20 bg-green-500/5 selection:bg-green-200 dark:selection:bg-green-500/10" }}
+{{ else if eq (.Get "type") "caution" }}
+	{{ $classList = "text-amber-600 border-amber-500/20 bg-amber-500/5 selection:bg-amber-200 dark:selection:bg-amber-500/10" }}
+{{ else if eq (.Get "type") "warning" }}
+	{{ $classList = "text-red-500 dark:text-red-500/80 border-red-500/20 bg-red-500/5 selection:bg-red-200 dark:selection:bg-red-500/10" }}
+{{ end }}
+
+
+<div class="{{ $classList }} my-5 rounded-md border px-5 py-4 text-md leading-normal [&_p]:mb-0 [&_p]:mt-2">
+	{{ if $title }}
+		<div class="mb-2 text-md font-bold">{{ $title }}:</div>
+	{{ end }}
+	<div class="text-md [&_*]:text-current [&_a]:underline [&_a]:decoration-1 [&_a]:underline-offset-4 [&_a]:hover:text-current [&_li]:marker:text-current">
+		{{ .Inner | $.Page.RenderString }}
+	</div>
+</div>
