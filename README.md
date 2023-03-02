@@ -99,6 +99,24 @@ Use with caution.
 {{< /admonition >}}
 ```
 
+## Tabs
+
+Tabbed-view navigation is supported using the following shortcode.
+
+```
+{{< tabs "uniqueid" >}}
+{{< tab "tab 1 title" >}} 
+  tab 1 Content 
+{{< /tab >}}
+{{< tab "tab 2 title" >}} 
+  tab 2 Content 
+{{< /tab >}}
+...
+{{< /tabs >}}
+```
+
+Pleaste note that the `uniqueid` must be unique for each tab group.
+
 ## Frontmatter
 
 We use YAML-formatted [front matter](https://gohugo.io/content-management/front-matter/).

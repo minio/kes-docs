@@ -1,4 +1,5 @@
 import { header } from "./header";
+import { imagePreview } from "./imagePreview";
 import { siteSearch } from "./search";
 import { sidebar } from "./sidebar";
 import { toc } from "./toc";
@@ -14,3 +15,6 @@ sidebar();
 
 // TOC
 toc();
+
+// Image preview
+imagePreview();
