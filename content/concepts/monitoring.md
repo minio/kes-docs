@@ -36,8 +36,9 @@ Use the following steps to get started monitoring KES with Prometheus.
        identities:
        - 2169daa644eb18b41d85214a20f7272d449e85ef4f1bf3e2609fbe3fa7ca00cd # Use the identity of your client.crt
    ```
-
-   **Note:** Restart the KES server after modifying the configuration file.
+   {{< admonition type="note" >}}
+   Restart the KES server after modifying the configuration file.
+   {{< /admonition >}}
 
 3. Create Prometheus Scrape Config
 
@@ -64,5 +65,5 @@ After the KES and Prometheus servers start, Prometheus should detect and display
 
 ## References
 
- - [**Server API Doc**]({{< relref "server-api.md" >}})
- - [**Go SDK Doc**](https://pkg.go.dev/github.com/minio/kes)
+ - [Server API Doc]({{< relref "server-api.md" >}})
+ - [Go SDK Doc](https://pkg.go.dev/github.com/minio/kes)

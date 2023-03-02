@@ -32,8 +32,10 @@ The audit log contains one log entry for each server API operation.
 {"time":"2020-03-24T12:37:33Z","request":{"path":"/v1/key/create/my-key","identity":"dd46485bedc9ad2909d2e8f9017216eec4413bc5c64b236d992f7ec19c843c5f"},"response":{"code":200, "time":12106}}
 ```
 
-**Important:** The KES server does **not** record audit logs for operations on the [metrics API]({{< relref "server-api.md#metrics">}}) endpoint. 
+{{< admonition type="caution">}}
+The KES server does **not** record audit logs for operations on the [metrics API]({{< relref "server-api.md#metrics">}}) endpoint. 
 Otherwise, querying the KES server metrics would change the metrics.
+{{< /admonition >}}
 
 ## Configuration Options
 
@@ -54,5 +56,5 @@ KES clients can connect to the error or audit log stream and obtain new log even
 
 ## References
 
- - [**Server API Doc**]({{< relref "server-api.md" >}})
- - [**Go SDK Doc**](https://pkg.go.dev/github.com/minio/kes)
+ - [Server API Doc]({{< relref "server-api.md" >}})
+ - [Go SDK Doc](https://pkg.go.dev/github.com/minio/kes)

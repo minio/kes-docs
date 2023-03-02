@@ -8,15 +8,15 @@ tableOfContents: true
 
 
 ```goat
-                      ╔═══════════════════════════════════════════════╗
-                      ║                               ┌───────────┐   ║
-                      ║                      ╭────────┤   KMS 1   │   ║
-┌────────────┐        ║  ┌────────────┐      │        └───────────┘   ║
-│ KES Client ├────────╫──┤ KES Server ├──────┤⇅                       ║
-└────────────┘        ║  └────────────┘      ┊        ┌───────────┐   ║
-                      ║                      ╰┄┄┄┄┄┄┄┄┤   KMS 2   │   ║
-                      ║                               └───────────┘   ║                  
-                      ╚═══════════════════════════════════════════════╝
+                 +-----------------------------------------+
+                 |                          .---------.    |
+                 |                     +---+   KMS 1   |   |
+ .----------.    |    .----------.     |    '---------'    |
+| KES Client +---+---+ KES Server +----⇅                   |
+ '----------'    |    '----------'     |    .---------.    |
+                 |                     +---+   KMS 2   |   |
+                 |                          '---------'    |                  
+                 +-----------------------------------------+
 ```
 
 ## Concepts
@@ -153,13 +153,17 @@ Instead, the command reports an error if it cannot migrate a key from the source
 
 Use the `--force` flag to overwrite existing keys as part of the migration. 
 
-**Caution:** Overwriting a master key erases the previous key!
+{{< admonition title="CAUTION!" type="caution" >}}
+Overwriting a master key erases the previous key!
+{{< /admonition >}}
 
 #### Merge Keys
 
 Instead of overwriting existing keys at the target KMS, you can also merge the source KMS into the target KMS using `--merge` flag. 
 
-**Note:** `--merge` only migrates master keys that do not exist at the target KMS. 
+{{< admonition type="note">}}
+`--merge` only migrates master keys that do not exist at the target KMS. 
+{{< /admonition >}}
 
 If the source and the target KMS each have keys with the same name but different values, `--merge` does **not** migrate the key. 
 Only use `--merge` when repeating a migration attempt or doing the migration in batches using patterns.

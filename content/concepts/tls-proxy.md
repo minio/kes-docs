@@ -22,7 +22,10 @@ Use a TLS proxy to provide one common TLS endpoint for one or multiple services.
 A set of clients connect to one endpoint served by a TLS proxy.
 The proxy, in turn, forwards the requests to the actual service(s). 
 
-**Tip:** Some common TLS proxies include [HAProxy](https://www.haproxy.com/) or [Nginx](https://www.nginx.com/)
+
+{{< admonition type="tip">}}
+Some common TLS proxies include [HAProxy](https://www.haproxy.com/) or [Nginx](https://www.nginx.com/)
+{{< /admonition >}}
 
 Running a TLS proxy between your KES clients and KES servers has some pros and cons:
 
@@ -89,7 +92,6 @@ On KES servers that accept requests from TLS proxies:
 - Enable audit logging. 
   Configure the KES server to log all API calls as audit events to an audit log.
    
-
 ## Tutorials
 
 ### Configure NGINX
@@ -208,7 +210,9 @@ You must add the NGINX identify to the list of TLS proxies on the KES server.
      ```sh
      kes policy list -k
      ```
-      
-     **Note:** You can only perform operations if the policy attached to your identity allows them.
+     {{< admonition type="note">}}
+     You can only perform operations if the policy attached to your identity allows them.
      If you act as the `root` identity because you have set `KES_CLIENT_TLS_CERT_FILE` to the root certificate file, then you should be able to perform any operation. 
      If you act as another identity that does not have the policy permission to list all policies then the KES server will reject the request with a `prohibited by policy` error.
+     {{< /admonition >}}
+     

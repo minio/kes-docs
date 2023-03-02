@@ -6,10 +6,10 @@ draft: false
 tableOfContents: true
 ---
 
-This section gives a high-level overview of how KES works. 
-It contains information about KES components, general architecture, and access controls. 
+Welcome to the KES documentation site.
+These pages give a high-level overview of how KES works, information about KES components, general architecture, and access controls. 
 
-For more detailed documentation, see the [Configuration Guide]({{< relref "/tutorials/configuration.md" >}}).
+For more detailed documentation on setting up KES, see the [Configuration Guide]({{< relref "/tutorials/configuration.md" >}}).
 
 ## Components
 
@@ -86,10 +86,13 @@ In case of mTLS the client certificate must have an Extended Key Usage containin
 Similarly, the server certificate has to have an Extended Key Usage containing `Server Authentication`. 
 If your setup is not working as expected, check that the certificates contain the correct Extended Key Usage values.
 
-> ProTip: You can view a certificate in a human-readable format via:
-> ```sh
-> openssl x509 -noout -text -in <your-certificate.cert>
-> ```
+{{< admonition type="tip" >}}
+View a certificate in a human-readable format with the following command:
+
+```sh
+openssl x509 -noout -text -in <your-certificate.cert>
+```
+{{< /admonition >}}
 
 ### Authentication
 In general, a KES server only accepts TLS connections from clients that can present a valid and authentic TLS certificate (📜) during the TLS handshake.
@@ -102,7 +105,7 @@ When a KES client tries to establish a connection to the KES server, the TLS pro
    certificate (📜) presented by the client.
  - The certificate presented by a client was issued by a Certificate Authority (CA) that the KES server trusts.
 
-**=>** *If the TLS handshake succeeds then the KES server considers the request authentic.*
+If the TLS handshake succeeds, then the KES server considers the request authentic.
 
 #### Disabling Authentication During Testing
 
@@ -112,7 +115,10 @@ It is possible to skip the certificate verification during testing or developmen
 2. Then clients still provide a certificate, but the server does not verify whether the certificate has been issued by a trusted CA. 
    Instead, the client can present a self-signed certificate.  
 
-**CA-issued certificates are highly recommended for production deployments. Only use `--auth=off` for testing or development.**
+{{< admonition type="caution" >}}
+CA-issued certificates are highly recommended for production deployments. 
+Only use `--auth=off` for testing or development.
+{{< /admonition >}}
 
 ### Authorization 
 
@@ -125,10 +131,12 @@ After computing the identity, the KES server checks whether the identity has an 
 If such an identity-policy mapping exists, the KES server validates that the request complies with the policy. 
 Otherwise, the server rejects the request. 
 
-**=>** *The KES server considers a request as authorized if the following statements are true:*
+{{< admonition type="note">}}
+The KES server considers a request as authorized if the following statements are true:
  - *An identity successfully computed from the client's certificate.*
  - *A policy associated to the identity exists.*
  - *The associated policy explicitly allows the operation that the request wants to perform.*
+{{< /admonition >}}
 
 ### Policies
 
@@ -236,8 +244,9 @@ This can be done by specifying a *`root`* identity value that will **never** be 
 For example `--root=_` (underscore) or `--root=disabled`.
 Since KES does not ever compute a cryptographic identity to `_` or `disabled`, it becomes impossible to perform an operation as *`root`*.
 
-**Note:**
+{{< admonition type="note" >}}
 Even though *`root`* can perform arbitrary API operations, it cannot change the *`root`* identity itself.
 The *`root`* identity can only be specified or changed through the CLI or the configuration file. 
 Therefore, an attacker cannot become the *`root`* identity by tricking the current *`root`*. 
 The attacker either has to compromise the *`root`* identity's private key or change the initial server configuration.
+{{< /admonition >}}
