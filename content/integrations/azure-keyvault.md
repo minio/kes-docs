@@ -1,268 +1,266 @@
 ---
-title: Azure KeyVault
+title: Azure Key Vault
 date: 2023-02-08
+lastmod: :git
 draft: false
+tableOfContents: true
 ---
 
-This guide shows how to setup a KES server that uses Azure KeyVault as a persistent key store:
+This tutorial explains how to setup a KES Server to use [Azure Key Vault](https://azure.microsoft.com/en-us/products/key-vault/) as the persistent key store:
 
-```
-                         ╔══════════════════════════════════════════════╗
-┌────────────┐           ║  ┌────────────┐          ┌────────────────┐  ║
-│ KES Client ├───────────╫──┤ KES Server ├──────────┤ Azure KeyVault │  ║
-└────────────┘           ║  └────────────┘          └────────────────┘  ║
-                         ╚══════════════════════════════════════════════╝
-```
-
-***
-
-
-### Azure KeyVault
-
-[Azure KeyVault](https://azure.microsoft.com/services/key-vault) is a managed KMS that provides a secret store that can be used by KES.
-
-An external application, i.e. KES, that wants to store and access secrets in Azure KeyVault, has to be registered in [Azure Active Directory](https://azure.microsoft.com/services/active-directory) and needs client credentials. 
-
-<details open="true"><summary><b>1. Active Directory Service</b></summary>
-
-First navigate to your Active Directory service.
-
-![Step 1](https://raw.githubusercontent.com/wiki/minio/kes/images/azure-keyvault-step1.png)
-
-</details>
-
-<details><summary><b>2. Register KES App</b></summary>
-
-Then go to App registrations and register a new application for KES.
-
-![Step 2](https://raw.githubusercontent.com/wiki/minio/kes/images/azure-keyvault-step2.png)
-
-Now, you can give the application a name - e.g. `KES-Demo` and register it. 
-Once completed, Azure will show you some details about your newly registered application. 
-
-![Step 3](https://raw.githubusercontent.com/wiki/minio/kes/images/azure-keyvault-step3.png)
-
-Some important fields are:
- - The application or client ID
- - The directory or tenant ID
- - The client credentials
-
-The application directory ID will be UUIDs - like `c3b7badf-cd2b-4297-bece-4de5f2e575f6`.
-However, there should be no client credentials, yet. So, we need to create a client secret for your KES server.
-
-</details>
-
-<details><summary><b>3. Create Client Secret</b></summary>
-
-Here, we select a client secret that we can give a name - e.g. `KES-Demo` - and select an expiry - e.g. 12 months:
-
-![Step 5](https://raw.githubusercontent.com/wiki/minio/kes/images/azure-keyvault-step5.png)
-
-Once completed, Azure will should a new secret with the chosen description and expiry. 
-**Make sure to copy the secret value. It may not be shown to you again.**
-This secret value will be required later by KES to authenticate to Azure KeyVault.
-
-</details>
-
-<details><summary><b>4. Application Summary</b></summary>
-
-After navigating back to the application overview, Azure will show that the application now has one secret.
-
-![Step 6](https://raw.githubusercontent.com/wiki/minio/kes/images/azure-keyvault-step6.png)
-
-At this point you should have the following information about your Azure application:
- - The application / client ID. Here, `c3b7badf-cd2b-4297-bece-4de5f2e575f6`.
- - The directory / tenant ID. Here, `41a37d4e-b3c4-49f4-b330-1114fb0271c8`.
- - The value of the newly created secret. Here, `-.j4XP6Sa7E39.KWn-SL~Dgbz~H-H-TPxT`.
-
-</details>
-
-<details><summary><b>5. Navigate to KeyVault Policy Tab</b></summary>
-
-Now, we can define which KeyVault API operations our external application (KES server) can perform.
-Therefore, navigate to the `Access policies` tab of your KeyVault instance and add a new access policy.
-
-![Step 7](https://raw.githubusercontent.com/wiki/minio/kes/images/azure-keyvault-step7.png)
-
-</details>
-
-<details><summary><b>6. Create KeyVault Policy</b></summary>
-
-Here, we specify which KeyVault API your application has access to. Select the following five `Secret permissions`:
-
-![Step 8](https://raw.githubusercontent.com/wiki/minio/kes/images/azure-keyvault-step8.png)
-
-</details>
-
-<details><summary><b>6. Assign Policy to Principal</b></summary>
-
-Finally, we have to select a principal or an authorized application. The principal can either be the application itself - then no authorized application has to be selected. Alternatively, we can select a user or group as principal and select our newly registered KES Azure application as authorized application.
-
-Here, we just set the principal. Therefore, we just search for the name of our application (`KES-Demo`), or insert the application UUID.
-
-![Step 6](https://raw.githubusercontent.com/wiki/minio/kes/images/azure-keyvault-step9.png)
-
-</details>
-
-<details><summary><b>7. Policy Summary</b></summary>
-
-Once added, Azure shows a new access policy associated to our registered KES application.
-
-![Step 6](https://raw.githubusercontent.com/wiki/minio/kes/images/azure-keyvault-step10.png)
-
-***Make sure you hit `Save` before navigating elsewhere.***
-
-</details>
-
-### KES Server Setup
-
-<details><summary><b>1. Generate KES Server Private Key & Certificate</b></summary>
-
-First, we need to generate a TLS private key and certificate for our KES server.
-A KES server can only be run with TLS - since [secure-by-default](https://en.wikipedia.org/wiki/Secure_by_default).
-Here we use self-signed certificates for simplicity.
-
-The following command generates a new TLS private key (`private.key`) and
-a self-signed X.509 certificate (`public.crt`) issued for the IP `127.0.0.1`
-and DNS name `localhost`: 
-
-```sh
-$ kes identity new --ip "127.0.0.1" localhost
-
-  Private key:  private.key
-  Certificate:  public.crt
-  Identity:     2e897f99a779cf5dd147e58de0fe55a494f546f4dcae8bc9e5426d2b5cd35680
+```goat
+                   +------------------------------------------+
+ .----------.      |   .----------.       .---------------.   |
+| KES Client +-----+--+ KES Server +-----+ Azure Key Vault |  |
+ '----------'      |   '----------'       '---------------'   |
+                   +------------------------------------------+
 ```
 
-> If you already have a TLS private key & certificate - e.g. from a WebPKI or internal
-> CA - you can use them instead. Remember to adjust the `tls` config section later on.
+## Azure Key Vault
+
+Azure Key Vault is a managed KMS service that provides a secret store that can be used by KES.
+
+As an external application, you must register KES in [Azure Active Directory](https://azure.microsoft.com/services/active-directory) and have client credentials to store and access secrets in Azure Key Vault. 
+
+1. Active Directory Service
+
+   - Navigate to **Azure Active Directory** and select **App registrations**.
+   
+     ![Step 1](/images/azure-keyvault-step1.png)
+
+     ![Step 1](/images/azure-keyvault-step2.png)
+
+   - Select **New registration**
+
+2. Register KES App
+
+   Give the application a name, such as `KES-Demo`, and register it. 
+   Once completed, Azure will show you some details about your newly registered application. 
+   
+   ![Step 3](/images/azure-keyvault-step3.png)
+   
+   Take note of the following fields to use later:
+   - Application (client) ID
+   - Directory (tenant) ID
+   
+   These fields contain universally unique identifiers (UUIDs), similar to `c3b7badf-cd2b-4297-bece-4de5f2e575f6`.
+   
+3. Create Client Secret
+
+   - Select **Add a certificate or secret**
+   - Assign a name, such as `KES-Demo`
+   - Select an expiration
+  
+   Azure creates a new secret with the chosen description and expiry.
+   This secret is required by KES to authenticate to Azure Key Vault.
+
+   {{< admonition type="caution">}}
+   Make sure to copy the secret value. 
+   It may not be shown again.
+   {{< /admonition >}}
+
+   ![Step 5](/images/azure-keyvault-step5.png)
+
+4. Application Summary
+
+   Navigate back to the application overview, and check that Azure shows that the application has one secret.
+   
+   ![Step 6](/images/azure-keyvault-step6.png)
+   
+   You should have the following information:
+   - Application (client) ID
+     
+     In our example images, `c3b7badf-cd2b-4297-bece-4de5f2e575f6`.
+   - Directory (tenant) ID
+
+     In our example images, `41a37d4e-b3c4-49f4-b330-1114fb0271c8`.
+   - The value of the newly created secret
+     
+     In our example images, `-.j4XP6Sa7E39.KWn-SL~Dgbz~H-H-TPxT`.
+   
+5. Add a Key Vault Policy
+
+   Navigate to the Key Vault **Access policies** tab and select **Add Access Policy** to create a Key Vault policy.
+   
+   ![Step 7](/images/azure-keyvault-step7.png)
+
+   Define which Key Vault operations the KES Server can perform.
+   Select the following five `Secret permissions`:
+
+   - Get
+   - List
+   - Set
+   - Delete
+   - Purge
+
+   ![Step 8](/images/azure-keyvault-step8.png)
+
+6. Assign Policy to Principal
+
+   Select a principal or an authorized application. 
+
+   If the application itself is the principal, no authorized application is required. 
+   Alternatively, select a user or group as principal and select the newly registered KES Azure application as the authorized application.
+   
+   For this tutorial, we set the principal as the secret we added. 
+   Search for the name of the application (`KES-Demo`) or add the Application ID.
+   
+   ![Step 6](/images/azure-keyvault-step9.png)
+
+7. Policy Summary
+
+   Azure shows a new access policy associated to our registered KES application.
+   
+   ![Step 7](/images/azure-keyvault-step10.png)
+
+   {{< admonition type="warning" >}}
+   Make sure you **Save** before navigating elsewhere.
+   {{< /admonition >}}
+
+## KES Server Setup
+
+1. Generate KES Server Private Key & Certificate
+
+   The KES server need both a TLS private key and a certificate.
+   A KES server is [secure-by-default](https://en.wikipedia.org/wiki/Secure_by_default) and can only run with TLS.
+   This tutorial uses self-signed certificates for simplicity.
+   
+   The following command generates a new TLS private key (`private.key`) and a self-signed X.509 certificate (`public.crt`) issued for the IP `127.0.0.1` and DNS name `localhost`: 
+   
+   ```sh
+   $ kes identity new --ip "127.0.0.1" localhost
+   
+     Private key:  private.key
+     Certificate:  public.crt
+     Identity:     2e897f99a779cf5dd147e58de0fe55a494f546f4dcae8bc9e5426d2b5cd35680
+   ```
+   
+   {{< admonition type="note">}}
+   If you already have a TLS private key & certificate from WebPKI or an internal CA, you can use them instead. 
+   Remember to adjust the `tls` config section.
+   {{< /admonition >}}
  
-</details>
+2. Generate Client Credentials
 
-<details><summary><b>2. Generate Client Credentials</b></summary>
-
-The client application needs some credentials to access the KES server. The following
-command generates a new TLS private/public key pair:
-```sh
-$ kes identity new --key=client.key --cert=client.crt MyApp
-
-  Private key:  client.key
-  Certificate:  client.crt
-  Identity:     02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b
-```
-
-The identity `02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b`
-is an unique fingerprint of the public key in `client.crt` and you can re-compute
-it anytime:
-```sh
-$ kes identity of client.crt
-
-  Identity:  02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b
-```
-
-</details>
-
-<details><summary><b>3. Configure KES Server</b></summary>
-
-Next, we can create the KES server configuration file: `config.yml`.
-Please, make sure that the identity in the policy section matches
-your `client.crt` identity.
-
-```yaml
-address: 0.0.0.0:7373 # Listen on all network interfaces on port 7373
-
-admin:
-  identity: disabled  # We disable the admin identity since we don't need it in this guide 
+   Use the following command to generate a new TLS private/public key pair for the client application to use to access the KES Server:
    
-tls:
-  key: private.key    # The KES server TLS private key
-  cert: public.crt    # The KES server TLS certificate
+   ```sh
+   $ kes identity new --key=client.key --cert=client.crt MyApp
    
-policy:
-  my-app: 
-    allow:
-    - /v1/key/create/my-key*
-    - /v1/key/generate/my-key*
-    - /v1/key/decrypt/my-key*
-    identities:
-    - 02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b # Use the identity of your client.crt
+     Private key:  client.key
+     Certificate:  client.crt
+     Identity:     02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b
+   ```
    
-keystore:
-     azure:
-       keyvault:
-         endpoint: "https://kes-test-1.vault.azure.net"    # Use your KeyVault instance endpoint.
-         credentials:
-           tenant_id: ""      # The ID of the tenant the client belongs to - e.g: "41a37d4e-b3c4-49f4-b330-1114fb0271c8".
-           client_id: ""      # The ID of the client                       - e.g: "c3b7badf-cd2b-4297-bece-4de5f2e575f6".
-           client_secret: ""  # The value of the client secret             - e.g: "-.j4XP6Sa7E39.KWn-SL~Dgbz~H-H-TPxT".
-```
+   The identity `02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b` is a unique fingerprint of the public key in `client.crt`.
+   You can re-compute the fingerprint at anytime:
+   
+   ```sh
+   $ kes identity of client.crt
+   
+     Identity:  02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b
+   ```
 
-</details>
+3. Configure the KES Server
 
-<details><summary><b>4. Start KES Server</b></summary>
+   Create the KES [server configuration file]({{< relref "/tutorials/configuration.md#config-file" >}}): `config.yml`.
+   Make sure that the identity in the policy section matches your `client.crt` identity.
+   
+   ```yaml
+   address: 0.0.0.0:7373 # Listen on all network interfaces on port 7373
+   
+   admin:
+     identity: disabled  # We disable the admin identity since we don't need it in this guide 
+      
+   tls:
+     key: private.key    # The KES server TLS private key
+     cert: public.crt    # The KES server TLS certificate
+      
+   policy:
+     my-app: 
+       allow:
+       - /v1/key/create/my-key*
+       - /v1/key/generate/my-key*
+       - /v1/key/decrypt/my-key*
+       identities:
+       - 02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b # Use the identity of your client.crt
+      
+   keystore:
+        azure:
+          keyvault:
+            endpoint: "https://kes-test-1.vault.azure.net"    # Use your KeyVault instance endpoint.
+            credentials:
+              tenant_id: ""      # The ID of the tenant the client belongs to - e.g: "41a37d4e-b3c4-49f4-b330-1114fb0271c8".
+              client_id: ""      # The ID of the client                       - e.g: "c3b7badf-cd2b-4297-bece-4de5f2e575f6".
+              client_secret: ""  # The value of the client secret             - e.g: "-.j4XP6Sa7E39.KWn-SL~Dgbz~H-H-TPxT".
+   ```
 
-Now, we can start a KES server instance:
-```
-$ kes server --config config.yml --auth off
-```
+4. Start the KES Server
+   
+   ```
+   $ kes server --config config.yml --auth off
+   ```
+   
+   {{< admonition title="Linux Swap Protection" type="tip" >}}
 
-> On linux, KES can use the [`mlock`](http://man7.org/linux/man-pages/man2/mlock.2.html) syscall
-> to prevent the OS from writing in-memory data to disk (swapping). This prevents leaking senstive
-> data accidentality. The following command allows KES to use the mlock syscall without running
-> with root privileges:
-> ```sh
-> $ sudo setcap cap_ipc_lock=+ep $(readlink -f $(which kes))
-> ```
-> Then, we can start a KES server instance with memory protection:
-> ```
-> $ kes server --config config.yml --auth off --mlock
-> ```
+   In Linux environments, KES can use the [`mlock`](http://man7.org/linux/man-pages/man2/mlock.2.html) syscall to prevent the OS from writing in-memory data to disk (swapping). 
+   This prevents leaking sensitive data.
+   
+   Use the following command to allow KES to use the mlock syscall without running with `root` privileges:
 
-</details>
+   ```sh
+   $ sudo setcap cap_ipc_lock=+ep $(readlink -f $(which kes))
+   ```
 
-### KES CLI Access
+   Start a KES server instance with memory protection:
+   
+   ```
+   $ kes server --config config.yml --auth off --mlock
+   ```
+   {{< /admonition >}}
 
-<details><summary><b>1. Set <code>KES_SERVER</code> Endpoint</a></summary>
+## KES CLI Access
 
-The KES CLI needs to know to which server it should talk to:
-```sh
-$ export KES_SERVER=https://127.0.0.1:7373
-```
+1. Set `KES_SERVER` Endpoint
 
-</details>
+   The following environment variable specifies the server the KES CLI should talk to:
 
-<details><summary><b>2. Use Client Credentials</b></summary>
+   ```sh
+   $ export KES_SERVER=https://127.0.0.1:7373
+   ```
 
-Further, the KES CLI needs some access credentials to talk to a KES server:
-```sh
-$ export KES_CLIENT_CERT=client.crt
-```
-```sh
-$ export KES_CLIENT_KEY=client.key
-```
+2. Define the Client Credentials
 
-</details>
+   The following environment variables set the access credentials the client uses to talk to a KES server:
+   
+   ```sh
+   $ export KES_CLIENT_CERT=client.crt
+   ```
+   ```sh
+   $ export KES_CLIENT_KEY=client.key
+   ```
 
-<details><summary><b>3. Perform Operations</b></summary>
+3. Test the Configuration
+   
+   Perform any API operation allowed by the policy we assigned above. 
+   
+   For example, create a key:
 
-Now, we can perform any API operation that is allowed based on the
-policy we assigned above. For example we can create a key:
-```sh
-$ kes key create my-key-1
-```
+   ```sh
+   $ kes key create my-key-1
+   ```
+   
+   Use the key to generate a new data encryption key:
 
-Then, we can use that key to generate a new data encryption key:
-```sh
-$ kes key dek my-key-1
-{
-  plaintext : UGgcVBgyQYwxKzve7UJNV5x8aTiPJFoR+s828reNjh0=
-  ciphertext: eyJhZWFkIjoiQUVTLTI1Ni1HQ00tSE1BQy1TSEEtMjU2IiwiaWQiOiIxMTc1ZjJjNDMyMjNjNjNmNjY1MDk5ZDExNmU3Yzc4NCIsIml2IjoiVHBtbHpWTDh5a2t4VVREV1RSTU5Tdz09Iiwibm9uY2UiOiJkeGl0R3A3bFB6S21rTE5HIiwiYnl0ZXMiOiJaaWdobEZrTUFuVVBWSG0wZDhSYUNBY3pnRWRsQzJqWFhCK1YxaWl2MXdnYjhBRytuTWx0Y3BGK0RtV1VoNkZaIn0=
-}
-```
+   ```sh
+   $ kes key dek my-key-1
+   {
+     plaintext : UGgcVBgyQYwxKzve7UJNV5x8aTiPJFoR+s828reNjh0=
+     ciphertext: eyJhZWFkIjoiQUVTLTI1Ni1HQ00tSE1BQy1TSEEtMjU2IiwiaWQiOiIxMTc1ZjJjNDMyMjNjNjNmNjY1MDk5ZDExNmU3Yzc4NCIsIml2IjoiVHBtbHpWTDh5a2t4VVREV1RSTU5Tdz09Iiwibm9uY2UiOiJkeGl0R3A3bFB6S21rTE5HIiwiYnl0ZXMiOiJaaWdobEZrTUFuVVBWSG0wZDhSYUNBY3pnRWRsQzJqWFhCK1YxaWl2MXdnYjhBRytuTWx0Y3BGK0RtV1VoNkZaIn0=
+   }
+   ```
+   
+## References
 
-</details>
-
-### References
-
- - [**Server API Doc**](https://github.com/minio/kes/wiki/Server-API)
- - [**Go SDK Doc**](https://pkg.go.dev/github.com/minio/kes)
+ - [Server API Doc]({{< relref "/concepts/server-api" >}})
+ - [Go SDK Doc](https://pkg.go.dev/github.com/minio/kes)

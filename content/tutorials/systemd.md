@@ -1,41 +1,50 @@
 ---
-title: SystemD
+title: systemd
 date: 2023-02-08
+lastmod: :git
 draft: false
+tableOfContents: true
 ---
 
-The SystemD section shows how to create a systemd service for KES on Linux systems.
+This tutorial explains how to create a `systemd` service for KES on Linux systems.
 
-### 1. Install 
+## Install 
 
-First, [download](https://github.com/minio/kes/releases/latest) the binary for your architecture and OS.
-For example on `linux/amd64` you can run:
+[Download](https://github.com/minio/kes/releases/latest) the latest KES binary for your architecture and OS.
+
+For example on `linux/amd64`, run:
+
 ```sh
 curl -X GET 'https://github.com/minio/kes/releases/latest/download/kes-linux-amd64' --output kes-linux-amd64
 ```
+
 ```sh
 sudo install kes-linux-amd64  /usr/local/bin/kes
 ```
 
-### 2. Create User/Group
+## Create User/Group
 
-Once the binary is installed, you can create a new unix user and group for KES:
+Create a new unix user and group for KES:
+
 ```sh
 useradd kes -s /sbin/nologin
 ```
-> If you choose a different user and group name than `kes`, please make sure to update
-> your `kes.service` file.  
-> The `kes` user needs to have read access for the `/etc/kes/` directory.
- 
-### 3. Configuration
 
-Next, you need to provide the KES server configuration under `/etc/kes/config.yml`.
-If you haven't created your KES server configuration file you can refer to:
- - [Our guides](https://github.com/minio/kes/wiki#guides) to setup KES together with a supported KMS.
- - [Our documentation](https://github.com/minio/kes/wiki/Configuration) for more information about KES server configuration.
- - [Our annotated example](https://github.com/minio/kes/blob/master/server-config.yaml) for additional examples and documentation.
+{{< admonition type="note">}}
+If you choose a different user and group name than `kes`, update the `kes.service` file.  
+The `kes` user needs to have read access for the `/etc/kes/` directory.
+{{< /admonition >}}
+ 
+## Configuration
+
+Update the KES server configuration under `/etc/kes/config.yml`.
+
+To create a new KES server configuration file, see:
+- [Config file guide]({{< relref "configuration/#config-file" >}}) to setup KES together with a supported KMS.
+- [Annotated example](https://github.com/minio/kes/blob/master/server-config.yaml) for additional examples and documentation.
 
 The following example is the configuration file from our [FileSystem Guide](https://github.com/minio/kes/wiki/Filesystem-Keystore):
+
 ```yml
 address: 0.0.0.0:7373
 admin:
@@ -59,9 +68,10 @@ keystore:
     path: ./keys # Choose a directory for the secret keys
 ```
 
-### 4. Systemd Service
+## systemd Service
 
-Finally, you can create your systemd service by creating a `kes.service` file under `/etc/systemd/system`
+Create the `systemd` service by creating a `kes.service` file under `/etc/systemd/system`
+
 ```ini
 [Unit]
 Description=KES
@@ -96,27 +106,35 @@ SendSIGKILL=no
 WantedBy=multi-user.target
 ```
 
-#### 4.1 Privileged Ports 
+### Privileged Ports 
 
-If KES should use a port number < 1024 (privileged port) with the service running as a regular 
-user (not root), you will need to add the bind capability via the  `AmbientCapabilities`
-directive in the `kes.service` file:
+If you intend to run KES on a privileged port number (one less than `1024`) with the service running as a regular non-`root` user, add the bind capability via the  `AmbientCapabilities` directive in the `kes.service` file:
+
 ```ini
 [Service]
 AmbientCapabilities=CAP_NET_BIND_SERVICE
 ```
 
-#### 4.2 Startup on Reboot
+### Startup on Reboot
 
-If you want to start KES after rebooting run:
+To automatically start KES after rebooting run:
+
 ```sh
 systemctl enable kes.service
 ```
-> You can prevent KES from starting after reboot anytime by running: `systemctl disable kes.service`
 
-#### 4.3 Start/Stop KES
+{{< admonition title="Disable `kes.service` on start" type="tip" >}}
+Prevent KES from starting after reboot by running: 
+
+```sh
+systemctl disable kes.service
+```
+{{< /admonition >}}
+
+### Start or Stop KES
 
 To start KES run:
+
 ```sh
 systemctl start kes.service
 ```

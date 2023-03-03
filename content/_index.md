@@ -1,50 +1,62 @@
 ---
 title: MinIO Key Encryption Service
 date: 2022-11-01
+lastmod: :git
 draft: false
+tableOfContents: true
 ---
 
-Welcome to the KES wiki! Here, you can find information about [MinIO](https://min.io)'s KES project - including architecture and configuration guides, best practices and general documentation.
+This site provides information about [MinIO](https://min.io?ref=kes-docs)'s Key Encryption Service (KES) project.
 
-### Why KES
+The documentation includes:
 
-KES is a stateless and distributed key-management system for high-performance applications. We built KES as the 
-bridge between modern applications - running as containers on [Kubernetes](https://kubernetes.io) - and
-centralized KMS solutions. Therefore, KES has been designed to be simple, scalable and secure by default. It has
-just a few knobs to tweak instead of a complex configuration and does not require a deep understanding of secure
-key-management or cryptography.
+- architecture and configuration guides
+- best practices
+- general documentation
 
-If you're new to KES you may want to checkout our [Get Started Guide](https://github.com/minio/kes/wiki/Getting-Started), our [Configuration](https://github.com/minio/kes/wiki/Configuration) guide or read more about how KES
-works at our [Concepts](https://github.com/minio/kes/wiki/Concepts) page.
+## Why KES
+
+KES is a stateless and distributed key-management system for high-performance applications. 
+KES serves as the bridge between modern applications that run as containers on [Kubernetes](https://kubernetes.io) and centralized Key Management Services (KMS). 
+By default, we designed KES to be simple, scalable, and secure. 
+With simplified configuration options compared to other services, KES does not require a deep understanding of secure key-management or cryptography principles.
+
+If you're new to KES you may want to start in one of the following pages:
+
+- Jump right in with the [Getting Started guide]({{< relref "/tutorials/getting-started" >}})
+- Review set up options with the [configuration guide]({{< relref "/tutorials/configuration.md" >}}) 
+- Learn how KES works at our [Concepts page]({{< relref "concepts/_index.md" >}}).
 
 ***
 
 ## Guides
- - **[Configuration](https://github.com/minio/kes/wiki/Configuration)**
+ - [Configuration]({{< relref "/tutorials/configuration.md" >}})
+ - [Server API]({{< relref "/concepts/server-api.md" >}})
+
+## Tutorials
+
+ - [MinIO Object Storage]({{< relref "/tutorials/kes-for-minio.md" >}})
+ - [TLS Proxies]({{< relref "/concepts/tls-proxy.md" >}})
+ - [Logging]({{< relref "/concepts/logging.md" >}})
+ - [Monitoring]({{< relref "/concepts/monitoring.md" >}})
+ - [Migration]({{< relref "/concepts/kms-migration.md" >}})
+ - [Systemd]({{< relref "/tutorials/systemd.md" >}})
 
 ## Supported KMS Targets
- - **[Hashicorp Vault](https://github.com/minio/kes/wiki/Hashicorp-Vault-Keystore)**
- - **[Fortanix SDKMS](https://github.com/minio/kes/wiki/Fortanix-SDKMS)**
- - **[Thales CipherTrust Manager / Gemalto KeySecure](https://github.com/minio/kes/wiki/Gemalto-KeySecure)**
- - **[AWS SecretsManager](https://github.com/minio/kes/wiki/AWS-SecretsManager)**
- - **[GCP SecretManager](https://github.com/minio/kes/wiki/GCP-SecretManager)**
- - **[Azure KeyVault](https://github.com/minio/kes/wiki/Azure-KeyVault)**
- - **[Filesystem](https://github.com/minio/kes/wiki/Filesystem-Keystore)**
+ - [Hashicorp Vault]({{< relref "/integrations//hashicorp-vault-keystore.md" >}})
+ - [Fortanix SDKMS]({{< relref "/integrations/fortanix-sdkms.md" >}})
+ - [Thales CipherTrust Manager (formerly Gemalto KeySecure)]({{< relref "/integrations/thales-ciphertrust.md" >}})
+ - [AWS Secrets Manager]({{< relref "/integrations/aws-secrets-manager.md" >}})
+ - [Google Cloud Secret Manager]({{< relref "/integrations/google-cloud-secret-manager.md" >}})
+ - [Azure KeyVault]({{< relref "/integrations/azure-keyvault.md" >}})
+ - [Local Filesystem]({{< relref "/tutorials/filesystem-keystore.md" >}})
 
-## API Documentation
 
- - **[Server API](https://github.com/minio/kes/wiki/Server-API)**
- - **[Go SDK API](https://pkg.go.dev/github.com/minio/kes?tab=doc)**
+## External References
+### API Documentation
 
-## Miscellaneous
+ - [Go SDK API](https://pkg.go.dev/github.com/minio/kes?tab=doc)
 
- - **[MinIO Object Storage](https://github.com/minio/kes/wiki/MinIO-Object-Storage)**
- - **[TLS Proxies](https://github.com/minio/kes/wiki/TLS-Proxy)**
- - **[Logging](https://github.com/minio/kes/wiki/Logging)**
- - **[Monitoring](https://github.com/minio/kes/wiki/Monitoring)**
- - **[Migration](https://github.com/minio/kes/wiki/KMS-Migration)**
- - **[Systemd](https://github.com/minio/kes/wiki/Systemd)**
+### MinIO Blog Posts
 
-## Blog Posts
-
- - **[Introducing KES - Key Management at Scale](https://blog.min.io/introducing-kes/)**
+ - [Introducing KES - Key Management at Scale](https://blog.min.io/introducing-kes/?rel=kes-docs)
