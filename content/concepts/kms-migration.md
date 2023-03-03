@@ -21,7 +21,7 @@ tableOfContents: true
 
 ## Concepts
 
-In general, a KES server connects to a Key Management Service (KMS)
+A KES server connects to a Key Management Service (KMS).
 The KMS acts as persistent and secure key store.
 The KES server stores all master keys at the KMS.
 
@@ -33,29 +33,7 @@ In such cases, you must migrate some or all master keys to the new KMS instance.
 While it may be possible to do that manually with KMS-specific tooling, we do not recommend doing such a such a critical operation as a key migration by hand.
 Migrating individual keys by hand increases the risk of exposing or losing a master key. 
 
-Instead, the KES CLI provides a migration command, `kes migrate`:
-
-```sh
-$ kes migrate --help
-Usage:
-    kes migrate [options] [<pattern>]
-
-Options:
-    --from <PATH>            Path to the KES config file of the migration source.
-    --to   <PATH>            Path to the KES config file of the migration target.
-
-    -f, --force              Migrate keys even if a key with the same name exists
-                             at the target. The existing keys will be deleted.
-
-    --merge                  Merge the source into the target by only migrating
-                             those keys that do not exist at the target.
-
-    -q, --quiet              Do not print progress information.
-    -h, --help               Print command line options.
-
-Examples:
-    $ kes migrate --from vault-config.yml --to aws-config.yml
-```
+Instead, the KES CLI provides a migration command, [`kes migrate`]({{< relref "/cli/kes-migrate/" >}}).
 
 The `migrate` command supports migrating master keys from one KMS instance to another KMS instance. 
 For example, you can use the command to migrate a Hashicorp Vault instance to another Hashicorp Vault instance. 

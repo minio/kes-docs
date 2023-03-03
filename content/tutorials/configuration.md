@@ -260,7 +260,7 @@ For more details, see the comprehensive list at the [server APIs page]({{< relre
 
 ##### Policies and Identities
 
-Use the policy section, to define which policy applies to which identity. 
+Use the policy section to define which policy applies to which identity. 
 An identity can be computed from the X.509 certificate as follows:
 
 ```sh
