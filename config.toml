@@ -12,6 +12,8 @@ theme = 'minio-hugo-docs'
   [markup.tableOfContents]
     startLevel = 2
     endLevel = 3
+	[markup.highlight]
+		noclasses = false
 
 [menu]
     # Main menu

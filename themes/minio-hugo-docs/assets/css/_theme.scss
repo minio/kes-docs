@@ -7,10 +7,11 @@ $theme-properties: (
 	--text-color: $black #a2adc0,
 	--text-muted-color: #5c5c5c #697995,
 	--headings-color: $black #e3eeef,
-
 	// Scrollbar
 	--scrollbar-bg: #dedede $dark-300,
-	--scrollbar-hover-bg: #c6c6c6 lighten($dark-300, 5%)
+	--scrollbar-hover-bg: #c6c6c6 lighten($dark-300, 5%),
+	// Typography
+	--pre-bg: $light-300 $dark-200
 );
 
 // Activate dark/light themes
