@@ -1,3 +1,4 @@
+import { clipboard } from "./clipboard";
 import { header } from "./header";
 import { imagePreview } from "./imagePreview";
 import { siteSearch } from "./search";
@@ -18,3 +19,6 @@ toc();
 
 // Image preview
 imagePreview();
+
+// Clipboard
+clipboard();

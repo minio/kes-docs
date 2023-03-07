@@ -106,6 +106,13 @@ module.exports = {
 							marginBottom: "1.75em",
 							opacity: "0.5",
 						},
+						pre: {
+							backgroundColor: "var(--pre-bg)",
+							color: "var(--text-color)",
+							fontWeight: "700",
+							borderRadius: "0.1875rem",
+							padding: "1rem 1.25rem",
+						},
 						"code::before": {
 							content: '""',
 						},
