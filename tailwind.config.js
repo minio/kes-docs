@@ -52,9 +52,6 @@ module.exports = {
 			fontSize: {
 				md: "0.9375rem",
 			},
-			backgroundColor: {
-				header: "var(--header-bg)",
-			},
 			textColor: {
 				body: "var(--text-color)",
 				muted: "var(--text-muted-color)",
@@ -112,6 +109,14 @@ module.exports = {
 							fontWeight: "700",
 							borderRadius: "0.1875rem",
 							padding: "1rem 1.25rem",
+						},
+						code: {
+							backgroundColor: "var(--pre-bg)",
+							color: "var(--text-color)",
+							padding: "0.125rem 0.25rem",
+							borderRadius: "0.1875rem",
+							borderWidth: "1px",
+							borderColor: "transparent",
 						},
 						"code::before": {
 							content: '""',
