@@ -5,8 +5,8 @@
 	"main": "index.html",
 	"scripts": {
 		"hugo": "hugo server -D",
-		"tailwind": "postcss ./themes/minio-hugo-docs/assets/css/vendors/tailwind.css -o ./themes/minio-hugo-docs/assets/css/utilities.css",
-		"dev": "postcss ./themes/minio-hugo-docs/assets/css/vendors/tailwind.css -o ./themes/minio-hugo-docs/assets/css/utilities.css -w",
+		"tailwind": "npx tailwindcss -i ./themes/minio-hugo-docs/assets/css/vendors/tailwind.css -o ./themes/minio-hugo-docs/assets/css/utilities.css",
+		"dev": "npx tailwindcss -i ./themes/minio-hugo-docs/assets/css/vendors/tailwind.css -o ./themes/minio-hugo-docs/assets/css/utilities.css --watch",
 		"start": "npm run tailwind && npm run hugo"
 	},
 	"repository": {
@@ -21,9 +21,6 @@
 	"devDependencies": {
 		"@tailwindcss/typography": "^0.5.9",
 		"autoprefixer": "^10.4.14",
-		"postcss": "^8.4.21",
-		"postcss-cli": "^10.1.0",
-		"postcss-import": "^15.1.0",
 		"prettier": "^2.8.4",
 		"prettier-plugin-go-template": "^0.0.13",
 		"prettier-plugin-tailwindcss": "^0.2.4"
