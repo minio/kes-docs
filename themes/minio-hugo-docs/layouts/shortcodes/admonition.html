@@ -2,27 +2,33 @@
 {{ $classList := default "note" }}
 
 {{ if eq (.Get "type") "note" }}
-{{ $classList = `text-[#1467c2] dark:text-blue-500 border-blue-500/20 bg-blue-500/10 [&_pre]:border-blue-500/20
-[&_code]:border-blue-500/20` }}
+	{{ $classList = `text-[#1467c2] dark:text-blue-500 border-blue-500/20 bg-blue-500/10 [&_pre]:border-blue-500/20
+		[&_code]:border-blue-500/20`
+	}}
 {{ else if eq (.Get "type") "tip" }}
-{{ $classList = `text-green-600 border-green-500/20 bg-green-500/5 [&_pre]:border-green-500/20
-[&_code]:border-green-500/20` }}
+	{{ $classList = `text-green-600 border-green-500/20 bg-green-500/5 [&_pre]:border-green-500/20
+		[&_code]:border-green-500/20`
+	}}
 {{ else if eq (.Get "type") "caution" }}
-{{ $classList = `text-amber-600 border-amber-500/20 bg-amber-500/5 [&_pre]:border-amber-500/20
-[&_code]:border-amber-500/20` }}
+	{{ $classList = `text-amber-600 border-amber-500/20 bg-amber-500/5 [&_pre]:border-amber-500/20
+		[&_code]:border-amber-500/20`
+	}}
 {{ else if eq (.Get "type") "warning" }}
-{{ $classList = `text-red-500 dark:text-red-500/80 border-red-500/20 bg-red-500/5 [&_pre]:border-red-500/20
-[&_code]:border-red-500/20` }}
+	{{ $classList = `text-red-500 dark:text-red-500/80 border-red-500/20 bg-red-500/5 [&_pre]:border-red-500/20
+		[&_code]:border-red-500/20`
+	}}
 {{ end }}
 
 
 <div
-	class="admonition {{ $classList }} my-5 rounded border px-5 py-4 text-md leading-normal [&_a]:text-current [&_p]:m-0 [&_p+p]:mt-2 [&_pre]:border [&_pre]:bg-white [&_pre]:dark:bg-dark-0">
+	class="admonition {{ $classList }} my-5 rounded border px-5 py-4 text-md leading-normal [&_a]:text-current [&_p+p]:mt-2 [&_p]:m-0 [&_pre]:border [&_pre]:bg-white [&_pre]:dark:bg-dark-0"
+>
 	{{ if $title }}
-	<div class="mb-2 text-md font-bold">{{ $title }}:</div>
+		<div class="mb-2 text-md font-bold">{{ $title }}:</div>
 	{{ end }}
 	<div
-		class="text-md [&_a]:underline [&_a]:decoration-1 [&_a]:underline-offset-4 [&_a]:hover:text-current [&_li]:marker:text-current [&_pre]:mb-0 [&_*:not(pre)_code]:bg-white [&_*:not(pre)_code]:dark:bg-dark-0">
+		class="text-md [&_a]:underline [&_a]:decoration-1 [&_a]:underline-offset-4 [&_a]:hover:text-current [&_code]:bg-white [&_code]:dark:bg-dark-0 [&_li]:marker:text-current [&_pre]:mb-0"
+	>
 		{{ .Inner | $.Page.RenderString }}
 	</div>
 </div>
