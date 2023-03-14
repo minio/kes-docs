@@ -132,6 +132,9 @@ module.exports = {
 							borderRadius: "0.1875rem",
 							cursor: "pointer",
 						},
+						strong: {
+							color: "inherit",
+						},
 					},
 				},
 			},
