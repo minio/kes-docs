@@ -56,5 +56,13 @@ export const sidebar = () => {
 		SIDEBAR_CLOSE_ELEM.addEventListener("click", () => {
 			closeSidebar();
 		});
+
+		// Scroll to active item
+		const ACTIVE_ELEM = document.querySelector("#sidebar li > a.text-theme-red");
+		if (ACTIVE_ELEM) {
+			if (ACTIVE_ELEM && ACTIVE_ELEM.offsetTop > 350) {
+				SIDEBAR_ELEM.scrollTop = ACTIVE_ELEM.offsetTop - 40;
+			}
+		}
 	}
 };

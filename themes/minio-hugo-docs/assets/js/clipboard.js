@@ -11,7 +11,6 @@ export const clipboard = () => {
 			COPY_BTN.setAttribute("type", "button");
 			COPY_BTN.setAttribute("aria-label", "Copy to clipboard");
 			COPY_BTN.innerHTML = "Copy";
-			COPY_BTN.onclick = () => {};
 
 			el.insertAdjacentElement("afterBegin", COPY_BTN);
 
