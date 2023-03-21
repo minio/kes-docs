@@ -1,5 +1,5 @@
 ---
-title: kes show show
+title: kes secret show
 date: 2023-03-03
 lastmod: :git
 draft: false
