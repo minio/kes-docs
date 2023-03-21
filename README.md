@@ -6,6 +6,7 @@ The KES docs use [Hugo](https://www.gohogo.io) to generate static HTML pages.
   - [Prerequisites](#prerequisites)
   - [Initial Setup](#initial-setup)
   - [Build Preview](#build-preview)
+  - [Build for production](#build-for-production)
   - [Style](#style)
     - [Markup](#markup)
     - [Style Guides](#style-guides)
@@ -37,9 +38,21 @@ You can launch a live preview of the site as you work.
 1. From your terminal in the repository folder, run
 
    ```shell
-   npm start
+   npm run start
    ```
 2. In your browser, go to `localhost:1313`
+
+
+## Build for production
+
+To build the site for production or to upload to the staging server:
+
+1. Run
+   
+   ```shell
+   npm run prod
+   ```
+2. Contents go to the `/public` directory in the repo folder.
 
 ## Style
 
