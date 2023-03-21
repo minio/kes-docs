@@ -113,10 +113,13 @@ module.exports = {
 						code: {
 							backgroundColor: "var(--pre-bg)",
 							color: "var(--text-color)",
-							padding: "0.125rem 0.25rem",
+							padding: "0.1rem 0.25rem 0",
 							borderRadius: "0.1875rem",
+							lineHeight: "1.2",
 							borderWidth: "1px",
 							borderColor: "transparent",
+							wordBreak: "break-all",
+							display: "inline-block",
 						},
 						"code::before": {
 							content: '""',
