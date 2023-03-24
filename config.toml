@@ -1,7 +1,7 @@
 baseURL = ''
 languageCode = 'en-us'
 title = 'MinIO KES Documentation'
-theme = 'minio-hugo-docs'
+theme = 'hugo-docs-theme'
 relativeURLs = "True"
 
 [params]
