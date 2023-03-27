@@ -3,7 +3,7 @@
   "baseUrl": ".",
   "paths": {
    "*": [
-    "../themes/minio-hugo-docs/assets/*"
+    "../themes/hugo-docs-theme/assets/*"
    ]
   }
  }
