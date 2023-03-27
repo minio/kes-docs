@@ -5,6 +5,7 @@ The KES docs use [Hugo](https://www.gohogo.io) to generate static HTML pages.
 - [MinIO's Key Encryption Service (KES) Documentation](#minios-key-encryption-service-kes-documentation)
   - [Prerequisites](#prerequisites)
   - [Initial Setup](#initial-setup)
+  - [Update Theme from Upstream Repository](#update-theme-from-upstream-repository)
   - [Build Preview](#build-preview)
   - [Style](#style)
     - [Markup](#markup)
@@ -28,7 +29,28 @@ The KES docs use [Hugo](https://www.gohogo.io) to generate static HTML pages.
 
 1. Clone this repository
 2. cd to the directory
-3. Run `npm install`
+3. Initialize the theme directory submodule
+   
+   ```
+   git submodule update --init --recursive
+   ```
+
+   **Note:** You must have access to the remote theme repository, which is a private MinIO repository.
+   
+4. Run `npm install`
+
+## Update Theme from Upstream Repository
+
+The theme we use in the docs is hosted and maintained in a separate, private repository.
+We use a the git submodule functionality to include it here.
+
+To pull new updates to the theme from the upstream repository, run the following:
+
+```
+git submodule update --recursive --remote
+```
+
+**Note:** You must have access to the remote theme repository, which is a private MinIO repository.
 
 ## Build Preview
 
@@ -116,7 +138,7 @@ Tabbed-view navigation is supported using the following shortcode.
 {{< /tabs >}}
 ```
 
-Pleaste note that the `uniqueid` must be unique for each tab group.
+**Important:** The `uniqueid` must be unique across the site for each tab group.
 
 ## Frontmatter
 
