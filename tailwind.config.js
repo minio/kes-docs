@@ -2,7 +2,7 @@
 const plugin = require("tailwindcss/plugin");
 
 module.exports = {
-	content: ["./themes/minio-hugo-docs/**/*.{html,js}"],
+	content: ["./themes/hugo-docs-theme/**/*.{html,js}"],
 	darkMode: "class",
 	theme: {
 		fontFamily: {
