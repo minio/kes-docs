@@ -5,8 +5,8 @@
 	"main": "index.html",
 	"scripts": {
 		"prod": "npm run tailwind && hugo",
-		"tailwind": "npx tailwindcss -i ./themes/minio-hugo-docs/assets/css/vendors/tailwind.css -o ./themes/minio-hugo-docs/assets/css/utilities.css",
-		"dev": "npx tailwindcss -i ./themes/minio-hugo-docs/assets/css/vendors/tailwind.css -o ./themes/minio-hugo-docs/assets/css/utilities.css --watch",
+		"tailwind": "npx tailwindcss -i ./themes/hugo-docs-theme/assets/css/vendors/tailwind.css -o ./themes/hugo-docs-theme/assets/css/utilities.css",
+		"dev": "npx tailwindcss -i ./themes/hugo-docs-theme/assets/css/vendors/tailwind.css -o ./themes/hugo-docs-theme/assets/css/utilities.css --watch",
 		"start": "npm run tailwind && hugo server -D"
 	},
 	"repository": {
