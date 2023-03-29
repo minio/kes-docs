@@ -14,36 +14,22 @@ Decrypt the contents of a message with a key.
 
 ```sh
 kes key decrypt                 \
-        [--insecure,-k]         \
-        [--enclave, e <name>]   \
         <name>                  \
         <ciphertext>            \
-        [<context>]
+        [<context>]             \
+        [--enclave, -e <name>]  \
+        [--insecure,-k]
 ```
 
 ## Parameters
 
-### `--insecure, -k`
-
-_Optional_
-
-Use this during testing and in non-production environments to bypass the TLS validation.
-
-### `--enclave, -e`
-
-_Optional_
-
-The short name of the KES enclave to output information about.
-
 ### `name`
 
-**Required**
-
-The short identifier for the key to use for the data encryption key.
+{{< include "includes/params/name.md" >}}
 
 ### `ciphertext`
 
-**Required**
+_Required_
 
 The encrypted text string to decrypt.
 
@@ -52,6 +38,14 @@ The encrypted text string to decrypt.
 _Optional_
 
 The context value to scope the request for a data encryption key.
+
+### `--enclave, -e`
+
+{{< include "includes/params/enclave.md" >}}
+
+### `--insecure, -k`
+
+{{< include "includes/params/insecure.md" >}}
 
 ## Examples
 

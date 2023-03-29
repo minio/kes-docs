@@ -13,38 +13,32 @@ Encrypt a message with a key.
 ## Syntax
 
 ```sh
-kes key encrypt                 \
-        [--insecure,-k]         \
-        [--enclave, e <name>]   \
-        <name>                  \
-        <message>
+kes key encrypt                \
+        <name>                 \
+        <message>              \
+        [--enclave, e <name>]  \
+        [--insecure,-k]
 ```
 
 ## Parameters
 
-### `--insecure, -k`
-
-_Optional_
-
-Use this during testing and in non-production environments to bypass the TLS validation.
-
-### `--enclave, -e`
-
-_Optional_
-
-The short name of the KES enclave to output information about.
-
 ### `name`
 
-**Required**
-
-The short identifier for the key to use for the data encryption key.
+{{< include "includes/params/name.md" >}}
 
 ### `message`
 
-**Required**
+_Required_
 
 The string to encrypt.
+
+### `--enclave, -e`
+
+{{< include "includes/params/enclave.md" >}}
+
+### `--insecure, -k`
+
+{{< include "includes/params/insecure.md" >}}
 
 ## Examples
 

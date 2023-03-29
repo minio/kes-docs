@@ -25,44 +25,31 @@ Date Created        Key
 ## Syntax
 
 ```sh
-kes key ls
-        [--insecure, -k]
-        [--json]
-        [--color <string>]
-        [--enclave, -e]
-        ['pattern']
+kes key ls                  \
+        [--color <string>]  \
+        [--enclave, -e]     \
+        [--insecure, -k]    \
+        [--json]            \
+        [<pattern>]
 ```
 
 ## Parameters
 
-### `--insecure, -k`
-
-_Optional_
-
-Use this during testing and in non-production environments to bypass the TLS validation.
-
-### `--json`
-
-_Optional_
-
-Output the results in JSON format.
-
 ### `--color`
 
-_Optional_
-
-Specify when to use colored output. 
-Possible values: `auto`, `never`, `always`
-
-`auto` enables colors if an interactive terminal is detected and disables colors if the output goes to a pipe.
-
-If not defined, KES uses the `auto` method.
+{{< include "includes/params/color.md" >}}
 
 ### `--enclave, -e`
 
-_Optional_
+{{< include "includes/params/enclave.md" >}}
 
-The short name of the KES enclave to output information about.
+### `--insecure, -k`
+
+{{< include "includes/params/insecure.md" >}}
+
+### `--json`
+
+{{< include "includes/params/json.md" >}}
 
 ### `pattern`
 

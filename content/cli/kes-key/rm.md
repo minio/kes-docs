@@ -15,32 +15,28 @@ Once removed, the key can no longer be used.
 ## Syntax
 
 ```sh
-kes key rm                  \
-        [--insecure, -k]    \
-        [--enclave, -e]     \
-        <name>
+kes key rm                \
+        <name>            \
+        [--enclave, -e]   \
+        [--insecure, -k]
 ```
 
 ## Parameters
 
-### `--insecure, -k`
-
-_Optional_
-
-Use this during testing and in non-production environments to bypass the TLS validation.
-
-### `--enclave, -e`
-
-_Optional_
-
-The short name of the KES enclave to output information about.
-
 ### `name`
 
-**Required**
+_Required_
 
 The name of the existing key to remove.
 To remove more than one key, separate each key with a space.
+
+### `--enclave, -e`
+
+{{< include "includes/params/enclave.md" >}}
+
+### `--insecure, -k`
+
+{{< include "includes/params/include.md" >}}
 
 ## Examples
 

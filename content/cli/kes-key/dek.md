@@ -22,37 +22,31 @@ ciphertext: lbFBRVMyNTYtR0NNX1NIQTI1NtkgMTRlYjE3YWVjMTBjZDMxYTZiYzAwNmJhODFkNjM1
 
 ```sh
 key key dek
-        [--insecure, -k]        \
-        [--enclave, -e <name>]  \
         <name>                  \
-        [<context>]
+        [<context>]             \
+        [--enclave, -e <name>]  \
+        [--insecure, -k]
 ```
 
 ## Parameters
 
-### `--insecure, -k`
-
-_Optional_
-
-Use this during testing and in non-production environments to bypass the TLS validation.
-
-### `--enclave, -e`
-
-_Optional_
-
-The short name of the KES enclave to output information about.
-
 ### `name`
 
-**Required**
-
-The short identifier for the key to use for the data encryption key.
+{{< include "includes/params/name.md" >}}
 
 ### `context`
 
 _Optional_
 
 The context value to scope the request for a data encryption key.
+
+### `--enclave, -e`
+
+{{< include "includes/params/enclave.md" >}}
+
+### `--insecure, -k`
+
+{{< include "includes/params/insecure.md" >}}
 
 ## Examples
 
