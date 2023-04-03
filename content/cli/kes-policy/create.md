@@ -13,36 +13,34 @@ Create a new policy to use with KES identities.
 ## Syntax
 
 ```sh
-kes policy create
+kes policy create                  \
+            <name>                 \
+            <path>                 \
+            [--enclave, -e <name>] \ 
             [--insecure, -k]
-            [--enclave, -e <name>]
-            <name>
-            <path>
 ```
 
 ## Parameters
 
-### `--insecure, -k`
-
-_Optional_
-
-Use this during testing and in non-production environments to bypass the TLS validation.
-
-### `--enclave, -e`
-
-_Optional_
-
-The short name of the KES enclave for the operation.
-
 ### `name`
 
-**Required**
+_Required_
 
 A short name to use to refer to the policy.
 
 ### `path`
 
+_Required_
+
 The path to the file containing the policy to use with this name.
+
+### `--enclave, -e`
+
+{{< include "includes/params/enclave.md" >}}
+
+### `--insecure, -k`
+
+{{< include "includes/params/insecure.md" >}}
 
 ## Examples
 

@@ -14,42 +14,16 @@ Update the KES binary to a different version.
 
 ```sh
 kes update                      \
-        [--insecure, -k]        \
-        [--downgrade, -d]       \
-        [--output, -o <path>]   \
-        [--os <string>]         \
         [--arch <string>]       \
+        [--downgrade, -d]       \
+        [--insecure, -k]        \
         [--minisign-key <key>]  \
+        [--os <string>]         \
+        [--output, -o <path>]   \
         [<version>]
 ```
 
 ## Parameters
-
-### `--insecure, -k`
-
-_Optional_
-
-Use this during testing and in non-production environments to bypass the TLS validation.
-
-### `--downgrade, -d`
-
-Allow the new binary to be a previous version.
-
-### `--output, -o`
-
-Save the new binary to the specified file path instead of replacing the current KES binary.
-
-### `--os`
-
-Download the binary for the specified operating system.
-
-Valid operating systems:
-
-- `darwin` 
-
-  Use for MacOS.
-- `linux`
-- `windows`
 
 ### `--arch`
 
@@ -66,9 +40,33 @@ Valid architectures:
  
   Valid only for the Linux operating system.
 
+### `--downgrade, -d`
+
+Allow the new binary to be a previous version.
+
+### `--insecure, -k`
+
+{{< include "includes/params/insecure.md" >}}
+
 ### `--minisign-key`
 
 Verify the downloaded binary with the specified minisign public key.
+
+### `--os`
+
+Download the binary for the specified operating system.
+
+Valid operating systems:
+
+- `darwin` 
+
+  Use for MacOS.
+- `linux`
+- `windows`
+
+### `--output, -o`
+
+Save the new binary to the specified file path instead of replacing the current KES binary.
 
 ## Examples
 

@@ -27,8 +27,8 @@ Time        Status    Identity                IP                 API            
 kes log              \
     [--audit]        \
     [--error]        \
-    [--json]         \
-    [--insecure, -k]
+    [--insecure, -k] \
+    [--json]
 ```
 
 ## Parameters
@@ -43,15 +43,13 @@ This is the default output for the command if not specified.
 
 Outputs error logs.
 
-### `--json`
-
-Output log events in JSON format.
-
 ### `--insecure, -k`
 
-_Optional_
+{{< include "includes/params/insecure.md" >}}
 
-Use this during testing and in non-production environments to bypass the TLS validation.
+### `--json`
+
+{{< include "includes/params/json.md" >}}
 
 ## Examples
 

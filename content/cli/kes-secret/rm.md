@@ -15,30 +15,26 @@ Once removed, the secret is no longer valid for the KES server.
 
 ```sh
 kes secret rm                       \
-           [--insecure, -k]         \
+           <name>                   \
            [--enclave, -e <name>]   \
-           <name>
+           [--insecure, -k]
 ```
 
 ## Parameters
 
-### `--insecure, -k`
+### `name`
 
-_Optional_
+_Required_
 
-Use this during testing and in non-production environments to bypass the TLS validation.
+The short name of the secret to remove.
 
 ### `--enclave, -e`
 
-_Optional_
+{{< include "includes/params/enclave.md" >}}
 
-The short name of the KES enclave to output information about.
+### `--insecure, -k`
 
-### `name`
-
-**Required**
-
-The short name of the secret to remove.
+{{< include "includes/params/insecure.md" >}}
 
 ## Examples
 

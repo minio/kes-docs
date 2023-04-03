@@ -14,45 +14,34 @@ Display the status of the KES server.
 
 ```sh
 kes status              \
-    [--insecure, -k]    \
-    [--short, -s]       \
     [--api]             \
+    [--color <string>]  \
+    [--insecure, -k]    \
     [--json]            \
-    [--color <string>]
+    [--short, -s]
 ```
 
 ## Parameters
-
-### `--insecure, -k`
-
-_Optional_
-
-Use this during testing and in non-production environments to bypass the TLS validation.
-
-### `--short, -s`
-
-Output a summary of the server status rather than the full information.
 
 ### `--api`
 
 List all server APIs.
 
-### `--json`
-
-_Optional_
-
-Output the information in JSON format.
-
 ### `--color`
 
-_Optional_
+{{< include "includes/params/color.md" >}}
 
-Specify when to use colored output. 
-Possible values: `auto`, `never`, `always`
+### `--insecure, -k`
 
-`auto` enables colors if an interactive terminal is detected and disables colors if the output goes to a pipe.
+{{< include "includes/params/insecure.md" >}}
 
-If not defined, KES uses the `auto` method.
+### `--json`
+
+{{< include "includes/params/json.md" >}}
+
+### `--short, -s`
+
+Output a summary of the server status rather than the full information.
 
 ## Examples
 

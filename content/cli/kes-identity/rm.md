@@ -12,22 +12,19 @@ Removes the identity of either an api key or a certificate.
 
 ## Syntax
 
-kes identity rm
+kes identity rm                     \
+             [--enclave, -e <name>] \
              [--insecure, -k]
-             [--enclave, -e <name>]
 
 ## Parameters
 
-### `--insecure, -k`
-
-_Optional_
-
-Use this during testing and in non-production environments to bypass the TLS validation.
 ### `--enclave, -e`
 
-_Optional_
+{{< include "includes/params/enclave.md" >}}
 
-The short name of the KES enclave for the operation.
+### `--insecure, -k`
+
+{{< include "includes/params/insecure.md" >}}
 
 ## Examples
 

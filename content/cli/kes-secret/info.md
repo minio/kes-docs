@@ -21,49 +21,36 @@ Created by  3ecfcdf38fcbe141ae26a1030f81e96b753365a46760ae6b578698a97c59fd22
 
 ```sh
 kes secret info                     \
-           [--insecure, -e]         \
-           [--json]                 \
+           <name>                   \
            [--color <string>]       \
            [--enclave, -e <name>]   \
-           <name>
+           [--insecure, -e]         \
+           [--json]
 ```
 
 ## Parameters
 
-### `--insecure, -k`
+### `name`
 
-_Optional_
+_Required_
 
-Use this during testing and in non-production environments to bypass the TLS validation.
-
-### `--json`
-
-_Optional_
-
-Output the results in JSON format.
+The short name of the secret about which to output information.
 
 ### `--color`
 
-_Optional_
-
-Specify when to use colored output. 
-Possible values: `auto`, `never`, `always`
-
-`auto` enables colors if an interactive terminal is detected and disables colors if the output goes to a pipe.
-
-If not defined, KES uses the `auto` method.
+{{< include "includes/params/color.md" >}}
 
 ### `--enclave, -e`
 
-_Optional_
+{{< include "includes/params/enclave.md" >}}
 
-The short name of the KES enclave to output information about.
+### `--insecure, -k`
 
-### `name`
+{{< include "includes/params/insecure.md" >}}
 
-**Required**
+### `--json`
 
-The short name of the secret about which to output information.
+{{< include "includes/params/json.md" >}}
 
 ## Examples
 

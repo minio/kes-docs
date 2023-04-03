@@ -15,31 +15,27 @@ Once removed, identities linked to the policy no longer have access allowed by t
 
 ```sh
 kes policy rm                       \
-           [--insecure, -k]         \
+           <name>                   \
            [--enclave, -e <name>]   \
-           <name>
+           [--insecure, -k]
 ```
 
 ## Parameters
 
-### `--insecure, -k`
-
-_Optional_
-
-Use this during testing and in non-production environments to bypass the TLS validation.
-
-### `--enclave, -e`
-
-_Optional_
-
-The short name of the KES enclave to output information about.
-
 ### `name`
 
-**Required**
+_Required_
 
 The short name of the policy to remove.
 To remove more than one policy name, separate multiple policy names with commas.
+
+### `--enclave, -e`
+
+{{< include "includes/params/enclave.md" >}}
+
+### `--insecure, -k`
+
+{{< include "includes/params/insecure.md" >}}
 
 ## Examples
 

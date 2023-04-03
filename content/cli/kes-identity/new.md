@@ -18,24 +18,22 @@ Instead, define the identities for stateless implementations in the [config file
 ## Syntax
 
 kes identity new
-             [--key <path>]
+             subject
              [--cert <path>]
+             [--dns <domain>]
+             [--encrypt]
+             [--expiry <duration>]
              [--force, -f]
              [--ip <ip>]
-             [--dns <domain>]
-             [--expiry <duration>]
-             [--encrypt]
-             subject
+             [--key <path>]
 
 ## Parameters
 
-### `--key`
+### `subject`
 
-_Optional_
+_Required_
 
-Specify the path to the file for the private key for the new identity.
-
-If not specified, KES assumes the key can be found at `./private.key`.
+The name to use for the identity.
 
 ### `--cert`
 
@@ -44,6 +42,23 @@ _Optional_
 Path to the public certificate for the new identity.
 
 If not specified, KES assumes the certificate is located at `./public.crt`.
+
+### `--dns`
+
+_Optional_
+
+Specify a domain name to use as a subject alternate name (SAN) for the identity.
+You can repeat the flag to add multiple domain names as SANs.
+
+### `--encrypt`
+
+Encrypt the private key with a password.
+
+### `--expiry`
+
+Number of hours in `#h` format until the certificate expires.
+
+If not specified, the certificate expires in `720h` (30 days).
 
 ### `--force, -f`
 
@@ -58,28 +73,13 @@ _Optional_
 Specify an IPv4 address to use as an subject alternate name (SAN) for the identity.
 You can repeat the flag to add multiple IPs as SANs.
 
-### `--dns`
+### `--key`
 
 _Optional_
 
-Specify a domain name to use as a subject alternate name (SAN) for the identity.
-You can repeat the flag to add multiple domain names as SANs.
+Specify the path to the file for the private key for the new identity.
 
-### `--expiry`
-
-Number of hours in `#h` format until the certificate expires.
-
-If not specified, the certificate expires in `720h` (30 days).
-
-### `--encrypt`
-
-Encrypt the private key with a password.
-
-### `subject`
-
-**Required**
-
-The name to use for the identity.
+If not specified, KES assumes the key can be found at `./private.key`.
 
 ## Examples
 
