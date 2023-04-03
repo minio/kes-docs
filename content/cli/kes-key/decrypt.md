@@ -8,7 +8,13 @@ tableOfContents: true
 
 ## Overview
 
-Decrypt the contents of a message with a key.
+Decrypt the contents of a data encryption key with a key and return the plaintext key.
+
+Use the plaintext value for encrypting or decrypting data using the DEK. 
+
+{{< admonition type="caution">}}
+Avoid storing the plaintext on disk, as it allows decryption of data without requiring access to the Secret key used to generate the DEK.
+{{< /admonition>}}
 
 ## Syntax
 

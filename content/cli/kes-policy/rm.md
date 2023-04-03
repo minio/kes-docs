@@ -9,7 +9,7 @@ tableOfContents: true
 ## Overview
 
 Remove a policy name from the KES server.
-Once removed, identities linked to the policy no longer have access allowed by the policy.
+Removing a policy prevents clients authenticating with an identity associated to that policy from performing any operations on the KES server.
 
 ## Syntax
 

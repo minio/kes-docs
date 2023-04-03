@@ -8,7 +8,8 @@ tableOfContents: true
 
 ## Overview
 
-Add a new crytographic key.
+Add a new crytographic key and store it on the configured Key Management System.
+KES *never* returns the generated secret to clients.
 
 ## Syntax
 

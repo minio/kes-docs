@@ -10,7 +10,11 @@ tableOfContents: true
 
 Remove a key from the KES server.
 
-Once removed, the key can no longer be used.
+Removing a Secret key prevents decrypting any cryptographic keys derived using that Secret key, which in turn prevents decrypting any objects encrypted with those cryptographic keys. 
+
+{{< admonition type="warning">}}
+Removing a Secret Key renders all data encrypted using that key permanently unreadable.
+{{< /admonition>}}
 
 ## Syntax
 

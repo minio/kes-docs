@@ -10,6 +10,15 @@ tableOfContents: true
 
 Create a new policy to use with KES identities.
 
+Adds a new temporary policy to the KES server. 
+Policies support KES access control.
+
+The created policy has no associated identities. 
+Use [`kes policy assign`]({{< relref "cli/kes-policy/assign.md" >}}) to assign identities to the policy. 
+
+All changes made by :mc:`kes policy` are lost when the KES server restarts.
+To create permanent policies, modify the `policy` section of the KES [configuration document]({{< relref "tutorials/configuration.md" >}}) to include the new policy.
+
 ## Syntax
 
 ```sh
