@@ -11,7 +11,7 @@ tableOfContents: true
 The :mc:`kes key` command creates, utilizes, displays, and deletes cryptographic keys (Secrets) through the MinIO Key Encryption Service (KES). 
 KES stores created secrets on the configured [Key Management System (KMS)]({{< relref "/_index.md#supported-kms-targets" >}}) target.
 
-You can also use the commands to encrypt/decrypt messages or generate new data encryption keys.
+You can also use these commands to encrypt/decrypt messages or generate new data encryption keys.
 
 This set of pages provides reference information for the `kes key` commands. 
 ## Subcommands

@@ -38,7 +38,7 @@ The server only accepts the connection if the client certificate is valid and au
 
 - A "valid" certificate is well-formed and current (i.e. not expired). 
 
-  Authentication with mTLS also mTLS also requires the following [Extended Key Usage](https://tools.ietf.org/html/rfc5280#section-4.2.1.12) extensions for the client and server.
+  Authentication with mTLS also requires the following [Extended Key Usage](https://tools.ietf.org/html/rfc5280#section-4.2.1.12) extensions for the client and server.
 
   - Client Authentication (`extendedKeyUsage = clientAuth`)
   - Server Authentication (`extendedKeyUsage = serverAuth`)
@@ -46,15 +46,19 @@ The server only accepts the connection if the client certificate is valid and au
 - An "authentic" certificate is issued by a trusted Certificate Authority (CA). 
   Both client and server *must* include the peer certificate CA in their local system trust store.
 
-  You can start the KES server with the `kes server --auth`  option to perform mTLS with untrusted or self-signed certificates during testing or early development. 
+{{< admonition type="note" >}}
 
-  MinIO strongly recommends only allowing trusted certificates in production environments.
+You can start the KES server with the `kes server --auth`  option to perform mTLS with untrusted or self-signed certificates during testing or early development. 
+
+MinIO strongly recommends only allowing trusted certificates in production environments.
+
+{{< /admonition >}}
 
 ### Authorization
 
 KES uses Policy-Based Access Control (PBAC) to determine what operations a given client has permission to perform. 
 Each policy consists of one or more identities, where each identity corresponds to the SHA-256 hash of an x.509 certificate. 
-The server only allows the client to perform the requested operation if *all* of the following are true:
+The server only allows the client to perform the requested operation if the following are true:
 
 - A policy on the KES server contains the client identity.
 - The policy explicitly allows the requested operation.
@@ -63,7 +67,7 @@ If no such policy exists on the KES server *or* if the policy does not explicitl
 
 ### KES Policies
 
-KES uses policy-based access control (PBAC), where a policy describes the operations which an authenticated client may perform. 
+KES uses policy-based access control (PBAC), where a policy describes the operations an authenticated client may perform. 
 
 The following `YAML` document provides an example of the :kesconf:`policy` section of the KES server configuration document. 
 The policy `minio-sse` includes the appropriate :API endpoints for supporting MinIO Server-Side Encryption:

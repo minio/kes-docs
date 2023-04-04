@@ -35,7 +35,7 @@ kes policy create                  \
 
 _Required_
 
-A short name to use to refer to the policy.
+A short name used to refer to the policy.
 
 ### `path`
 

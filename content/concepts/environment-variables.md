@@ -24,7 +24,7 @@ The x.509 certificate to present to the KES server.
 The KES server requires clients to present their certificate for performing mutual TLS (mTLS).
 
 The KES server computes an identity from the certificate and compares it to its configured policies. 
-The KES server grants the minio server access to only those operations explicitly granted by the policy.
+The KES server grants the MinIO server access to only those operations explicitly granted by the policy.
 
 ## `MINIO_KMS_KES_KEY_NAME`
 

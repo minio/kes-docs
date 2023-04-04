@@ -8,12 +8,12 @@ tableOfContents: true
 
 ## Overview
 
-Decrypt the contents of a data encryption key with a key and return the plaintext key.
+Decrypt the contents of a data encryption key and return the plaintext value.
 
 Use the plaintext value for encrypting or decrypting data using the DEK. 
 
 {{< admonition type="caution">}}
-Avoid storing the plaintext on disk, as it allows decryption of data without requiring access to the Secret key used to generate the DEK.
+Avoid storing the plaintext value of a DEK on disk, as it allows decryption of data without requiring access to the secret key used to generate the DEK.
 {{< /admonition>}}
 
 ## Syntax
@@ -44,6 +44,8 @@ The encrypted text string to decrypt.
 _Optional_
 
 The context value to scope the request for a data encryption key.
+
+You create contexts in the `kubeconfig` file of a Kubernetes deployment to define a set of cluster, namespace, and user configuration to use.
 
 ### `--enclave, -e`
 

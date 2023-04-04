@@ -31,7 +31,7 @@ A short, human-readable name to use to interact with the enclave with the KES co
 
 _Required_
 
-The of the identity to use to create the enclave.
+The [`subject`]({{< relref "cli/kes-enclave/new.md#subject" >}}) of the identity to use to create the enclave.
 
 ### `--insecure, -k`
 

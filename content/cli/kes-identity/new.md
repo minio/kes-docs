@@ -70,7 +70,7 @@ Overwrite any existing private key or certificate that may exist for the identit
 
 _Optional_
 
-Specify an IPv4 address to use as an subject alternate name (SAN) for the identity.
+Specify an IPv4 address to use as a subject alternate name (SAN) for the identity.
 You can repeat the flag to add multiple IPs as SANs.
 
 ### `--key`
