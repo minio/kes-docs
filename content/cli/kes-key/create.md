@@ -8,37 +8,34 @@ tableOfContents: true
 
 ## Overview
 
-Add a new crytographic key.
+Add a new cryptographic key and store it in the configured Key Management System.
+KES *never* returns the generated secret to clients.
 
 ## Syntax
 
 ```sh
 kes key create                  \
-        [--insecure, -k]        \
+        <name>                  \
         [--enclave, -e <name>]  \
-        <name>
+        [--insecure, -k]
 ```
 
 ## Parameters
 
-### `--insecure, -k`
+### `name`
 
-_Optional_
+{{< include "includes/params/name.md" >}}
 
-Use this during testing and in non-production environments to bypass the TLS validation.
+You may add multiple names to a single command to generate multiple keys.
 
 ### `--enclave, -e`
 
-_Optional_
+{{< include "includes/params/enclave.md" >}}
 
-The short name of the KES enclave to output information about.
+### `--insecure, -k`
 
-### `name`
+{{< include "includes/params/insecure.md" >}}
 
-**Required**
-
-A name to use for the cryptographic key.
-You may add multiple names to a single command to generate multiple keys.
 
 ## Examples
 

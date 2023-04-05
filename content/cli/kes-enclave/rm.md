@@ -13,24 +13,22 @@ Deletes an enclave from KES.
 ## Syntax
 
 ```sh
-kes enclave rm                  \
-            [--insecure, -k]    \
-            <name>
+kes enclave rm                \
+            <name>            \
+            [--insecure, -k] 
 ```
 
 ## Parameters
 
-### `--insecure, -k`
-
-_Optional_
-
-Use this during testing and in non-production environments to bypass the TLS validation.
-
 ### `name`
 
-**Required**
+_Required_
 
 The short name of the KES enclave to output information about.
+
+### `--insecure, -k`
+
+{{< include "includes/params/insecure.md" >}}
 
 ## Examples
 

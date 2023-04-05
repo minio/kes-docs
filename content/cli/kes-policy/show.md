@@ -35,38 +35,32 @@ Created by: 3ecfcdf38fcbe141ae26a1030f81e96b753365a46760ae6b578698a97c59fd22
 ## Syntax
 
 ```sh
-kes policy show
-           [--insecure, -k]
-           [--enclave, -e <name>]
+kes policy show                   \
+           <name>                 \
+           [--enclave, -e <name>] \
+           [--insecure, -k]       \
            [--json]
-           <name>
 ```
 
 ## Parameters
 
-### `--insecure, -k`
+### `name`
 
-_Optional_
+_Required_
 
-Use this during testing and in non-production environments to bypass the TLS validation.
+The short name of the policy about which to output information.
 
 ### `--enclave, -e`
 
-_Optional_
+{{< include "includes/params/enclave.md" >}}
 
-The short name of the KES enclave to output information about.
+### `--insecure, -k`
+
+{{< include "includes/params/insecure.md" >}}
 
 ### `--json`
 
-_Optional_
-
-Output the results in JSON format.
-
-### `name`
-
-**Required**
-
-The short name of the policy about which to output information.
+{{< include "includes/params/json.md" >}}
 
 ## Examples
 

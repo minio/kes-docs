@@ -25,10 +25,14 @@ System       UpTime            Heap           Stack       CPUs        Threads
 
 ```sh
 kes metric           \
-    [--rate]         \
-    [--insecure, -k]
+    [--insecure, -k] \
+    [--rate]
 ```
 ## Parameters
+
+### `--insecure, -k`
+
+{{< include "includes/params/insecure.md" >}}
 
 ### `--rate`
 
@@ -36,12 +40,6 @@ The frequency to scrape metrics for output.
 Use time in seconds, such as `300s`.
 
 If not specified, the default is `5s`.
-
-### `--insecure, -k`
-
-_Optional_
-
-Use this during testing and in non-production environments to bypass the TLS validation.
 
 ## Examples
 

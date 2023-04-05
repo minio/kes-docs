@@ -14,38 +14,32 @@ Prints the identity information for a KES enclave.
 
 ```sh
 kes enclave info                \
-            [--insecure, -k]    \
-            [--json]            \
+            <name>              \
             [--color <string>]  \
-            <name>
+            [--insecure, -k]    \
+            [--json]
 ```
 
 ## Parameters
 
-### `--insecure, -k`
+### `name`
 
-_Optional_
+_Required_
 
-Use this during testing and in non-production environments to bypass the TLS validation.
-
-### `--json`
-
-Output the results in JSON format.
+The short name of the KES enclave to output information about.
 
 ### `--color`
 
-Specify when to use colored output. 
-Possible values: `auto`, `never`, `always`
+{{< include "includes/params/color.md" >}}
 
-`auto` enables colors if an interactive terminal is detected and disables colors if the output goes to a pipe.
+### `--insecure, -k`
 
-If not defined, KES uses the `auto` method.
+{{< include "includes/params/insecure.md" >}}
 
-### `name`
+### `--json`
 
-**Required**
+{{< include "includes/params/json.md" >}}
 
-The short name of the KES enclave to output information about.
 
 ## Examples
 

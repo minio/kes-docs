@@ -23,7 +23,96 @@ It should only be used for testing purposes.
 
 ## Quickstart
 
-1. Generate KES Server Private Key & Certificate
+1. Install the KES binary
+
+   You can install the KES binary by:
+   - downloading a pre-compiled **Binary Release**
+   - pulling the **Docker** image
+   - issuing a **Homebrew** command
+   - compiling from **Source** with your Go toolchain
+   
+   Select the tab below for the method you would like to use.
+
+   {{< tabs "kes-binary-install" >}}
+   
+   {{< tab "Binary Releases" >}} 
+
+   MinIO provides the following pre-compiled KES binary files.
+   Download the binary for your operating system and system architecture.
+   
+   | **OS**         | **ARCH** | **Binary**                                                                                   |
+   |----------------|----------|----------------------------------------------------------------------------------------------|
+   | Linux          | amd64    | [linux-amd64](https://github.com/minio/kes/releases/latest/download/kes-linux-amd64)         |
+   | Linux          | arm64    | [linux-arm64](https://github.com/minio/kes/releases/latest/download/kes-linux-arm64)         |
+   | Linux          | ppc64le  | [linux-ppc64le](https://github.com/minio/kes/releases/latest/download/kes-linux-ppc64le)     |
+   | Linux          | s390x    | [linux-s390x](https://github.com/minio/kes/releases/latest/download/kes-linux-s390x)         |
+   | Apple (M1, M2) | arm64    | [darwin-arm64](https://github.com/minio/kes/releases/latest/download/kes-darwin-arm64)       |
+   | Apple (Intel)  | amd64    | [darwin-amd64](https://github.com/minio/kes/releases/latest/download/kes-darwin-amd64)       |
+   | Windows       | amd64    | [windows-amd64](https://github.com/minio/kes/releases/latest/download/kes-windows-amd64.exe) |
+
+   - Optionally, verify the binary using [minisign](https://jedisct1.github.io/minisign/) by downloading the corresponding [`.minisign` signature file](https://github.com/minio/kes/releases/latest).
+     Then fun the following command, replacing `<OS>` and `<ARCH>` with the values for your system:
+
+     ```shell {.copy}
+     minisign -Vm kes-<OS>-<ARCH> -P RWTx5Zr1tiHQLwG9keckT0c45M3AGeHD6IvimQHpyRywVWGbP1aVSGav
+     ```
+
+   - Mark the downloaded file as executable if necessary for your OS.
+
+     For example, run `chmod +x <path/to/file>`.
+   - Optionally, move the file to the desired run location or to a folder in your system's path or add the file's location to the system path.
+
+     For example, if you put the binary in `$HOME/minio-binaries`, run the following:
+
+     ```shell {.copy}
+     export PATH=$PATH:@HOME/minio-binaries/
+     ```
+
+   **Important:** Invoke the Windows executable file from the terminal, PowerShell, or Command Prompt.
+   You cannot double click the file from the Windows graphical user interface.
+
+   {{< /tab >}}
+
+   {{< tab "Docker" >}} 
+   Pull the release with the following command:
+
+   ```shell {.copy}
+   docker pull minio/kes
+   ``` 
+
+   {{< /tab >}}
+
+   {{< tab "Homebrew" >}} 
+
+   To install the KES binary with [Homebrew](https://brew.sh), run the following command:
+
+   ```shell {.copy}
+   brew install minio/stable/kes
+   ```
+
+   {{< /tab >}}
+
+   {{< tab "Source" >}} 
+
+   You can download and install the binary with your Go toolchain:
+
+   ```shell {.copy}
+   go install github.com/minio/kes/cmd/kes@latest
+   ```
+
+   {{< /tab >}}
+
+   {{< /tabs >}}
+
+   Confirm command availability by running the following command from your prompt or terminal:
+
+   ```shell {.copy}
+   kes --help
+   ```
+
+   You may need to adjust the command for your OS structure and PATH, such as with `./kes --help`.
+
+2. Generate KES Server Private Key & Certificate
 
    Generate a TLS private key and certificate for the KES server.
 
@@ -45,7 +134,7 @@ It should only be used for testing purposes.
    Remember to adjust the `tls` config section.
    {{< /admonition >}}
  
-2. Generate Client Credentials
+3. Generate Client Credentials
 
    The client application needs credentials to access the KES server. 
    The following command generates a new TLS private/public key pair:
@@ -67,7 +156,7 @@ It should only be used for testing purposes.
      Identity:  02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b
    ```
 
-3. Configure KES Server
+4. Configure KES Server
 
    Create the KES server configuration file: `config.yml`.
    Ensure the identity in the `policy` section matches your `client.crt` identity.
@@ -83,7 +172,7 @@ It should only be used for testing purposes.
      cert: public.crt    # The KES server TLS certificate
    ```
 
-4. Start KES Server
+5. Start KES Server
 
    Start the KES server instance:
 

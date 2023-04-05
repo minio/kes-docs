@@ -8,7 +8,12 @@ tableOfContents: true
 
 ## Overview
 
-Manage the KES policies that determine the actions a given credential can perform.
+
+The :mc:`kes policy` commands temporarily create, modify, list, remove, or display policies on the MinIO Key Encryption Service (KES). 
+
+All changes made by `kes policy` commands are lost when the KES server restarts. 
+To make persistent changes to KES policies, modify the `policy` section of the KES [configuration file]({{< relref "tutorials/configuration.md#config-file" >}}).
+ Specifically, for each `policy.policyname` to modify, add/remove the identities to/from the `policy.policyname.identities` array.
 
 ## Subcommands
 

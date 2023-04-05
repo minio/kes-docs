@@ -13,29 +13,29 @@ Creates a new KES enclave.
 ## Syntax
 
 ```sh
-kes enclave create              \
-            [--insecure, -k]    \
-            <name>              \
-            <identity>
+kes enclave create           \
+            <name>           \
+            <identity>       \
+            [--insecure, -k]
 ```
 
 ## Parameters
 
-### `--insecure, -k`
-
-Use this during testing and in non-production environments to bypass the TLS validation.
-
 ### `<name>`
 
-**Required**
+_Required_
 
 A short, human-readable name to use to interact with the enclave with the KES commands.
 
 ### `<identity>`
 
-**Required**
+_Required_
 
-The of the identity to use to create the enclave.
+The [`subject`]({{< relref "cli/kes-enclave/new.md#subject" >}}) of the identity to use to create the enclave.
+
+### `--insecure, -k`
+
+{{< include "includes/params/insecure.md" >}}
 
 ## Examples
 

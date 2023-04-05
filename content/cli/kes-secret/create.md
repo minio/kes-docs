@@ -13,27 +13,25 @@ Add a new secret to use on the KES server.
 ## Syntax
 
 ```sh
-kes secrete create
+kes secrete create                  \
+            <name>                  \
+            <value>                 \
+            [--enclave, -e <name>]  \
+            [--file <path>]         \
             [--insecure, -e]
-            [--enclave, -e <name>]
-            [--file <path>]
-            <name>
-            <value>
 ```
 
 ## Parameters
 
-### `--insecure, -k`
+### `name`
 
-_Optional_
+_Required_
 
-Use this during testing and in non-production environments to bypass the TLS validation.
+A short name to use to refer to the secret.
 
 ### `--enclave, -e`
 
-_Optional_
-
-The short name of the KES enclave for the operation.
+{{< include "includes/params/enclave.md" >}}
 
 ### `--file`
 
@@ -42,11 +40,9 @@ Provide the path to the file.
 
 You cannot provide both a **--file** and a **value**.
 
-### `name`
+### `--insecure, -k`
 
-**Required**
-
-A short name to use to refer to the secret.
+{{< include "includes/params/insecure.md" >}}
 
 ### `value`
 

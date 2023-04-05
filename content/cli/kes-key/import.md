@@ -14,37 +14,32 @@ Import a cryptographic key.
 
 ```sh
 kes key import                  \
-        [--insecure, -k]        \
-        [--enclave, -e <name>]  \
         <name>                  \
-        <key>
+        <key>                   \
+        [--enclave, -e <name>]  \
+        [--insecure, -k]
 ```
 
 ## Parameters
 
-### `--insecure, -k`
-
-_Optional_
-
-Use this during testing and in non-production environments to bypass the TLS validation.
-
-### `--enclave, -e`
-
-_Optional_
-
-The short name of the KES enclave to output information about.
-
 ### `name`
 
-**Required**
-
-The short identifier to use for the key after import.
+{{< include "includes/params/name.md" >}}
 
 ### `key`
 
-**Required**
+_Required_
 
 Key to use to decrypt the import file.
+
+### `--enclave, -e`
+
+{{< include "includes/params/enclave.md" >}}
+
+### `--insecure, -k`
+
+{{< include "includes/params/insecure.md" >}}
+
 
 ## Examples
 

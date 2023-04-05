@@ -13,55 +13,42 @@ Output the contents of a secret.
 ## Syntax
 
 ```sh
-kes secret show
-           [--insecure, -k]
+kes secret show                     \
+           <name>                   \
+           [--color <string>]       \
+           [--enclave, -e <name>]   \
+           [--insecure, -k]         \
+           [--json]                 \
            [--plain, -p]
-           [--json]
-           [--color <string>]
-           [--enclave, -e <name>]
-           <name>
 ```
 
 ## Parameters
 
+### `name`
+
+_Required_
+
+The short name of the secret to remove.
+
+### `--color`
+
+{{< include "includes/params/color.md" >}}
+
+### `--enclave, -e`
+
+{{< include "includes/params/enclave.md" >}}
+
 ### `--insecure, -k`
 
-_Optional_
+{{< include "includes/params/insecure.md" >}}
 
-Use this during testing and in non-production environments to bypass the TLS validation.
+### `--json`
+
+{{< include "includes/params/json.md" >}}
 
 ### `--plain, -p`
 
 Output the raw secret with no styling.
-
-### `--json`
-
-_Optional_
-
-Output the results in JSON format.
-
-### `--color`
-
-_Optional_
-
-Specify when to use colored output. 
-Possible values: `auto`, `never`, `always`
-
-`auto` enables colors if an interactive terminal is detected and disables colors if the output goes to a pipe.
-
-If not defined, KES uses the `auto` method.
-
-### `--enclave, -e`
-
-_Optional_
-
-The short name of the KES enclave to output information about.
-
-### `name`
-
-**Required**
-
-The short name of the secret to remove.
 
 ## Examples
 

@@ -8,42 +8,34 @@ tableOfContents: true
 
 ## Overview
 
-Decrypt the contents of a message with a key.
+Decrypt the contents of a data encryption key and return the plaintext value.
+
+Use the plaintext value for encrypting or decrypting data using the DEK. 
+
+{{< admonition type="caution">}}
+Avoid storing the plaintext value of a DEK on disk, as it allows decryption of data without requiring access to the secret key used to generate the DEK.
+{{< /admonition>}}
 
 ## Syntax
 
 ```sh
 kes key decrypt                 \
-        [--insecure,-k]         \
-        [--enclave, e <name>]   \
         <name>                  \
         <ciphertext>            \
-        [<context>]
+        [<context>]             \
+        [--enclave, -e <name>]  \
+        [--insecure,-k]
 ```
 
 ## Parameters
 
-### `--insecure, -k`
-
-_Optional_
-
-Use this during testing and in non-production environments to bypass the TLS validation.
-
-### `--enclave, -e`
-
-_Optional_
-
-The short name of the KES enclave to output information about.
-
 ### `name`
 
-**Required**
-
-The short identifier for the key to use for the data encryption key.
+{{< include "includes/params/name.md" >}}
 
 ### `ciphertext`
 
-**Required**
+_Required_
 
 The encrypted text string to decrypt.
 
@@ -52,6 +44,16 @@ The encrypted text string to decrypt.
 _Optional_
 
 The context value to scope the request for a data encryption key.
+
+You create contexts in the `kubeconfig` file of a Kubernetes deployment to define a set of cluster, namespace, and user configuration to use.
+
+### `--enclave, -e`
+
+{{< include "includes/params/enclave.md" >}}
+
+### `--insecure, -k`
+
+{{< include "includes/params/insecure.md" >}}
 
 ## Examples
 
