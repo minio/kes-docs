@@ -1,11 +1,10 @@
 baseURL = ''
 languageCode = 'en-us'
-title = 'MinIO KES Documentation'
+title = 'Documentation'
 theme = 'hugo-docs-theme'
 relativeURLs = "True"
 
 [params]
-    logo = '/img/logo.svg'
     footerText = 'This work is licensed under a Creative Commons Attribution 4.0 International License. 2020-Present, MinIO, Inc.'
     homeLink = '/'
 

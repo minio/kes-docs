@@ -6,5 +6,4 @@ public
 .vscode
 node_modules
 **/.DS_Store
-themes/minio-hugo-docs/assets/css/utilities.css
 package-lock.json

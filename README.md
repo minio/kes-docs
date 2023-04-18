@@ -18,7 +18,6 @@ The KES docs use [Hugo](https://www.gohogo.io) to generate static HTML pages.
   - [Tabs](#tabs)
   - [Frontmatter](#frontmatter)
 
-
 ## Prerequisites
 
 - Any [operating system that Hugo supports](https://gohugo.io/installation/)
@@ -31,14 +30,14 @@ The KES docs use [Hugo](https://www.gohogo.io) to generate static HTML pages.
 1. Clone this repository
 2. cd to the directory
 3. Initialize the theme directory submodule
-   
+
    ```
    git submodule update --init --recursive
    ```
 
    **Note:** You must have access to the remote theme repository, which is a private MinIO repository.
-   
-4. Run `npm install`
+
+4. Setup the theme as described in `themes/hugo-docs-theme/README.md`
 
 ## Update Theme from Upstream Repository
 
@@ -60,20 +59,21 @@ You can launch a live preview of the site as you work.
 1. From your terminal in the repository folder, run
 
    ```shell
-   npm run start
+   hugo server
    ```
-2. In your browser, go to `localhost:1313`
 
+2. In your browser, go to `localhost:1313`
 
 ## Build for production
 
 To build the site for production or to upload to the staging server:
 
 1. Run
-   
+
    ```shell
-   npm run prod
+   hugo
    ```
+
 2. Contents go to the `/public` directory in the repo folder.
 
 ## Style
@@ -111,47 +111,9 @@ To link to another page within the docs, use the following format.
 [link text]({{< relref "path/to/page/#heading" >}})
 ```
 
-### Admonitions
+### Components (Tabs, Admonitions, Cards, etc.)
 
-We have added a shortcode that supports four admonition types
-
-- Note
-- Tip
-- Caution
-- Warning
-
-```Markdown
-{{< admonition title="Admonition title" type="[note | tip | caution | warning]" >}}
-Text...
-{{< /admonition >}}
-```
-
-The admonition title (`title="Admonition title"`) is optional.
-
-```Markdown
-{{< admonition title="Warning: Data loss!" type="warning" >}}
-Using this command causes data loss. 
-Use with caution.
-{{< /admonition >}}
-```
-
-## Tabs
-
-Tabbed-view navigation is supported using the following shortcode.
-
-```
-{{< tabs "uniqueid" >}}
-{{< tab "tab 1 title" >}} 
-  tab 1 Content 
-{{< /tab >}}
-{{< tab "tab 2 title" >}} 
-  tab 2 Content 
-{{< /tab >}}
-...
-{{< /tabs >}}
-```
-
-**Important:** The `uniqueid` must be unique across the site for each tab group.
+Refer `themes/hugo-docs-theme/README.md`
 
 ## Frontmatter
 
