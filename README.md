@@ -14,8 +14,7 @@ The KES docs use [Hugo](https://www.gohogo.io) to generate static HTML pages.
     - [Spelling](#spelling)
   - [Shortcodes](#shortcodes)
     - [Internal linking](#internal-linking)
-    - [Admonitions](#admonitions)
-  - [Tabs](#tabs)
+    - [Components (Tabs, Admonitions, Cards, etc.)](#components-tabs-admonitions-cards-etc)
   - [Frontmatter](#frontmatter)
 
 ## Prerequisites
@@ -43,11 +42,15 @@ The KES docs use [Hugo](https://www.gohogo.io) to generate static HTML pages.
 
 The theme we use in the docs is hosted and maintained in a separate, private repository.
 We use a the git submodule functionality to include it here.
+After updating the theme, re-install node packages and then re-build the theme assets.
 
 To pull new updates to the theme from the upstream repository, run the following:
 
 ```
 git submodule update --recursive --remote
+cd themes/hugo-docs-theme
+npm install
+npm run build
 ```
 
 **Note:** You must have access to the remote theme repository, which is a private MinIO repository.
@@ -89,7 +92,7 @@ Goldmark is fully [Commonmark](https://commonmark.org/help/) compliant.
 MinIO uses an internal style guide.
 Allow maintainers to modify your branch when you submit your PR so that we can adjust for internal style consistencies.
 
-Otherwise, follow the following resources in order of preference:
+Otherwise, follow these resources in order of preference:
 
 1. [MongoDB Style Guide](https://www.mongodb.com/docs/meta/style-guide/quickstart/)
 2. [ASD-STE-100 Simplified Technical English](https://asd-ste100.org/STE_downloads.html#features16-x)
@@ -113,7 +116,7 @@ To link to another page within the docs, use the following format.
 
 ### Components (Tabs, Admonitions, Cards, etc.)
 
-Refer `themes/hugo-docs-theme/README.md`
+Refer to `themes/hugo-docs-theme/README.md`.
 
 ## Frontmatter
 
