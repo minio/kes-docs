@@ -12,6 +12,7 @@ The KES docs use [Hugo](https://www.gohogo.io) to generate static HTML pages.
     - [Markup](#markup)
     - [Style Guides](#style-guides)
     - [Spelling](#spelling)
+    - [Code Blocks](#code-blocks)
   - [Shortcodes](#shortcodes)
     - [Internal linking](#internal-linking)
     - [Components (Tabs, Admonitions, Cards, etc.)](#components-tabs-admonitions-cards-etc)
@@ -101,6 +102,22 @@ Otherwise, follow these resources in order of preference:
 ### Spelling
 
 We write in American English, using [Merriam Webster's online dictionary](https://www.merriam-webster.com/) as the standard spelling reference.
+
+### Code Blocks
+
+To add a copy button to a code block, add `{.copy}` after the language format.
+
+For example
+
+```md
+```yaml {.copy}
+tls:
+  key:      ./server.key   # Path to the TLS private key
+  cert:     ./server.cert  # Path to the TLS certificate
+  password: ""             # An optional password to decrypt the TLS private key
+```
+
+The code block *must* have a valid language type for the copy function to work.
 
 ## Shortcodes
 

@@ -50,13 +50,19 @@ _Optional_
 Specify a domain name to use as a subject alternate name (SAN) for the identity.
 You can repeat the flag to add multiple domain names as SANs.
 
+Requires the `--key` and `--cert` flags.
+
 ### `--encrypt`
 
 Encrypt the private key with a password.
 
+Requires the `--key` and `--cert` flags.
+
 ### `--expiry`
 
 Number of hours in `#h` format until the certificate expires.
+
+Requires the `--key` and `--cert` flags.
 
 If not specified, the certificate expires in `720h` (30 days).
 
@@ -73,6 +79,8 @@ _Optional_
 Specify an IPv4 address to use as a subject alternate name (SAN) for the identity.
 You can repeat the flag to add multiple IPs as SANs.
 
+Requires the `--key` and `--cert` flags.
+
 ### `--key`
 
 _Optional_
@@ -86,7 +94,7 @@ If not specified, KES assumes the key can be found at `./private.key`.
 Create an identity with the default expiration that uses the default path for the key and certificate locations.
 
 ```sh {.copy}
-$ kes identity new Client-1
+$ kes identity new
 ```
 
 Create an identity that uses either of two IP addresses as a subject alternate name (SAN).
