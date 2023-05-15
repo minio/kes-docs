@@ -99,7 +99,7 @@ You can disable the requirement for a valid certificate when calling this endpoi
     "method"  : string
     "path"    : string
     "max_body": number   // in bytes
-    "timeout" : number   // in seconds, 0 indicates never times out
+    "timeout" : number   // in seconds, 0 indicates never times out;
   }
 ]
 ```
@@ -114,11 +114,8 @@ $ curl \
 ```
 
 #### Sample Response
-```json
-{ 
-  "version": "0.18.0"
-}
-```
+
+Request results in either a ``200 Ok`` response or an error.
 
 ### API
 
