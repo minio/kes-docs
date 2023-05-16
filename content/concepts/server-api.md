@@ -8,9 +8,18 @@ tableOfContents: true
 
 ## API Overview
 
+By default, KES requires a valid certificate for any API call.
+Requests without a certificate fail with a TLS error.
+
+You can disable the requirement for a valid certificate when calling some endpoints in the KES [configuration file]({{< relref "tutorials/configuration.md#api-configuration" >}}).
+
+If any endpoint does not require a certificate, failed calls result in an HTTP error instead of a TLS error.
+
+
 | [**API**](#Version)                                     |                                                             |
 |:--------------------------------------------------------|:------------------------------------------------------------|
 | [`/version`](#version)                                  | Get version information.                                    |
+| [`/ready`](#ready)                                      | Return KES server readiness.                                |
 | [`/v1/api`](#api)                                       | Get a list of supported API endpoints.                      |
 | [`/v1/metrics`](#metrics)                               | Get server metrics in the Prometheus exposition format.     |
 | [`/v1/status`](#status)                                 | Get server status information.                              |
@@ -72,6 +81,48 @@ $ curl \
 }
 ```
 
+### Ready
+
+| Method   | Path                        | Content-Type       |
+|:--------:|:---------------------------:|:------------------:|
+| `GET`    | `/v1/ready`                 | `application/json` |
+
+Return the KES server readiness.
+
+You can disable the requirement for a valid certificate when calling this endpoint in the KES [configuration file]({{< relref "tutorials/configuration.md#api-configuration" >}}).
+
+#### Format
+
+```
+[
+  {
+    "method"  : string
+    "path"    : string
+    "max_body": number   // in bytes
+    "timeout" : number   // in seconds, 0 indicates never times out;
+  }
+]
+```
+
+#### Sample Request
+```bash
+$ curl \
+    --key root.key \
+    --cert root.cert \
+    --request GET \
+    'https://play.min.io:7373/v1/ready'
+```
+
+#### Sample Response
+
+An authenticated request results in one of the following HTML codes:
+
+| Response              | Readiness |
+|:---------------------:|:---------:|
+| `200 Ok`              | Ready     |
+| `502 Bad Gateway`     | Not ready |
+| `504 Gateway Timeout` | Not ready |
+
 ### API
 
 | Method   | Path                        | Content-Type       |
@@ -79,6 +130,8 @@ $ curl \
 | `GET`    | `/v1/api`                   | `application/json` |
 
 Get a list of API endpoints supported by the server.
+
+You can disable the requirement for a valid certificate when calling this endpoint in the KES [configuration file]({{< relref "tutorials/configuration.md#api-configuration" >}}).
 
 #### Format
 
@@ -275,6 +328,9 @@ Get server metrics.
 For example, the total number of requests.
 Metrics return in the [Prometheus exposition format](https://prometheus.io/docs/instrumenting/exposition_formats/).
 
+You can disable the requirement for a valid certificate when calling this endpoint in the KES [configuration file]({{< relref "tutorials/configuration.md#api-configuration" >}}).
+
+
 ```sh
 # TYPE kes_http_request_active gauge
 kes_http_request_active 0
@@ -323,6 +379,7 @@ $ curl \
 ```
 
 #### Sample Response
+
 ```bash
 # HELP kes_http_request_active Number of active requests that are not finished, yet.
 # TYPE kes_http_request_active gauge
@@ -370,6 +427,15 @@ kes_system_up_time 837876.75
 
 Get the current status of the KES server. 
 If the server is up, the request returns `200 OK` and a JSON document that describes status-related server information.
+The information the response returns includes the following:
+
+- Version
+- Uptime
+- Keystore status
+- Keystore latency (in ms)
+
+You can disable the requirement for a valid certificate when calling this endpoint in the KES [configuration file]({{< relref "tutorials/configuration.md#api-configuration" >}}).
+
 
 #### Format
 

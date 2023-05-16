@@ -95,9 +95,10 @@ The config file is separated into various sections:
 
  - A general server configuration section including the server address and root identity.
  - A [TLS section](#tls-configuration) to specify the server key/certificate and TLS proxy configuration.
+ - An [API section](#api-configuration) to enable or disable authentication for specific endpoints.
+ - A [policy section](#policy-configuration) to control who can perform various API operations.
  - A [cache section](#cache-configuration) to control how long the KES server caches keys in memory.
  - A [logging section](#logging-configuration) to control what log messages write to `STDOUT` and `STDERR`.
- - A [policy section](#policy-configuration) to control who can perform various API operations.
  - A [KMS / key store section](#kms-configuration) specifies where to store and fetch keys.
 
 #### TLS Configuration
@@ -112,6 +113,42 @@ tls:
 
 Optionally, also configure a TLS proxy in this section. 
 See the separate [TLS Proxy page]({{< relref "concepts/tls-proxy" >}}) for more information.
+
+#### API Configuration
+
+By default, KES requires a valid TLS certificate for all API calls.
+You can change this behavior for specific API endpoints to allow requests to the endpoints without a certificate.
+
+{{< admonition type="caution" >}}
+The default behavior of the KES API endpoints should be suitable for most situations.
+Only customize endpoints for a specific need.
+{{< /admonition >}}
+
+When you disable authentication for at least one endpoint, KES no longer requires a certificate for a client to call _any_ API endpoint.
+However, the request must still include a certificate for KES to successfully process a call to any API endpoint that requires authentication.
+
+This change means that on KES servers with at least one endpoint configured to disable authentication, clients do not receive a TLS error on failure, but an HTTP error instead.
+
+You can disable authentication for the following API endpoints:
+
+- `/v1/ready`
+- `/v1/status`
+- `/v1/metrics`
+- `/v1/api`
+
+For example, to skip authentication for the endpoints that allow readiness probes and status checks, add the following to the configuration file:
+
+```yaml
+api:
+  /v1/ready:
+    skip_auth: true
+    timeout:   15s
+  /v1/ready:
+    skip_auth: false
+    timeout:   15s
+```
+
+See [link text]({{< relref "concepts/server-api.md" >}}) for information on the KES API.
 
 #### Cache Configuration
 
@@ -287,8 +324,11 @@ policy:
     - ${MY_APP_IDENTITY}
 ```
 
-**Note:** The server does not fail if an environment variable is not present or not a "valid" identity. 
+{{< admonition type="note" >}}
 You must set all expected environment variables before starting the server.
+The server starts even if an environment variable is not present or does not contain a "valid" identity. 
+{{< /admonition >}}
+
 
 #### Key Configuration
 
@@ -320,4 +360,8 @@ keystore:
     path: ./keys # The key store directory. Keys will be created inside ./keys/
 ```
 
-For production setups, only secure key stores backed by a KMS such as [Hashicorp Vault](https://github.com/minio/kes/wiki/Hashicorp-Vault-Keystore). 
+For production setups, use a secure key store backed by a KMS such as [Hashicorp Vault](https://github.com/minio/kes/wiki/Hashicorp-Vault-Keystore). 
+
+## Sample Configuration File
+
+{{< include "includes/server-config.md" >}}
