@@ -121,7 +121,7 @@ You can change this behavior for specific API endpoints to allow requests to the
 
 {{< admonition type="caution" >}}
 The default behavior of the KES API endpoints should be suitable for most situations.
-Only customize endpoints for specific need.
+Only customize endpoints for a specific need.
 {{< /admonition >}}
 
 When you disable authentication for at least one endpoint, KES no longer requires a certificate for a client to call _any_ API endpoint.
