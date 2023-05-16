@@ -120,14 +120,14 @@ By default, KES requires a valid TLS certificate for all API calls.
 You can change this behavior for specific API endpoints to allow requests to the endpoints without a certificate.
 
 {{< admonition type="caution" >}}
-The default behavior of the KES API endpoints should suffice in most every situation.
-Only customize endpoints for specific need
+The default behavior of the KES API endpoints should be suitable for most situations.
+Only customize endpoints for specific need.
 {{< /admonition >}}
 
 When you disable authentication for at least one endpoint, KES no longer requires a certificate for a client to call _any_ API endpoint.
-However, the request must still include a certificate for KES to successfully process a call to an API endpoint that does require authentication.
+However, the request must still include a certificate for KES to successfully process a call to any API endpoint that requires authentication.
 
-This change means that on KES servers with at least one endpoint configured to disable authentication, clients no receive a TLS error on failure, but an HTTP error instead.
+This change means that on KES servers with at least one endpoint configured to disable authentication, clients do not receive a TLS error on failure, but an HTTP error instead.
 
 You can disable authentication for the following API endpoints:
 
@@ -324,9 +324,9 @@ policy:
     - ${MY_APP_IDENTITY}
 ```
 
-{{< admonition title="Admonition title" type="note" >}}
-The server does not fail if an environment variable is not present or not a "valid" identity. 
+{{< admonition type="note" >}}
 You must set all expected environment variables before starting the server.
+The server starts even if an environment variable is not present or does not contain a "valid" identity. 
 {{< /admonition >}}
 
 
@@ -360,7 +360,7 @@ keystore:
     path: ./keys # The key store directory. Keys will be created inside ./keys/
 ```
 
-For production setups, only secure key stores backed by a KMS such as [Hashicorp Vault](https://github.com/minio/kes/wiki/Hashicorp-Vault-Keystore). 
+For production setups, use a secure key store backed by a KMS such as [Hashicorp Vault](https://github.com/minio/kes/wiki/Hashicorp-Vault-Keystore). 
 
 ## Sample Configuration File
 

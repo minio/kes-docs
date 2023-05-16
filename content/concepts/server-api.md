@@ -115,7 +115,13 @@ $ curl \
 
 #### Sample Response
 
-Request results in either a ``200 Ok`` response or an error.
+An authenticated request results in one of the following HTML codes:
+
+| Response              | Readiness |
+|:---------------------:|:---------:|
+| `200 Ok`              | Ready     |
+| `502 Bad Gateway`     | Not ready |
+| `504 Gateway Timeout` | Not ready |
 
 ### API
 
@@ -373,6 +379,7 @@ $ curl \
 ```
 
 #### Sample Response
+
 ```bash
 # HELP kes_http_request_active Number of active requests that are not finished, yet.
 # TYPE kes_http_request_active gauge

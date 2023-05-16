@@ -58,12 +58,12 @@ tls:
 # The API configuration. The APIs exposed by the KES server can
 # be adjusted here. Each API is identified by its API path.
 #
-# In general, the KES server uses sane defaults for all APIs.
+# In general, the KES server uses reasonable defaults for all APIs.
 # Only customize the APIs if there is a real need.
 # 
 # Disabling authentication for an API must be carefully evaluated.
-# One example, when disabling authentication may be justified, would
-# be the liveness and readiness probes in a Kubernetes environment.
+# One example when disabling authentication may be justified could
+# be the readiness probe in a Kubernetes environment.
 #
 # When authentication is disabled, the particular API can be
 # accessed by any client that can send HTTPS requests to the
