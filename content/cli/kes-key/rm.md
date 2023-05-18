@@ -36,11 +36,11 @@ To remove more than one key, separate each key with a space.
 
 ### `--enclave, -e`
 
-{{< include "includes/params/enclave.md" >}}
+{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 
-{{< include "includes/params/include.md" >}}
+{{< include "_includes/params/include.md" >}}
 
 ## Examples
 

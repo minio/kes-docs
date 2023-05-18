@@ -24,17 +24,17 @@ kes key create                  \
 
 ### `name`
 
-{{< include "includes/params/name.md" >}}
+{{< include "_includes/params/_name.md" >}}
 
 You may add multiple names to a single command to generate multiple keys.
 
 ### `--enclave, -e`
 
-{{< include "includes/params/enclave.md" >}}
+{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 
-{{< include "includes/params/insecure.md" >}}
+{{< include "_includes/params/insecure.md" >}}
 
 
 ## Examples

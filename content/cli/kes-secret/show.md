@@ -32,19 +32,19 @@ The short name of the secret to remove.
 
 ### `--color`
 
-{{< include "includes/params/color.md" >}}
+{{< include "_includes/params/color.md" >}}
 
 ### `--enclave, -e`
 
-{{< include "includes/params/enclave.md" >}}
+{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 
-{{< include "includes/params/insecure.md" >}}
+{{< include "_includes/params/insecure.md" >}}
 
 ### `--json`
 
-{{< include "includes/params/json.md" >}}
+{{< include "_includes/params/json.md" >}}
 
 ### `--plain, -p`
 

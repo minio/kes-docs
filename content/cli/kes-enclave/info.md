@@ -30,15 +30,15 @@ The short name of the KES enclave to output information about.
 
 ### `--color`
 
-{{< include "includes/params/color.md" >}}
+{{< include "_includes/params/color.md" >}}
 
 ### `--insecure, -k`
 
-{{< include "includes/params/insecure.md" >}}
+{{< include "_includes/params/insecure.md" >}}
 
 ### `--json`
 
-{{< include "includes/params/json.md" >}}
+{{< include "_includes/params/json.md" >}}
 
 
 ## Examples

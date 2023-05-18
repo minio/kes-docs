@@ -35,7 +35,7 @@ The [`subject`]({{< relref "cli/kes-identity/new.md#subject" >}}) of the identit
 
 ### `--insecure, -k`
 
-{{< include "includes/params/insecure.md" >}}
+{{< include "_includes/params/insecure.md" >}}
 
 ## Examples
 
