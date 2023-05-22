@@ -32,7 +32,7 @@ kes metric           \
 
 ### `--insecure, -k`
 
-{{< include "includes/params/insecure.md" >}}
+{{< include "_includes/params/insecure.md" >}}
 
 ### `--rate`
 

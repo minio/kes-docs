@@ -33,11 +33,11 @@ kes identity info                   \
 
 ### `--color`
 
-{{< include "includes/params/color.md" >}}
+{{< include "_includes/params/_color.md" >}}
 
 ### `--enclave, -e`
 
-{{< include "includes/params/enclave.md" >}}
+{{< include "_includes/params/enclave.md" >}}
 
 ### `identity`
 
@@ -47,11 +47,11 @@ The UUID of a specific identity to retrieve information about.
 
 ### `--insecure, -k`
 
-{{< include "includes/params/insecure.md" >}}
+{{< include "_includes/params/insecure.md" >}}
 
 ### `--json`
 
-{{< include "includes/params/json.md" >}}
+{{< include "_includes/params/json.md" >}}
 
 ## Examples
 

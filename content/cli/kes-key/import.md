@@ -24,7 +24,7 @@ kes key import                  \
 
 ### `name`
 
-{{< include "includes/params/name.md" >}}
+{{< include "_includes/params/name.md" >}}
 
 ### `key`
 
@@ -34,11 +34,11 @@ Key to use to decrypt the import file.
 
 ### `--enclave, -e`
 
-{{< include "includes/params/enclave.md" >}}
+{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 
-{{< include "includes/params/insecure.md" >}}
+{{< include "_includes/params/insecure.md" >}}
 
 
 ## Examples

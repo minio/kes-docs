@@ -4,6 +4,7 @@ date: 2023-02-08
 lastmod: :git
 draft: false
 tableOfContents: true
+heading: true
 ---
 
 Welcome to the KES documentation site.

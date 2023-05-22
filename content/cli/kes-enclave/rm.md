@@ -28,7 +28,7 @@ The short name of the KES enclave to output information about.
 
 ### `--insecure, -k`
 
-{{< include "includes/params/insecure.md" >}}
+{{< include "_includes/params/insecure.md" >}}
 
 ## Examples
 

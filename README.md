@@ -155,3 +155,7 @@ draft: false ## set to true if the document is not yet ready for publication
 tableOfContents: true ## creates a right-side page navigation TOC, set to `false` if not needed
 ---
 ```
+
+### Custom Frontmatter params
+
+Refer to `themes/hugo-docs-theme/README.md`.

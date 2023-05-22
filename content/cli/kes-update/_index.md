@@ -46,7 +46,7 @@ Allow the new binary to be a previous version.
 
 ### `--insecure, -k`
 
-{{< include "includes/params/insecure.md" >}}
+{{< include "_includes/params/insecure.md" >}}
 
 ### `--minisign-key`
 

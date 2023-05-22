@@ -31,7 +31,7 @@ A short name to use to refer to the secret.
 
 ### `--enclave, -e`
 
-{{< include "includes/params/enclave.md" >}}
+{{< include "_includes/params/enclave.md" >}}
 
 ### `--file`
 
@@ -42,7 +42,7 @@ You cannot provide both a **--file** and a **value**.
 
 ### `--insecure, -k`
 
-{{< include "includes/params/insecure.md" >}}
+{{< include "_includes/params/insecure.md" >}}
 
 ### `value`
 

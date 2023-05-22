@@ -1,0 +1,3 @@
+---
+navHidden: true
+---

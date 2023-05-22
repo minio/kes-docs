@@ -364,4 +364,4 @@ For production setups, use a secure key store backed by a KMS such as [Hashicorp
 
 ## Sample Configuration File
 
-{{< include "includes/server-config.md" >}}
+{{< include "_includes/server-config.md" >}}
