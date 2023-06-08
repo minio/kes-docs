@@ -1,7 +1,7 @@
 baseURL = ''
 languageCode = 'en-us'
 title = 'Documentation'
-theme = 'hugo-docs-theme'
+theme = 'kes-docs-theme'
 relativeURLs = "True"
 
 [params]

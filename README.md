@@ -37,7 +37,7 @@ The KES docs use [Hugo](https://www.gohogo.io) to generate static HTML pages.
 
    **Note:** You must have access to the remote theme repository, which is a private MinIO repository.
 
-4. Setup the theme as described in `themes/hugo-docs-theme/README.md`
+4. Setup the theme as described in `themes/kes-docs-theme/README.md`
 
 ## Update Theme from Upstream Repository
 
@@ -49,7 +49,7 @@ To pull new updates to the theme from the upstream repository, run the following
 
 ```
 git submodule update --recursive --remote
-cd themes/hugo-docs-theme
+cd themes/kes-docs-theme
 npm install
 npm run build
 ```
@@ -133,7 +133,7 @@ To link to another page within the docs, use the following format.
 
 ### Components (Tabs, Admonitions, Cards, etc.)
 
-Refer to `themes/hugo-docs-theme/README.md`.
+Refer to `themes/kes-docs-theme/README.md`.
 
 ## Frontmatter
 
@@ -158,4 +158,4 @@ tableOfContents: true ## creates a right-side page navigation TOC, set to `false
 
 ### Custom Frontmatter params
 
-Refer to `themes/hugo-docs-theme/README.md`.
+Refer to `themes/kes-docs-theme/README.md`.
