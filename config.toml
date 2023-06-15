@@ -279,3 +279,12 @@ relativeURLs = "True"
         weight = 5
         [menu.platform.params]
             activeFill = '#0076d2'
+     [[menu.docs]]
+        name = "KES Documentation"
+        weight = 1
+        [menu.docs.params]
+            current = true
+     [[menu.docs]]
+        name = "MinIO Documentation"
+        url = "https://min.io/docs"
+        weight = 2
