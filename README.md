@@ -17,6 +17,7 @@ The KES docs use [Hugo](https://www.gohogo.io) to generate static HTML pages.
     - [Internal linking](#internal-linking)
     - [Components (Tabs, Admonitions, Cards, etc.)](#components-tabs-admonitions-cards-etc)
   - [Frontmatter](#frontmatter)
+    - [Custom Frontmatter params](#custom-frontmatter-params)
 
 ## Prerequisites
 
@@ -28,16 +29,17 @@ The KES docs use [Hugo](https://www.gohogo.io) to generate static HTML pages.
 ## Initial Setup
 
 1. Clone this repository
-2. cd to the directory
+2. cd to the directory (`cd kes-docs`)
 3. Initialize the theme directory submodule
 
    ```
    git submodule update --init --recursive
    ```
 
-   **Note:** You must have access to the remote theme repository, which is a private MinIO repository.
-
-4. Setup the theme as described in `themes/kes-docs-theme/README.md`
+4. `cd themes/kes-doc-theme`
+5. `npm install`
+6. `npm build`
+7. `cd ../../`
 
 ## Update Theme from Upstream Repository
 
