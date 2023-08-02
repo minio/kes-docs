@@ -40,7 +40,7 @@ To remove more than one key, separate each key with a space.
 
 ### `--insecure, -k`
 
-{{< include "_includes/params/include.md" >}}
+{{< include "_includes/params/insecure.md" >}}
 
 ## Examples
 
