@@ -33,7 +33,7 @@ kes identity info                   \
 
 ### `--color`
 
-{{< include "_includes/params/_color.md" >}}
+{{< include "_includes/params/color.md" >}}
 
 ### `--enclave, -e`
 

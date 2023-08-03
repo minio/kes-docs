@@ -128,14 +128,14 @@ MinIO strongly recommends synchronizing changes to configuration files in distri
 
 ## Supported KMS Targets
 
- - [Hashicorp Vault]({{< relref "/integrations//hashicorp-vault-keystore.md" >}})
- - [Fortanix SDKMS]({{< relref "/integrations/fortanix-sdkms.md" >}})
- - [Thales CipherTrust Manager (formerly Gemalto KeySecure)]({{< relref "/integrations/thales-ciphertrust.md" >}})
  - [AWS Secrets Manager]({{< relref "/integrations/aws-secrets-manager.md" >}})
- - [Google Cloud Secret Manager]({{< relref "/integrations/google-cloud-secret-manager.md" >}})
  - [Azure KeyVault]({{< relref "/integrations/azure-keyvault.md" >}})
+ - [Entrust KeyControl]({{< relref "/integrations/entrust-keycontrol.md" >}})
+ - [Fortanix SDKMS]({{< relref "/integrations/fortanix-sdkms.md" >}})
+ - [Google Cloud Secret Manager]({{< relref "/integrations/google-cloud-secret-manager.md" >}})
+ - [Hashicorp Vault]({{< relref "/integrations//hashicorp-vault-keystore.md" >}})
  - [Local Filesystem]({{< relref "/tutorials/filesystem-keystore.md" >}})
-
+ - [Thales CipherTrust Manager (formerly Gemalto KeySecure)]({{< relref "/integrations/thales-ciphertrust.md" >}})
 
 ## External References
 ### API Documentation

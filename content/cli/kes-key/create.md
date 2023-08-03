@@ -24,7 +24,7 @@ kes key create                  \
 
 ### `name`
 
-{{< include "_includes/params/_name.md" >}}
+{{< include "_includes/params/name.md" >}}
 
 You may add multiple names to a single command to generate multiple keys.
 
