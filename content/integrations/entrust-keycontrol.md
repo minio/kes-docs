@@ -6,7 +6,7 @@ draft: false
 tableOfContents: true
 ---
 
-[Entrust KeyControl](https://www.entrust.com/digital-security/key-management/keycontrol) is a proprietary KMS that provides a secret store that can be used by KES.
+[Entrust KeyControl](https://www.entrust.com/digital-security/key-management/keycontrol) is a proprietary KMS which KES supports using for storing secrets.
 
 ```goat
                 +-----------------------------------------+
@@ -18,12 +18,13 @@ tableOfContents: true
 
 ## Prerequisites
 
-
-This guide assumes that you have setup an Entrust KeyControl v10.1 cluster. 
+This procedure was written and tested against Entrust KeyControl v10.1. 
+The provided instructions may work against other KeyControl versions.
+This procedure assumes you have prior experience with Entrust products and have followed their documentation, best practices, and other published materials in deploying the KeyControl service.
 
 For instructions to set up an Entrust KeyControl cluster, refer to the Entrust documentation:
  - [Entrust KeyControl on AWS](https://docs.hytrust.com/DataControl/10.1/Online/Content/Books/Amazon-Web-Services/Creating-KC-Cluster-AWS/Configuring-the-First-KC-Node-AWS.html)
- - [Entrust KeyControl on prem](https://docs.hytrust.com/DataControl/10.1/Online/Content/OLH-Files/Help-content-map-all-books.html) 
+ - [Entrust KeyControl on-premises](https://docs.hytrust.com/DataControl/10.1/Online/Content/OLH-Files/Help-content-map-all-books.html) 
 
 ## Set up Entrust KeyControl
 
@@ -31,14 +32,14 @@ Before setting up the KES Server, complete the following sections in KeyControl 
 
 ### Create a new Vault
 
-1. Login into your KeyControl cluster as `secroot` and create a new **PASM** Vault.
-2. Access Vault Management, then select **Create Vault**.
-3. Make the following entries:
+Log in to your KeyControl cluster with a user that has root-level permissions (for example, `secroot`) and create a new **PASM** vault.
 
-   - **Type**: PASM
-   - **Name**: minio
-   - **Description**: optional additional information for the vault, or leave blank
-   - **Admin Name**: user name to to manage the vault
+Make entries similar to the following:
+
+   - **Type**: `PASM`
+   - **Name**: `minio`
+   - **Description**: Optional additional information for the vault, or leave blank.
+   - **Admin Name**: User name to to manage the vault.
      
      Note: This user has complete access to the Vault.
    - **Admin Email**: Email address for the vault administrator
@@ -46,64 +47,48 @@ Before setting up the KES Server, complete the following sections in KeyControl 
      Note: KeyControl sends a one-time password to this email address to access the vault.
      You need this password in the next step.
 
+Make other required entries as per KeyControl or your own guidelines.
+You can set the Name and Description to be more specific to your MinIO deployment or according to your own guidelines.
+
 ### Access the new Vault
 
-1. Access the Vault URL
+1. Access the Vault URL.
    
    This URL should be in the email with the one-time password.
    You can also find the URL from the Vault tab in KeyControl.
-2. Use the admin user name and the one-time password emailed to you to access the vault
+2. Use the admin user name and the one-time password sent by email to access the Vault.
 
 
 ### Create a new Box
 
-KeyControl stores secrets in a box inside the vault.
-Add a box to store your secrets.
+KeyControl stores secrets in a Box inside the Vault.
+Add a Box to store your secrets.
 
-1. From the KeyControl Secrets Vault screen, select **Manage** then **Manage Boxes**
-2. Select **Create** to add a new Box
-  
-   or
-
-   Select **Add a Box Now** from the Manage Boxes page
-4. Make the following entries ont he **About** page
+Follow the prompts and make entries similar to the following:
    
    - **Name**: A descriptive name for the box, such as the MinIO Tenant name.
    - **Description**: Optional additional information about the secrets in the box.
-   - **Secret Expiration**: leave blank
-5. Select **Continue**
-6. Leave the options on the **Checkout Details** page blank and click **Continue**
-   
-   {{< admonition type="important" >}}
-   Do **NOT** select **Secret Checkout Duration**.
-   {{< /admonition >}}
+   - **Secret Expiration**: leave blank.
+   - **Secret Checkout Duration**: leave blank.
+   - **Secret Rotation Duration**: leave blank.
 
-7. Leave the options on the **Rotation Details** page blank
-   
-   {{< admonition type="important" >}}
-   Do **NOT** select **Secret Rotation Duration**.
-   {{< /admonition >}}
-
-8. Select **Create** to add the new Box
+Make other required entries as per KeyControl or your own guidelines.
 
 ### Attach the 'Vault User' role policy
 
 KeyControl uses Role-Based Access Control.
 Add a policy with the `Vault User` role and attach the policy to the user account used by KES.
 
-1. Create a new Access Policy
-2. Make the following entries on the **About** page:
+Follow the prompts and make entries similar to the following:
 
-   - **Name**: KES Service
-   - **Description**: Optional longer description for the policy
-   - **Role**: Vault User Role
+   - **Name**: KES Service.
+   - **Description**: Optional longer description for the policy.
+   - **Role**: Vault User Role.
    - **Users**: The KeyControl account KES uses to access keys.
-3. Select **Continue**
-4. Make the following entries on the **Resources** page:
+   - **Box**: Select the box you added in the previous step from the dropdown.
+   - **Secrets**: All Secrets.
 
-   - **Box**: Select the box you added in the previous step from the dropdown
-   - **Secrets**: All Secrets
-5. Select **Add** to create the policy and attach it to the selected user
+Make other required entries as per KeyControl or your own guidelines.
 
 
 ## KES Server Setup
@@ -112,10 +97,8 @@ After creating a new vault, box inside the vault, and the user access policy in 
 
 ### Generate KES server private key & certificate
 
-
-First, we need to generate a TLS private key and certificate for our KES server.
-If you already have TLS certificate you want to use for your KES server you can
-skip this step.
+Generate a TLS private key and certificate for your KES server.
+If you already have TLS certificate you want to use for your KES server or a working KES server, you can skip this step.
 
 The following command generates a new TLS private key (`private.key`) and a self-signed X.509 certificate (`public.crt`) issued for the IP `127.0.0.1` and DNS name `localhost`.
 
@@ -150,7 +133,7 @@ The identity can be computed again via:
  
 ### Generate a new API key
 
-The client application needs some credentials to access the KES server. 
+The client application requires credentials in order to access the KES server. 
 The following command generates a new API key.
 
 ```sh {.copy}
@@ -215,7 +198,7 @@ keystore:
 
 ### Start the KES Server
 
-Use the yaml file you created to start a KES server instance.
+Use the YAML file you created to start a KES server instance.
 
 ```sh {.copy}
 kes server --config config.yml --auth off
@@ -242,7 +225,7 @@ kes server --config config.yml --auth off --mlock
 ### KES CLI Access
 
 
-1. Set `KES_SERVER` Endpoint
+1. Set the `KES_SERVER` Endpoint.
 
    The following environment variable specifies the server the KES CLI should talk to:
 
@@ -250,7 +233,7 @@ kes server --config config.yml --auth off --mlock
    $ export KES_SERVER=https://127.0.0.1:7373
    ```
 
-2. Define the Client Credentials
+2. Define the Client Credentials.
 
    The following environment variables set the access credentials the client uses to talk to a KES server:
    
@@ -262,9 +245,9 @@ kes server --config config.yml --auth off --mlock
    $ export KES_CLIENT_KEY=client.key
    ```
 
-3. Test the Configuration
+3. Test the Configuration.
    
-   Perform any API operation allowed by the policy we assigned above. 
+   Perform any API operation allowed by the policy defined in the KES server configuration file. 
    
    For example, create a key:
 
