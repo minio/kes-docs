@@ -98,7 +98,7 @@ After creating a new vault, box inside the vault, and the user access policy in 
 ### Generate KES server private key & certificate
 
 Generate a TLS private key and certificate for your KES server.
-If you already have TLS certificate you want to use for your KES server or a working KES server, you can skip this step.
+If you already have either a TLS certificate you want to use for your KES server or a working KES server, you can skip this step.
 
 The following command generates a new TLS private key (`private.key`) and a self-signed X.509 certificate (`public.crt`) issued for the IP `127.0.0.1` and DNS name `localhost`.
 
