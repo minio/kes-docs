@@ -102,6 +102,9 @@ TasksMax=infinity
 TimeoutStopSec=infinity
 SendSIGKILL=no
 
+# Enable memory locking features used to prevent paging.
+AmbientCapabilities=CAP_IPC_LOCK
+
 [Install]
 WantedBy=multi-user.target
 ```
