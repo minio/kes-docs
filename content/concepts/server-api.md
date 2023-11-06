@@ -31,18 +31,13 @@ If any endpoint does not require a certificate, failed calls result in an HTTP e
 | [`/v1/key/generate`](#generate-key)                     | Generate a new plain/encrypted data encryption key pair.    |
 | [`/v1/key/encrypt`](#encrypt-key)                       | Encrypt a (small) plaintext with a key.                     |
 | [`/v1/key/decrypt`](#decrypt-ley)                       | Decrypt a (small) ciphertext with a key.                    |
-| [`/v1/key/bulk/decrypt`](#bulk-decrypt-key)             | Decrypt a list of (small) ciphertexts with a key.           |
 | [**Policy API**](#Policy-API)                           |                                                             |
 | [`/v1/policy/describe`](#describe-policy)               | Fetch information about a policy.                           |
-| [`/v1/policy/assign`](#assign-policy)                   | Assign a policy to an identity.                             |
-| [`/v1/policy/write`](#write-policy)                     | Create or overwrite a policy.                               |
 | [`/v1/policy/read`](#read-policy)                       | Fetch a policy.                                             |
 | [`/v1/policy/list`](#list-policy)                       | List policies.                                              |
-| [`/v1/policy/delete`](#list-policy)                     | Delete a policy.                                            |
 | [**Identity API**](#identity-api)                       |                                                             |
 | [`/v1/identity/describe`](#describe-odentity)           | Fetch information about an identity.                        |
 | [`/v1/identity/self/describe`](#self-describe-identity) | Fetch information about the identity issuing the request.   |
-| [`/v1/identity/delete`](#delete-identity)               | Delete an identity.                                         |
 | [`/v1/identity/list`](#list-identity)                   | List identities.                                            |
 | [**Log API**](#log-api)                                 |                                                             |
 | [`/v1/log/audit`](#audit-log)                           | Subscribe to the audit log.                                 |
@@ -57,14 +52,6 @@ If any endpoint does not require a certificate, failed calls result in an HTTP e
 
 Get the KES server version information.
 
-#### Format
-
-```
-{
-    "version": string
-}
-```
-
 #### Sample Request
 ```bash
 $ curl \
@@ -76,8 +63,9 @@ $ curl \
 
 #### Sample Response
 ```json
-{ 
-  "version": "0.18.0"
+{
+  "version": "2023-10-03T00-48-37Z",
+  "commit": "9d1b5ad6dbdd963beabfbc91eb1ca0d330d5cd3d"
 }
 ```
 
@@ -87,26 +75,15 @@ $ curl \
 |:--------:|:---------------------------:|:------------------:|
 | `GET`    | `/v1/ready`                 | `application/json` |
 
-Return the KES server readiness.
+The KES server readiness probe. 
+Returns `200 OK` if KES is ready.
 
 You can disable the requirement for a valid certificate when calling this endpoint in the KES [configuration file]({{< relref "tutorials/configuration.md#api-configuration" >}}).
-
-#### Format
-
-```
-[
-  {
-    "method"  : string
-    "path"    : string
-    "max_body": number   // in bytes
-    "timeout" : number   // in seconds, 0 indicates never times out;
-  }
-]
-```
 
 #### Sample Request
 ```bash
 $ curl \
+    -I \
     --key root.key \
     --cert root.cert \
     --request GET \
@@ -114,14 +91,11 @@ $ curl \
 ```
 
 #### Sample Response
-
-An authenticated request results in one of the following HTML codes:
-
-| Response              | Readiness |
-|:---------------------:|:---------:|
-| `200 Ok`              | Ready     |
-| `502 Bad Gateway`     | Not ready |
-| `504 Gateway Timeout` | Not ready |
+```
+HTTP/1.1 200 OK
+Date: Sat, 28 Oct 2023 16:29:49 GMT
+Content-Length: 0
+```
 
 ### API
 
@@ -132,19 +106,6 @@ An authenticated request results in one of the following HTML codes:
 Get a list of API endpoints supported by the server.
 
 You can disable the requirement for a valid certificate when calling this endpoint in the KES [configuration file]({{< relref "tutorials/configuration.md#api-configuration" >}}).
-
-#### Format
-
-```
-[
-  {
-    "method"  : string
-    "path"    : string
-    "max_body": number   // in bytes
-    "timeout" : number   // in seconds, 0 indicates never times out
-  }
-]
-```
 
 #### Sample Request
 ```bash
@@ -183,13 +144,13 @@ $ curl \
     "timeout": 15
   },
   {
-    "method": "POST",
+    "method": "PUT",
     "path": "/v1/key/create/",
     "max_body": 0,
     "timeout": 15
   },
   {
-    "method": "POST",
+    "method": "PUT",
     "path": "/v1/key/import/",
     "max_body": 1048576,
     "timeout": 15
@@ -201,26 +162,20 @@ $ curl \
     "timeout": 15
   },
   {
-    "method": "POST",
+    "method": "PUT",
     "path": "/v1/key/generate/",
     "max_body": 1048576,
     "timeout": 15
   },
   {
-    "method": "POST",
+    "method": "PUT",
     "path": "/v1/key/encrypt/",
     "max_body": 1048576,
     "timeout": 15
   },
   {
-    "method": "POST",
+    "method": "PUT",
     "path": "/v1/key/decrypt/",
-    "max_body": 1048576,
-    "timeout": 15
-  },
-  {
-    "method": "POST",
-    "path": "/v1/key/bulk/decrypt/",
     "max_body": 1048576,
     "timeout": 15
   },
@@ -237,32 +192,14 @@ $ curl \
     "timeout": 15
   },
   {
-    "method": "POST",
-    "path": "/v1/policy/assign/",
-    "max_body": 1048576,
-    "timeout": 15
-  },
-  {
     "method": "GET",
     "path": "/v1/policy/read/",
     "max_body": 0,
     "timeout": 15
   },
   {
-    "method": "POST",
-    "path": "/v1/policy/write/",
-    "max_body": 1048576,
-    "timeout": 15
-  },
-  {
     "method": "GET",
     "path": "/v1/policy/list/",
-    "max_body": 0,
-    "timeout": 15
-  },
-  {
-    "method": "DELETE",
-    "path": "/v1/policy/delete/",
     "max_body": 0,
     "timeout": 15
   },
@@ -285,12 +222,6 @@ $ curl \
     "timeout": 15
   },
   {
-    "method": "DELETE",
-    "path": "/v1/identity/forget/",
-    "max_body": 0,
-    "timeout": 15
-  },
-  {
     "method": "GET",
     "path": "/v1/log/error",
     "max_body": 0,
@@ -302,18 +233,6 @@ $ curl \
     "max_body": 0,
     "timeout": 0
   },
-  {
-    "method": "POST",
-    "path": "/v1/enclave/create/",
-    "max_body": 0,
-    "timeout": 15
-  },
-  {
-    "method": "POST",
-    "path": "/v1/enclave/delete/",
-    "max_body": 0,
-    "timeout": 15
-  }
 ]
 ```
 
@@ -329,7 +248,6 @@ For example, the total number of requests.
 Metrics return in the [Prometheus exposition format](https://prometheus.io/docs/instrumenting/exposition_formats/).
 
 You can disable the requirement for a valid certificate when calling this endpoint in the KES [configuration file]({{< relref "tutorials/configuration.md#api-configuration" >}}).
-
 
 ```sh
 # TYPE kes_http_request_active gauge
@@ -430,25 +348,13 @@ If the server is up, the request returns `200 OK` and a JSON document that descr
 The information the response returns includes the following:
 
 - Version
-- Uptime
+- Uptime (in seconds)
+- OS and CPU architecture
+- Current memory consumption
 - Keystore status
 - Keystore latency (in ms)
 
 You can disable the requirement for a valid certificate when calling this endpoint in the KES [configuration file]({{< relref "tutorials/configuration.md#api-configuration" >}}).
-
-
-#### Format
-
-```json
-{
-    "version": string
-    "uptime" : number       // in seconds
-    "kms"    : {
-        "state"  : string   // optional
-        "latency": number   // optional, in milliseconds
-    }
-}
-```
 
 #### Sample Request
 ```bash
@@ -461,12 +367,15 @@ $ curl \
 #### Sample Response
 ```json
 {
-  "version": "0.17.1",
-  "uptime": 3000000000,
-  "kms": {
-    "state": "reachable",
-    "latency": 148000000
-  }
+  "version": "2023-10-03T00-48-37Z",
+  "os": "linux",
+  "arch": "amd64",
+  "uptime": 724306, // in seconds
+  "num_cpu": 4,
+  "num_cpu_used": 4,
+  "mem_heap_used": 4960704,
+  "mem_stack_used": 1081344,
+  "keystore_latency": 1 // in milliseconds
 }
 ```
 
@@ -476,7 +385,7 @@ $ curl \
 
 | Method   | Path                        | Content-Type       |
 |:--------:|:---------------------------:|:------------------:|
-| `POST`   | `/v1/key/create/<name>`     | `application/json` |
+| `PUT`    | `/v1/key/create/<name>`     | `application/json` |
 
 Create a new cryptographic key.
 
@@ -486,7 +395,7 @@ Create a new cryptographic key.
 $ curl \
     --key root.key \
     --cert root.cert \
-    --request POST \
+    --request PUT \
     'https://play.min.io:7373/v1/key/create/my-key'
 ```
 
@@ -494,24 +403,16 @@ $ curl \
 
 | Method   | Path                        | Content-Type       |
 |:--------:|:---------------------------:|:------------------:|
-| `POST`   | `/v1/key/import/<name>`     | `application/json` |
+| `PUT`    | `/v1/key/import/<name>`     | `application/json` |
 
 Import a cryptographic key into the KES server.
-
-#### Format
-
-```json
-{
-   "bytes": string   // base64-encoded byte-string
-}
-```
 
 #### Sample Request
 ```bash
 $ curl \
     --key root.key \
     --cert root.cert \
-    --request POST \
+    --request PUT \
     --data '{"bytes":"uNta318uv2GvEmMs5U4HiIWE/GtrpADR0cYZg+nhrkI="}' \
     'https://play.min.io:7373/v1/key/import/my-key'
 ```
@@ -539,23 +440,11 @@ $ curl \
 
 ### List Keys
 
-| Method   | Path                        | Content-Type           |
-|:--------:|:---------------------------:|:----------------------:|
-| `GET`    | `/v1/key/list/<pattern>`    | `application/x-ndjson` |
+| Method   | Path                        | Content-Type      |
+|:--------:|:---------------------------:|:-----------------:|
+| `GET`    | `/v1/key/list/<prefix>`    | `application/json` |
 
-List all key names that match the specified pattern.
-The pattern `*` lists all keys.
-
-#### Format
-
-```json
-{
-   "name"      : string
-   "created_at": string    // optional, time (RFC 3339) with sub-second precision
-   "created_by": string    // optional, KES identity
-   "error"     : string    // optional
-}
-```
+List all key names. Specify an optional prefix to list only key names starting with that prefix.
 
 #### Sample Request
 ```bash
@@ -563,19 +452,14 @@ $ curl \
     --key root.key \
     --cert root.cert \
     --request GET \
-    'https://play.min.io:7373/v1/key/list/my-key*'
+    'https://play.min.io:7373/v1/key/list/my-key'
 ```
 
 #### Sample Response
 ```json
 {
-  "name": "my-key"
-}
-{
-  "name": "my-key1"
-}
-{
-  "name": "my-key2"
+  "names": [ "key-0", "key-1", "key-2" ],
+  "continue_at": "key-3" 
 }
 ```
 
@@ -583,7 +467,7 @@ $ curl \
 
 | Method   | Path                        | Content-Type       |
 |:--------:|:---------------------------:|:------------------:|
-| `POST`   | `/v1/key/generate/<name>`   | `application/json` |
+| `PUT`    | `/v1/key/generate/<name>`   | `application/json` |
 
 Generate a new data encryption key (DEK). 
 
@@ -595,27 +479,12 @@ Since this key never leaves the KES server, only the KES server can decrypt the 
 An application should use the plaintext DEK for a cryptographic operation.
 The application should remember both the ciphertext DEK and which key `<name>` was used. 
 
-#### Format
-
-```json
-{
-   "context": string    // optional, base64-encoded byte-string
-}
-```
-
-```json
-{
-   "plaintext" : string    // base64-encoded byte-string
-   "ciphertext": string    // base64-encoded byte-string
-}
-```
-
 #### Sample Request
 ```bash
 $ curl \
     --key root.key \
     --cert root.cert \
-    --request POST \
+    --request PUT \
     --data '{}' \
     'https://play.min.io:7373/v1/key/generate/my-key'
 ```
@@ -632,33 +501,18 @@ $ curl \
 
 | Method   | Path                        | Content-Type       |
 |:--------:|:---------------------------:|:------------------:|
-| `POST`   | `/v1/key/encrypt/<name>`    | `application/json` |
+| `PUT`    | `/v1/key/encrypt/<name>`    | `application/json` |
 
 Decrypts and authenticates a small plaintext with the cryptographic key.
 The plaintext must not exceed 1 MB. 
 Use the **Encrypt Key** endpoint for wrapping small data, such as another cryptographic key. 
-
-#### Format
-
-```json
-{
-   "plaintext": string    // base64-encoded byte string
-   "context"  : string    // optional, base64-encoded byte-string
-}
-```
-
-```json
-{
-   "ciphertext": string    // base64-encoded byte-string
-}
-```
 
 #### Sample Request
 ```bash
 $ curl \
     --key root.key \
     --cert root.cert \
-    --request POST \
+    --request PUT \
     --data '{"plaintext":"SGVsbG8gV29ybGQhCg=="}' \
     'https://play.min.io:7373/v1/key/encrypt/my-key'
 ```
@@ -674,31 +528,17 @@ $ curl \
 
 | Method   | Path                        | Content-Type
 |:--------:|:---------------------------:|:------------------:|
-| `POST`   | `/v1/key/decrypt/<name>`    | `application/json` |
+| `PUT`    | `/v1/key/decrypt/<name>`    | `application/json` |
 
 Decrypts a ciphertext with the cryptographic key. 
 Returns the corresponding plaintext if and only if the ciphertext is authentic and has been produced by the named key.
-
-#### Format
-```json
-{
-   "ciphertext": string    // base64-encoded byte string
-   "context"   : string    // optional, base64-encoded byte-string
-}
-```
-
-```json
-{
-   "plaintext": string    // base64-encoded byte-string
-}
-```
 
 #### Sample Request
 ```bash
 $ curl \
     --key root.key \
     --cert root.cert \
-    --request POST \
+    --request PUT \
     --data '{"ciphertext":"eyJhZWFkIjoiQUVTLTI1Ni1HQ00iLCJpdiI6ImJWbHRZVDdpUEtxUjNFYWpvaHp3cmc9PSIsIm5vbmNlIjoiSWxqaHBNcWViUUF5d1MxbyIsImJ5dGVzIjoiYlpNL1liU0E4ZSswVnFSUDhaR2UvdDJHQThrbzRBeXcwNGZBam1KWkIxKzk2OTg4VXYwcFJmRjEvS3poM1hGeCJ9"}' \
     'https://play.min.io:7373/v1/key/decrypt/my-key'
 ```
@@ -708,55 +548,6 @@ $ curl \
 {
   "plaintext": "TIDXCHZxPr84r7ktggCCW7otoz5T4zsRENi4THCjXPo="
 }
-```
-
-### Bulk Decrypt Key
-
-| Method   | Path                             | Content-Type
-|:--------:|:--------------------------------:|:------------------:|
-| `POST`   | `/v1/key/bulk/decrypt/<name>`    | `application/json` |
-
-Decrypt a list of ciphertexts with the cryptographic key. 
-Returns the corresponding plaintexts if and only if all ciphertexts are authentic and were produced by the named key.
-
-```json
-[
-  {
-     "ciphertext": string    // base64-encoded byte string
-     "context"   : string    // optional, base64-encoded byte-string
-  }
-]
-```
-
-#### Format
-```json
-[
-  {
-    "plaintext": string    // base64-encoded byte-string
-  }
-]
-```
-
-#### Sample Request
-```bash
-$ curl \
-    --key root.key \
-    --cert root.cert \
-    --request POST \
-    --data '[{"ciphertext":"eyJhZWFkIjoiQUVTLTI1Ni1HQ00iLCJpdiI6ImJWbHRZVDdpUEtxUjNFYWpvaHp3cmc9PSIsIm5vbmNlIjoiSWxqaHBNcWViUUF5d1MxbyIsImJ5dGVzIjoiYlpNL1liU0E4ZSswVnFSUDhaR2UvdDJHQThrbzRBeXcwNGZBam1KWkIxKzk2OTg4VXYwcFJmRjEvS3poM1hGeCJ9"},{"ciphertext":"eyJhZWFkIjoiQUVTLTI1Ni1HQ00tSE1BQy1TSEEtMjU2IiwiaWQiOiIxYTQ3ZjY4ZjE0MWNlNGJmZDIwOWFmZThlNzViMzI4MSIsIml2IjoiZHkxZGdaV2FUVTN1WThGdHE2QjI2UT09Iiwibm9uY2UiOiJldllDMWdoT1NtSEllbFdRIiwiYnl0ZXMiOiJkQUJBOFdISldPOVZEWXdRRFQ3TTl1NDRESjdVRVVVcVE0UzBOYXpuQ3dDd2U2MHl3R2o5TUxLaUUzMDE3R0psIn0="}]' \
-    'https://play.min.io:7373/v1/key/decrypt/my-key'
-```
-
-#### Sample Response
-```json
-[
-  {
-    "plaintext": "TIDXCHZxPr84r7ktggCCW7otoz5T4zsRENi4THCjXPo="
-  },
-  {
-    "plaintext": "F5YcdDIZgZSYRrLB0gsCWDK7RP/Vc+25Mh+rRhWxbvo="
-  }
-]
 ```
 
 ## Policy API
@@ -770,14 +561,6 @@ $ curl \
 Describes a policy by returning its metadata.
 For example, retrieves who created the policy and when did they create it.
 
-#### Format
-```json
-{
-   "created_at": string    // RFC 3339 encoded timestamp
-   "created_by": string    // KES identity
-}
-```
-
 #### Sample Request
 ```bash
 $ curl \
@@ -790,66 +573,10 @@ $ curl \
 #### Sample Response
 ```json
 {
+   "name": "my-policy",
    "created_at": "2020-03-24T12:37:33Z",
    "created_by": "2ed3c8c81376106d14a3374e901aa1ec59a978db3133c9619ba526ce6754d2e6"
 }
-```
-
-### Assign Policy
-
-| Method   | Path                            | Content-Type       |
-|:--------:|:-------------------------------:|:------------------:|
-| `POST`   | `/v1/policy/assign/<policy>`    | `application/json` |
-
-Assign a policy to an identity. 
-An identity can have at most one assigned policy.
-You can assign a policy to multiple identities.
-
-The assigned policy defines which API calls an identity can perform.
-- You cannot assign a policy to the admin identity. 
-- An identity cannot assign a policy to itself.
-
-#### Format
-```json
-{
-   "identity": string    // KES identity
-}
-```
-
-#### Sample Request
-```bash
-$ curl \
-    --key root.key \
-    --cert root.cert \
-    --request POST \
-    --data '{"identity":"a4eac2d875d60ef25b068965c4e850aac074028dc576f3699276c6ea0ae1828f"}' \
-    'https://play.min.io:7373/v1/identity/assign/my-policy'
-```
-
-### Write Policy
-
-| Method   | Path                        | Content-Type       |
-|:--------:|:---------------------------:|:------------------:|
-| `POST`   | `/v1/policy/write/<policy>` | `application/json` |
-
-Create or update a policy at the KES server.
-
-#### Format
-```json
-{
-   "allow": [string]   // optional
-   "deny" : [string]   // optional
-}
-```
-
-#### Sample Request
-```bash
-$ curl \
-    --key root.key \
-    --cert root.cert \
-    --request POST \
-    --data '{"allow":["/v1/key/generate/my-key","/v1/key/decrypt/my-key"]}' \
-    'https://play.min.io:7373/v1/policy/write/my-policy'
 ```
 
 ### Read Policy
@@ -859,14 +586,6 @@ $ curl \
 | `GET`    | `/v1/policy/read/<policy>`  | `application/json` |
 
 Get a policy from the KES server.
-
-#### Format
-```json
-{
-   "allow": [string]   // optional
-   "deny" : [string]   // optional
-}
-```
 
 #### Sample Request
 ```bash
@@ -880,31 +599,23 @@ $ curl \
 ### Sample Response
 ```json
 {
-  "allow": [
-    "/v1/key/generate/my-key",
-    "/v1/key/decrypt/my-key"
-  ]
+  "allow": {
+    "/v1/key/generate/my-key": {},
+    "/v1/key/decrypt/my-key": {}
+  },
+  "deny": {    
+    "/v1/key/decrypt/my-key-internal*": {}
+  }
 }
 ```
 
 ### List Policy
 
-| Method   | Path                        | Content-Type           |
-|:--------:|:---------------------------:|:----------------------:|
-| `GET`    | `/v1/policy/list/<pattern>` | `application/x-ndjson` |
+| Method   | Path                        | Content-Type       |
+|:--------:|:---------------------------:|:------------------:|
+| `GET`    | `/v1/policy/list/<prefix>`  | `application/json` |
 
-List all policy metadata that match the specified pattern.
-Use the pattern `*` to list all policy metadata.
-
-#### Format
-```json
-{
-   "name"      : string
-   "created_at": string    // optional, time (RFC 3339) with sub-second precision
-   "created_by": string    // optional, KES identity
-   "error"     : string    // optional
-}
-```
+List all policy names. Specify an optional prefix to list only policy names starting with that prefix.
 
 #### Sample Request
 ```bash
@@ -912,40 +623,15 @@ $ curl \
     --key root.key \
     --cert root.cert \
     --request GET \
-    'https://play.min.io:7373/v1/policy/list/*'
+    'https://play.min.io:7373/v1/policy/list/my-policy'
 ```
 
 ### Sample Response
 ```json
 {
-  "name": "my-policy",
-  "created_at": "2022-03-02T12:11:06.840267Z",
-  "created_by": "3ecfcdf38fcbe141ae26a1030f81e96b753365a46760ae6b578698a97c59fd22"
+  "names": ["my-policy", "my-policy-2"],
+  "continue_at": ""
 }
-{
-  "name": "my-policy2",
-  "created_at": "2022-03-02T12:12:10.181179Z",
-  "created_by": "3ecfcdf38fcbe141ae26a1030f81e96b753365a46760ae6b578698a97c59fd22"
-}
-```
-
-### Delete Policy
-
-| Method   | Path                         | Content-Type       |
-|:--------:|:----------------------------:|:------------------:|
-| `DELETE` | `/v1/policy/delete/<policy>` | `application/json` |
-
-Delete a policy from the KES server.
-
-**Caution:** All identities assigned to this policy  lose all authorization privileges.  
-
-#### Sample Request
-```bash
-$ curl \
-    --key root.key \
-    --cert root.cert \
-    --request DELETE \
-    'https://play.min.io:7373/v1/policy/delete/my-policy'
 ```
 
 ## Identity API
@@ -958,17 +644,6 @@ $ curl \
 
 Describes an identity by returning its metadata.
 For example, use this endpoint to determine the currently assigned policy or whether it is an admin identity.
-
-#### Format
-
-```json
-{
-   "policy"    : string    // Name of assigned policy. Empty if admin is true
-   "admin"     : boolean   // True if the identity is an admin
-   "created_at": string    // RFC 3339 encoded timestamp
-   "created_by": string    // KES identity
-}
-```
 
 #### Sample Request
 ```bash
@@ -1002,22 +677,6 @@ It returns the identity and policy information for the client identity.
 The self-describe API endpoint is publicly available and does not require any special permissions. 
 Any client can query its own identity and policy information.
 
-#### Format
-
-```json
-{
-   "identity"   : string    // KES identity issuing the request
-   "policy_name": string    // Name of assigned policy. Empty if admin is true
-   "admin"      : boolean   // True if the identity is an admin
-   "created_at" : string    // RFC 3339 encoded timestamp
-   "created_by" : string    // KES identity
-   "policy"     : {
-      "allow": [string]     // optional
-      "deny" : [string]     // optional
-   }
-}
-```
-
 #### Sample Request
 ```bash
 $ curl \
@@ -1040,45 +699,13 @@ $ curl \
 }
 ```
 
-### Delete Identity
-
-| Method   | Path                             | Content-Type       |
-|:--------:|:--------------------------------:|:------------------:|
-| `DELETE` | `/v1/identity/delete/<identity>` | `application/json` |
-
-Deletes an identity from the KES server.
-
-The client certificate that corresponds to the identity is no longer authorized to perform any API operations.
-You cannot delete the admin identity.
-
-#### Sample Request
-```bash
-$ curl \
-    --key root.key \
-    --cert root.cert \
-    --request DELETE \
-    'https://play.min.io:7373/v1/identity/delete/a4eac2d875d60ef25b068965c4e850aac074028dc576f3699276c6ea0ae1828f'
-```
-
 ### List Identity
 
-| Method   | Path                          | Content-Type           |
-|:--------:|:-----------------------------:|:----------------------:|
-| `GET`    | `/v1/identity/list/<pattern>` | `application/x-ndjson` |
+| Method   | Path                          | Content-Type       |
+|:--------:|:-----------------------------:|:------------------:|
+| `GET`    | `/v1/identity/list/<prefix>`  | `application/json` |
 
-List all identity metadata hat match the specified pattern.
-Use the pattern `*` to list all identity metadata.
-
-#### Format
-```json
-{
-   "identity"  : string    // KES identity
-   "policy"    : string
-   "created_at": string    // optional, time (RFC 3339) with sub-second precision
-   "created_by": string    // optional, KES identity
-   "error"     : string    // optional
-}
-```
+List all identities. Specify an optional prefix to list only identities starting with that prefix.
 
 #### Sample Request
 ```bash
@@ -1086,20 +713,17 @@ $ curl \
     --key root.key \
     --cert root.cert \
     --request GET \
-    'https://play.min.io:7373/v1/identity/list/*'
+    'https://play.min.io:7373/v1/identity/list/'
 ```
 
 #### Sample Response
 ```json
 {
-  "identity": "413c35cb06a9e1aa142ccebf829c96cbfd16162131a92f5ec8c9006f6fc5c9dc",
-  "policy": "my-policy",
-  "created_at": "2022-03-02T12:25:36.938167Z",
-}
-{
-  "identity": "1d7562ffd775ed4da949e4b08fe1085fba4991cadba4a96142a578c30106ba23",
-  "policy": "my-policy2",
-  "created_at": "2022-03-02T12:27:47.554596Z",
+  "identities": [ 
+    "413c35cb06a9e1aa142ccebf829c96cbfd16162131a92f5ec8c9006f6fc5c9dc",
+    "1d7562ffd775ed4da949e4b08fe1085fba4991cadba4a96142a578c30106ba23"
+  ],
+  "continue_at": ""
 }
 ```
 
@@ -1113,22 +737,6 @@ $ curl \
 
 Connect to the KES server audit log such that all new audit events stream to the client.
 
-#### Format
-```json
-{
-    "time"    : string
-    "request" : {
-        "path"    : string
-        "identity": string   // optional, KES identity
-        "ip"      : string   // optional, IPv4 or IPv6 address
-    }
-    "response": {
-        "code": number
-        "time": string
-    }
-}
-```
-
 #### Sample Request
 ```bash
 $ curl \
@@ -1140,9 +748,9 @@ $ curl \
 
 #### Sample Response
 ```json
-{"time":"2020-02-06T16:51:55Z","request":{"path":"/v1/log/audit/trace","identity":"dd46485bedc9ad2909d2e8f9017216eec4413bc5c64b236d992f7ec19c843c5f"},"response":{"code":200, "time":12056}}
-{"time":"2020-02-06T16:52:18Z","request":{"path":"/v1/policy/list/*","identity":"dd46485bedc9ad2909d2e8f9017216eec4413bc5c64b236d992f7ec19c843c5f"},"response":{"code":200, "time":28088}}
-{"time":"2020-02-06T16:52:25Z","request":{"path":"/v1/identity/list/*","identity":"dd46485bedc9ad2909d2e8f9017216eec4413bc5c64b236d992f7ec19c843c5f"},"response":{"code":200, "time":16476}}
+{"time":"2020-02-06T16:51:55Z","request":{"path":"/v1/log/audit/trace","identity":"dd46485bedc9ad2909d2e8f9017216eec4413bc5c64b236d992f7ec19c843c5f"},"response":{"code":200, "time":1200}}
+{"time":"2020-02-06T16:52:18Z","request":{"path":"/v1/policy/list/*","identity":"dd46485bedc9ad2909d2e8f9017216eec4413bc5c64b236d992f7ec19c843c5f"},"response":{"code":200, "time":2800}}
+{"time":"2020-02-06T16:52:25Z","request":{"path":"/v1/identity/list/*","identity":"dd46485bedc9ad2909d2e8f9017216eec4413bc5c64b236d992f7ec19c843c5f"},"response":{"code":200, "time":1640}}
 ```
 
 ### Error Log
@@ -1153,13 +761,6 @@ $ curl \
 
 
 Connect to the KES server error log such that all new error events stream to the client.
-
-#### Format
-```json
-{
-    "message": string
-}
-```
 
 #### Sample Request
 ```bash
