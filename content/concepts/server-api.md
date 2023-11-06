@@ -75,7 +75,8 @@ $ curl \
 |:--------:|:---------------------------:|:------------------:|
 | `GET`    | `/v1/ready`                 | `application/json` |
 
-The KES server readiness probe. Returns `200 OK` if KES is ready.
+The KES server readiness probe. 
+Returns `200 OK` if KES is ready.
 
 You can disable the requirement for a valid certificate when calling this endpoint in the KES [configuration file]({{< relref "tutorials/configuration.md#api-configuration" >}}).
 

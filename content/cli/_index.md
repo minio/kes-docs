@@ -27,7 +27,8 @@ Download the binary for your OS and system architecture.
 | darwin   | arm64   | [darwin-arm64](https://github.com/minio/kes/releases/latest/download/kes-darwin-arm64)       |
 | windows  | amd64   | [windows-amd64](https://github.com/minio/kes/releases/latest/download/kes-windows-amd64.exe) |
 
-Download the binary via `curl` but replace `<OS>` and `<ARCH>` with your operating system and CPU architecture.
+Download the binary using `curl`.
+Replace `<OS>` and `<ARCH>` with your operating system and CPU architecture.
 ```sh
 curl -sSL --tlsv1.2 'https://github.com/minio/kes/releases/latest/download/kes-<OS>-<ARCH>' -o ./kes
 ```
