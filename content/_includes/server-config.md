@@ -25,6 +25,11 @@ tls:
   cert:     ./server.cert  # Path to the TLS certificate
   password: ""             # An optional password to decrypt the TLS private key
   
+  # Specify how/whether the KES server verifies certificates presented
+  # by clients. Valid values are "on" and "off". Defaults to off, which
+  # is recommended for most use cases.
+  auth:     ""
+  
   # An optional path to a file or directory containing X.509 certificate(s).
   # If set, the certificate(s) get added to the list of CA certificates for
   # verifying the mTLS certificates sent by the KES clients.
