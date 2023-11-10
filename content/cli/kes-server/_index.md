@@ -42,6 +42,16 @@ This flag does not require a configuration file, TLS cert generation, or other s
 
 Keys are ephemeral and stored in memory.
 
+{{< admonition title="Keys Are Lost On Restart" type="important" >}}
+
+Ephemeral data is lost when the process restarts. 
+This includes all encryption keys stored on KES, rendering any encrypted data as permanently unreadable.
+
+Do not encrypt data using ephemeral keys if you are not comfortable with losing that data. 
+
+Never use development mode for production environments.
+{{< /admonition >}}
+
 The output of the flag includes the API key to use on the KES client during testing.
 Output resembles the following:
 
