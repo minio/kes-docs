@@ -23,6 +23,16 @@ It should only be used for testing purposes.
 
 ## Quickstart
 
+{{< admonition title="Development Mode" type="note" >}}
+For a quick development test server, use
+
+```sh
+kes server --dev
+```
+
+This starts a KES server on `127.0.0.1:7373` and stores keys in memory.
+{{< /admonition >}}
+
 1. Install the KES binary
 
    You can install the KES binary by:
