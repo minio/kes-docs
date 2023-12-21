@@ -290,5 +290,9 @@ relativeURLs = "True"
             current = true
      [[menu.docs]]
         name = "MinIO Documentation"
-        url = "https://min.io/docs"
+        url = "https://min.io/docs/minio/kubernetes/upstream/index.html"
         weight = 2
+     [[menu.docs]]
+        name = "DirectPV Documentation"
+        url = "https://min.io/docs/directpv"
+        weight = 3
