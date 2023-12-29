@@ -514,11 +514,15 @@ keystore:
 
 ### Encrypt Vault-stored Keys
 
-Hasicorp's [Transit](https://developer.hashicorp.com/vault/docs/secrets/transit) functionality provides a means to encrypt and decrypt keys stored in the vault.
+Hashicorp's [Transit](https://developer.hashicorp.com/vault/docs/secrets/transit) functionality provides a means to encrypt and decrypt keys stored in the vault.
 This provides an additional layer of encryption that may be useful in specific use cases.
 
 When enabled, Hashicorp stores a key in the Vault to encrypt or decrypt the other keys stored in the vault.
 KES then uses the vault-managed key to store or retrieve keys from the Vault.
+
+{{< admonition type="warning" >}}
+If the specified transit key is incorrect, disabled, removed, or otherwise unaccessible, KES cannot retrieve any vault keys nor perform any en/decryption operations relying on those keys.
+{{< /admonition >}}
 
 To configure Transit, add the following section to the KES Configuration YAML's `keystore.vault` section:
 
