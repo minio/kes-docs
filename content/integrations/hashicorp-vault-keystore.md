@@ -469,8 +469,6 @@ keystore:
 ### Multi-Tenancy with Vault Namespaces
 
 Vault can serve as the backend for multiple, isolated KES tenants.
-
-Vault can serve as backend for multiple, isolated KES tenants.
 Each KES tenant can consist of `N` replicas.
 There can be `M` KES tenants connected to the same Vault server/cluster. 
 
@@ -512,6 +510,24 @@ keystore:
        ping: 10s
      tls:
        ca: vault.crt # Manually trust the vault certificate since we use self-signed certificates
+```
+
+### Encrypt Vault-stored Keys
+
+Hasicorp's [Transit](https://developer.hashicorp.com/vault/docs/secrets/transit) functionality provides a means to encrypt and decrypt keys stored in the vault.
+This provides an additional layer of encryption that may be useful in specific use cases.
+
+When enabled, Hashicorp stores a key in the Vault to encrypt or decrypt the other keys stored in the vault.
+KES then uses the vault-managed key to store or retrieve keys from the Vault.
+
+To configure Transit, add the following section to the KES Configuration YAML's `keystore.vault` section:
+
+```sh {.copy}
+keystore:
+  vault:
+    transit:      # Optionally encrypt keys stored on the K/V engine with a Vault-managed key.
+      engine: ""  # The path of the transit engine - e.g. "my-transit". If empty, defaults to: transit (Vault default)
+      key: ""     # The key name that should be used to encrypt entries stored on the K/V engine.
 ```
 
 ## References
