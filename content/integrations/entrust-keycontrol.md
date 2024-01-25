@@ -265,6 +265,13 @@ kes server --config config.yml --auth off --mlock
    }
    ```
 
+## Using KES with a MinIO Server
+
+MinIO Server requires KES to set up server-side data encryption.
+
+See the [KES for MinIO instruction guide]({{< relref "/tutorials/kes-for-minio.md" >}}) for additional steps needed to use your new KES Server with a MinIO Server.
+
+
 ## References
 
  - [Server API Doc]({{< relref "/concepts/server-api" >}})

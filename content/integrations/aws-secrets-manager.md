@@ -86,7 +86,7 @@ You need an [AWS access key and AWS secret key pair](https://docs.aws.amazon.com
 1. Generate KES Server Private Key & Certificate
 
    First, we need to generate a TLS private key and certificate for our KES server.
-   A KES server can only be run with TLS - since [secure-by-default](https://en.wikipedia.org/wiki/Secure_by_default).
+   A KES server is [secure-by-default](https://en.wikipedia.org/wiki/Secure_by_default) and can only be run with TLS.
    Here we use self-signed certificates for simplicity.
 
    The following command generates a new TLS private/public key pair and a certificate for the IP address `127.0.0.1` with the DNS name of `localhost`:
@@ -106,7 +106,7 @@ You need an [AWS access key and AWS secret key pair](https://docs.aws.amazon.com
  
 2. Generate Client Credentials
 
-   Create credentials for the client application to use to access the KES server. 
+   Create credentials the client application uses to access the KES server. 
    
    The following command generates a new TLS private/public key pair:
 
@@ -227,3 +227,135 @@ You need an [AWS access key and AWS secret key pair](https://docs.aws.amazon.com
      ciphertext: eyJhZWFkIjoiQUVTLTI1Ni1HQ00tSE1BQy1TSEEtMjU2IiwiaWQiOiIxMTc1ZjJjNDMyMjNjNjNmNjY1MDk5ZDExNmU3Yzc4NCIsIml2IjoiVHBtbHpWTDh5a2t4VVREV1RSTU5Tdz09Iiwibm9uY2UiOiJkeGl0R3A3bFB6S21rTE5HIiwiYnl0ZXMiOiJaaWdobEZrTUFuVVBWSG0wZDhSYUNBY3pnRWRsQzJqWFhCK1YxaWl2MXdnYjhBRytuTWx0Y3BGK0RtV1VoNkZaIn0=
    }
    ```
+
+## Using KES with a MinIO Server
+
+MinIO Server requires KES to set up server-side data encryption.
+
+See the [KES for MinIO instruction guide]({{< relref "/tutorials/kes-for-minio.md" >}}) for additional steps needed to use your new KES Server with a MinIO Server.
+
+
+## Configuration References
+
+The following section describes each of the Key Encryption Service (KES) configuration settings for using AWS Secrets Manager and AWS Key Management System as the root KMS for Server Side Encryption with KES.
+
+{{< admonition title="MinIO Server Requires Expanded Permissions" type="important" >}}
+Starting with [MinIO Server RELEASE.2023-02-17T17-52-43Z](https://github.com/minio/minio/releases/tag/RELEASE.2023-02-17T17-52-43Z), MinIO requires expanded KES permissions for functionality. 
+The example configuration in this section contains all required permissions.
+{{< /admonition >}}
+
+
+{{< tabs "aws-config" >}}
+{{< tab "YAML Overview" >}}
+Fields with `${<STRING>}` use the environment variable matching the `<STRING>` value. 
+You can use this functionality to set credentials without writing them to the configuration file.
+
+The YAML assumes a minimal set of permissions for the MinIO deployment accessing KES. 
+As an alternative, you can omit the `policy.minio-server` section and instead set the `${MINIO_IDENTITY}` hash as the `${ROOT_IDENTITY}`.
+
+```yaml {.copy}
+address: 0.0.0.0:7373
+root: ${ROOT_IDENTITY}
+
+tls:
+  key: kes-server.key
+  cert: kes-server.cert
+
+api:
+  /v1/ready:
+    skip_auth: false
+    timeout:   15s
+
+policy:
+  minio-server:
+    allow:
+    - /v1/key/create/*
+    - /v1/key/generate/*
+    - /v1/key/decrypt/*
+    - /v1/key/bulk/decrypt
+    - /v1/key/list/*
+    - /v1/status
+    - /v1/metrics
+    - /v1/log/audit
+    - /v1/log/error
+    deny:
+    - /v1/key/generate/my-app-internal*
+    - /v1/key/decrypt/my-app-internal*
+    identities:
+    - ${MINIO_IDENTITY}
+
+    my-app:
+    allow:
+    - /v1/key/create/my-app*
+    - /v1/key/generate/my-app*
+    - /v1/key/decrypt/my-app*
+    deny:
+    - /v1/key/generate/my-app-internal*
+    - /v1/key/decrypt/my-app-internal*
+    identities:
+    - df7281ca3fed4ef7d06297eb7cb9d590a4edc863b4425f4762bb2afaebfd3258
+    - c0ecd5962eaf937422268b80a93dde4786dc9783fb2480ddea0f3e5fe471a731
+
+keys:
+  - name: "minio-encryption-key-alpha"
+  - name: "minio-encryption-key-baker"
+  - name: "minio-encryption-key-charlie"
+
+cache:
+  expiry:
+    any: 5m0s
+    unused: 20s
+    offline: 0s
+
+# The following log configuration only affects logging to console.
+log:
+
+  # Enable/Disable logging error events to STDERR. Valid values
+  # are "on" or "off". If not set the default is "on". If no error
+  # events should be logged to STDERR it has to be set explicitly
+  # to: "off".
+  error: on
+
+  # Enable/Disable logging audit events to STDOUT. Valid values
+  # are "on" and "off". If not set the default is "off".
+  # Logging audit events to STDOUT may flood your console since
+  # there will be one audit log event per request-response pair.
+  audit: off
+
+keystore:
+  aws:
+    # The AWS SecretsManager key store. The server will store
+    # secret keys at the AWS SecretsManager encrypted with
+    # AWS-KMS. See: https://aws.amazon.com/secrets-manager
+    secretsmanager:
+      endpoint: secretsmanager.REGION.amazonaws   # The AWS SecretsManager endpoint      - e.g.: secretsmanager.us-east-2.amazonaws.com
+      region: REGION     # The AWS region of the SecretsManager - e.g.: us-east-2
+      kmskey: ""     # The AWS-KMS key ID used to en/decrypt secrets at the SecretsManager. By default (if not set) the default AWS-KMS key will be used.
+      credentials:   # The AWS credentials for accessing secrets at the AWS SecretsManager.
+        accesskey: "${AWS_ACCESS_KEY}"  # Your AWS Access Key
+        secretkey: "${AWS_SECRET_KEY}"  # Your AWS Secret Key
+        token: ""      # Your AWS session token (usually optional)
+```
+
+{{< /tab >}}
+
+{{< tab "Reference" >}}
+
+For complete documentation, see the [configuration page]({{< relref "/tutorials/configuration.md" >}}).
+
+| <div style="width:150px"> Key  </div>                        | Description                    |
+|-----------------------------|--------------------------------|
+| `address`                     | The network address and port the KES server listens to on startup. Defaults to port `7373` on all host network interfaces. |
+| `root`                        | The identity for the KES superuser (`root`) identity. Clients connecting with a TLS certificate whose hash (`kes identity of client.cert`) matches this value have access to all KES API operations. Specify `disabled` to remove the root identity and rely only on the `policy` configuration for controlling identity and access management to KES. |
+| `tls`                         | The TLS private key and certificate used by KES for establishing TLS-secured communications. Specify the full path for both the private `.key` and public `.cert` to the `key` and `cert` fields, respectively. |
+| `policy`                      | Specify one or more [policies]({{< relref "/tutorials/configuration.md#policy-configuration" >}}) to control access to the KES server. MinIO SSE requires access to the following KES cryptographic APIs: <br><br> `/v1/key/create/*` <br> `/v1/key/generate/*` <br> `/v1/key/decrypt/*` <br><br> Specifying additional keys does not expand MinIO SSE functionality and may violate security best practices around providing unnecessary client access to cryptographic key operations. <br><br> You can restrict the range of key names MinIO can create as part of performing SSE by specifying a prefix before the `*.` For example, `minio-sse-*` only grants access to `create`, `generate`, or `decrypt` keys using the `minio-sse-` prefix. <br><br>KES uses mTLS to authorize connecting clients by comparing the hash of the TLS certificate against the `identities` of each configured policy. Use the `kes identity of` command to compute the identity of the MinIO mTLS certificate and add it to the `policy.<NAME>.identities` array to associate MinIO to the `<NAME>` policy. |
+| `keys`                        | Specify an array of keys which *must* exist on the root KMS for KES to successfully start. KES attempts to create the keys if they do not exist and exits with an error if it fails to create any key. KES does not accept any client requests until it completes validation of all specified keys.|
+| `cache`                       | Specify expiration of cached keys in `#d#h#m#s` format. Unexpired keys may be used in the event the KMS becomes temporarily unavailable. <br><br> Entries may be set for `any` key, `unused` keys, or `offline` keys. <br><br> If not set, KES uses values of `5m` for all keys, `20s` for unused keys, and `0s` for offline keys. |
+| `log`                         | Enable or disable output for `error` and `audit` type logging events to the console. |
+| `keystore.aws.secretsmanager` | Use this section of values to configure the AWS Secrets Manager and AWS KMS. |
+| `keystore.aws.secretsmanager.endpoint` | The endpoint for the Secrets Manager service, including the region. |
+| `keystore.aws.secretsmanager.region` | The AWS region to use for other AWS services. |
+| `keystore.aws.secretsmanager.kmskey` | The root KMS Key to use for cryptographic operations. Formerly known as the Customer Master Key. |
+| `keystore.aws.secretsmanager.credentials` | The AWS Credentials to use for performing authenticated operations against Secrets Manager and KMS. The specified credentials *must* have the [appropriate permissions](https://min.io/docs/minio/container/operations/server-side-encryption/configure-minio-kes-aws.html#minio-sse-aws-prereq-aws?ref=kes-docs). <br><br> Make entries for both `accesskey` and `secretkey` or an entry for `token`. |
+{{< /tab >}}
+{{< /tabs >}}

@@ -24,7 +24,7 @@ tls:
   key:      ./server.key   # Path to the TLS private key
   cert:     ./server.cert  # Path to the TLS certificate
   password: ""             # An optional password to decrypt the TLS private key
-  
+
   # Specify how/whether the KES server verifies certificates presented
   # by clients. Valid values are "on" and "off". Defaults to off, which
   # is recommended for most use cases.
@@ -63,12 +63,12 @@ tls:
 # The API configuration. The APIs exposed by the KES server can
 # be adjusted here. Each API is identified by its API path.
 #
-# In general, the KES server uses reasonable defaults for all APIs.
+# In general, the KES server uses sane defaults for all APIs.
 # Only customize the APIs if there is a real need.
 # 
 # Disabling authentication for an API must be carefully evaluated.
-# One example when disabling authentication may be justified could
-# be the readiness probe in a Kubernetes environment.
+# One example, when disabling authentication may be justified, would
+# be the liveness and readiness probes in a Kubernetes environment.
 #
 # When authentication is disabled, the particular API can be
 # accessed by any client that can send HTTPS requests to the
@@ -237,27 +237,7 @@ keystore:
   # and development. It should not be used for production.
   fs:
     path: "" # Path to directory. Keys will be stored as files.
-
-  # Configuration for storing keys on a KES server.
-  kes:
-    endpoint: 
-    - ""           # The endpoint (or list of endpoints) to the KES server(s)
-    enclave: ""    # An optional enclave name. If empty, the default enclave will be used
-    tls:           # The KES mTLS authentication credentials - i.e. client certificate.
-      cert: ""     # Path to the TLS client certificate for mTLS authentication
-      key: ""      # Path to the TLS client private key for mTLS authentication
-      ca: ""       # Path to one or multiple PEM root CA certificates
     
-  # Configuration for storing keys via a KES KeyStore plugin or at
-  # a KeyStore that exposes an API compatible to the KES KeyStore
-  # plugin specification: https://github.com/minio/kes/blob/master/internal/generic/spec-v1.md
-  generic:
-    endpoint: "" # The plugin endpoint - e.g. https://127.0.0.1:7001
-    tls:         # The KES client TLS configuration for mTLS authentication and certificate verification.
-      key: ""    # Path to the TLS client private key for mTLS authentication
-      cert: ""   # Path to the TLS client certificate for mTLS authentication
-      ca: ""     # Path to one or multiple PEM root CA certificates
-
   # Hashicorp Vault configuration. The KES server will store/fetch
   # secret keys at/from Vault's key-value backend.
   #
@@ -273,15 +253,15 @@ keystore:
       engine: ""  # The path of the transit engine - e.g. "my-transit". If empty, defaults to: transit (Vault default)
       key: ""     # The key name that should be used to encrypt entries stored on the K/V engine.
     approle:    # AppRole credentials. See: https://www.vaultproject.io/docs/auth/approle.html
-      engine: ""  # The path of the AppRole engine - e.g. authenticate. If empty, defaults to: approle. (Vault default)
-      id: ""      # Your AppRole Role ID
-      secret: ""  # Your AppRole Secret ID
-      retry: 15s  # Duration until the server tries to re-authenticate after connection loss.
+      namespace: "" # Optional Vault namespace used just for authentication. A single "/" is an alias for the Vault root namespace.
+      engine: ""    # The path of the AppRole engine - e.g. authenticate. If empty, defaults to: approle. (Vault default)
+      id: ""        # Your AppRole Role ID
+      secret: ""    # Your AppRole Secret ID
     kubernetes: # Kubernetes credentials. See: https://www.vaultproject.io/docs/auth/kubernetes
-      engine: ""  # The path of the Kubernetes engine e.g. authenticate. If empty, defaults to: kubernetes. (Vault default)
-      role: ""    # The Kubernetes JWT role
-      jwt:  ""    # Either the JWT provided by K8S or a path to a K8S secret containing the JWT.
-      retry: 15s  # Duration until the server tries to re-authenticate after connection loss.
+      namespace: "" # Optional Vault namespace used just for authentication. A single "/" is an alias for the Vault root namespace.
+      engine: ""    # The path of the Kubernetes engine e.g. authenticate. If empty, defaults to: kubernetes. (Vault default)
+      role: ""      # The Kubernetes JWT role
+      jwt:  ""      # Either the JWT provided by K8S or a path to a K8S secret containing the JWT.
     tls:        # The Vault client TLS configuration for mTLS authentication and certificate verification
       key: ""     # Path to the TLS client private key for mTLS authentication to Vault
       cert: ""    # Path to the TLS client certificate for mTLS authentication to Vault
@@ -366,4 +346,20 @@ keystore:
       # with Azure managed credentials.
       managed_identity:
         client_id: ""      # The Azure managed identity of the client - i.e. a UUID.
+
+  entrust:
+    # The Entrust KeyControl configuration.
+    # For more information take a look at:
+    # https://www.entrust.com/digital-security/key-management/keycontrol
+    keycontrol:
+      endpoint: ""     # The KeyControl endpoint - e.g. https://keycontrol.my-org.com
+      vault_id: ""     # The Vault ID            - e.g. e30497c1-bff7-4e81-beb7-fb35c4b7410c
+      box_id:   ""     # The Box name or ID      - e.g. tenant-1
+      # The KeyControl access credentials
+      credentials:
+        username: ""   # The username able to access the Vault and Box.
+        password: ""   # The user password
+      # The KeyControl client TLS configuration
+      tls:
+        ca: ""         # Path to one or multiple PEM-encoded CA certificates for verifying the KeyControl TLS certificate.
 ```

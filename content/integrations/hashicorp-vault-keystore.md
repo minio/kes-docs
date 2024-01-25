@@ -414,6 +414,12 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
    }
       ```
 
+## Using KES with a MinIO Server
+
+MinIO Server requires KES to set up server-side data encryption.
+
+See the [KES for MinIO instruction guide]({{< relref "/tutorials/kes-for-minio.md" >}}) for additional steps needed to use your new KES Server with a MinIO Server.
+
 ## Advanced Configuration
 
 These additional configuration steps may solve specific problems.
