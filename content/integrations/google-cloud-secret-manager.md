@@ -77,15 +77,15 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
    The following command generates a new TLS private key `server.key` and a self-signed X.509 certificate `server.cert` that is issued for the IP `127.0.0.1` and DNS name `localhost` (as SAN). 
    Customize the command to match your setup.
    
-   ```sh
-    kes tool identity new --server --key server.key --cert server.cert --ip "127.0.0.1" --dns localhost
+   ```sh {.copy}
+   kes tool identity new --server --key server.key --cert server.cert --ip "127.0.0.1" --dns localhost
    ```
    
    {{< admonition type="tip" >}}
    Any other tooling for X.509 certificate generation works as well. 
    For example, you could use `openssl`:
    
-   ```sh
+   ```sh {.copy}
    $ openssl ecparam -genkey -name prime256v1 | openssl ec -out server.key
    
    $ openssl req -new -x509 -days 30 -key server.key -out server.cert \
@@ -95,19 +95,19 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
 
 2. Create a private key and certificate for the application
  
-   ```sh
+   ```sh {.copy}
    kes tool identity new --key=app.key --cert=app.cert app
    ```
 
    You can compute the `app` identity at any time.
 
-   ```sh
+   ```sh {.copy}
    kes tool identity of app.cert
    ```
 
 3. Create the [config file]({{< relref "/tutorials/configuration.md#config-file" >}}) `server-config.yml`
 
-   ```yaml
+   ```yaml {.copy}
    address: 0.0.0.0:7373
    root:    disabled  # We disable the root identity since we don't need it in this guide 
    
@@ -141,7 +141,7 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
    {{< tabs "Google initialization" >}}
    {{< tab "Linux" >}}
 
-   ```sh
+   ```sh {.copy}
    export APP_IDENTITY=$(kes tool identity of app.cert)
    
    kes server --config=server-config.yml --auth=off
@@ -199,13 +199,13 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
 
 5. In the other window or tab, connect to the server
  
-   ```sh
+   ```sh {.copy}
    export KES_CLIENT_CERT=app.cert
    export KES_CLIENT_KEY=app.key
    kes key create -k my-app-key
    ```
 
-   ```sh
+   ```sh {.copy}
    export APP_IDENTITY=$(kes tool identity of app.cert)
    
    kes server --config=server-config.yml --auth=off
@@ -226,7 +226,7 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
      ciphertext: ...
    }
    ```
-   ```sh
+   ```sh {.copy}
    kes key decrypt -k my-app-key <base64-ciphertext>
    ```
 

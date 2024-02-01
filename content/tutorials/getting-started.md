@@ -26,7 +26,7 @@ It should only be used for testing purposes.
 {{< admonition title="Development Mode" type="note" >}}
 For a quick development test server, use
 
-```sh
+```sh {.copy}
 kes server --dev
 ```
 
@@ -171,7 +171,7 @@ This starts a KES server on `127.0.0.1:7373` and stores keys in memory.
    Create the KES server configuration file: `config.yml`.
    Ensure the identity in the `policy` section matches your `client.crt` identity.
 
-   ```yaml
+   ```yaml {.copy}
    address: 0.0.0.0:7373 # Listen on all network interfaces on port 7373
    
    admin:
@@ -186,8 +186,8 @@ This starts a KES server on `127.0.0.1:7373` and stores keys in memory.
 
    Start the KES server instance:
 
-   ```sh
-   $ kes server --config config.yml --auth off
+   ```sh {.copy}
+   kes server --config config.yml --auth off
    ```
 
 ## KES CLI Access
@@ -196,19 +196,19 @@ This starts a KES server on `127.0.0.1:7373` and stores keys in memory.
 
    This variable tells the KES CLI which KES server to access.
 
-   ```sh
-   $ export KES_SERVER=https://127.0.0.1:7373
+   ```sh {.copy}
+   export KES_SERVER=https://127.0.0.1:7373
    ```
 
 2. Use Client Credentials
 
    These variables tell the KES CLI which credentials to use to access to a KES server.
 
-   ```sh
-   $ export KES_CLIENT_CERT=client.crt
+   ```sh {.copy}
+   export KES_CLIENT_CERT=client.crt
    ```
-   ```sh
-   $ export KES_CLIENT_KEY=client.key
+   ```sh {.copy}
+   export KES_CLIENT_KEY=client.key
    ```
 
 3. Perform Operations
@@ -216,8 +216,8 @@ This starts a KES server on `127.0.0.1:7373` and stores keys in memory.
    Now, we can perform any API operation. 
    Since we are using the admin identity, we do not have to worry about policy permissions.
 
-   ```sh
-   $ kes key create my-key-1
+   ```sh {.copy}
+   kes key create my-key-1
    ```
    
    Then, we can use that key to generate a new data encryption key:

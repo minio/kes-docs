@@ -23,7 +23,7 @@ It has been tested with CipherTrust Manager `k170v` version `2.0.0` and Gemalto 
 
 To connect to your CipherTrust Manager instance via the `ksctl` CLI you need a `config.yaml` file similar to:
 
-```yaml
+```yaml {.copy}
 KSCTL_URL: <your-keysecure-endpoint>
 KSCTL_USERNAME: <your-user/admin-name>
 KSCTL_PASSWORD: <your-user/admin-password>
@@ -40,7 +40,7 @@ If your CipherTrust Manager instance has been configured with a TLS certificate 
 
 1. Create a new group for KES
    
-   ```sh
+   ```sh {.copy}
    ksctl groups create --name KES-Service
    ```
 
@@ -51,13 +51,13 @@ If your CipherTrust Manager instance has been configured with a TLS certificate 
    If you already have an existing user that you want to assign to the `KES-Service` group, skip this step and proceed with 3.
    {{< /admonition>}}
 
-   ```sh
+   ```sh {.copy}
    ksctl users create --name <username> --pword '<password>'
    ```
 
 3. Assign the user to the `KES-Service` group created in step 1
  
-   ```sh
+   ```sh {.copy}
    ksctl groups adduser --name KES-Service --userid "<user-ID>"
    ```
 
@@ -69,9 +69,9 @@ If your CipherTrust Manager instance has been configured with a TLS certificate 
 5. Create a policy for the `KES-Service` group
   
    Create a text file named `kes-policy.json` that grants members of the `KES-Service` group **create**, **read** and **delete** permissions.
-   THe contents of the file should be similar to the following:
+   The contents of the file should be similar to the following:
    
-   ```json
+   ```json {.copy}
    {                                                                                          
      "allow": true,
      "name": "kes-policy",
@@ -96,7 +96,7 @@ If your CipherTrust Manager instance has been configured with a TLS certificate 
 
    Use the following command to create the policy using the file created above.
 
-   ```sh
+   ```sh {.copy}
    ksctl policy create --jsonfile kes-policy.json
    ```
 
@@ -104,7 +104,7 @@ If your CipherTrust Manager instance has been configured with a TLS certificate 
    
    Create a file named `kes-attachment.json` with the policy attachment specification:
 
-   ```json
+   ```json {.copy}
    {                                                                                          
       "cust": {
          "groups": ["KES-Service"]
@@ -114,7 +114,7 @@ If your CipherTrust Manager instance has been configured with a TLS certificate 
 
    Use the following command to attach the `kes-policy` to the `KES-Service` group:
 
-   ```sh
+   ```sh {.copy}
    ksctl polattach create -p kes-policy -g kes-attachment.json
    ```
 
@@ -122,7 +122,7 @@ If your CipherTrust Manager instance has been configured with a TLS certificate 
    
    The following command returns a new refresh token:
 
-   ```sh
+   ```sh {.copy}
    ksctl tokens create --user <username> --password '<password>' --issue-rt | jq -r .refresh_token
    ```
    
@@ -130,7 +130,7 @@ If your CipherTrust Manager instance has been configured with a TLS certificate 
 
    The command outputs a refresh token similar to
 
-   ```
+   ```text
    CEvk5cdHLG7si05LReIeDbXE3PKD082YdUFAnxX75md3jzV0BnyHyAmPPJiA0
    ```
 
@@ -151,37 +151,37 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
    The following command generates a new TLS private key `server.key` and a self-signed X.509 certificate `server.cert` that is issued for the IP `127.0.0.1` and DNS name `localhost` (as SAN). 
    Customize the command to match your setup.
    
-   ```sh
-    kes tool identity new --server --key server.key --cert server.cert --ip "127.0.0.1" --dns localhost
+   ```sh {.copy}
+   kes tool identity new --server --key server.key --cert server.cert --ip "127.0.0.1" --dns localhost
    ```
    
    {{< admonition type="tip" >}}
    Any other tooling for X.509 certificate generation works as well. 
    For example, you could use `openssl`:
    
-   ```sh
-   $ openssl ecparam -genkey -name prime256v1 | openssl ec -out server.key
+   ```sh {.copy}
+   openssl ecparam -genkey -name prime256v1 | openssl ec -out server.key
    
-   $ openssl req -new -x509 -days 30 -key server.key -out server.cert \
+   openssl req -new -x509 -days 30 -key server.key -out server.cert \
        -subj "/C=/ST=/L=/O=/CN=localhost" -addext "subjectAltName = IP:127.0.0.1"
    ```
    {{< /admonition >}}
 
 2. Create a private key and certificate for the application
  
-   ```sh
+   ```sh {.copy}
    kes tool identity new --key=app.key --cert=app.cert app
    ```
 
    You can compute the `app` identity at any time.
 
-   ```sh
+   ```sh {.copy}
    kes tool identity of app.cert
    ```
 
 3. Create the [config file]({{< relref "/tutorials/configuration.md#config-file" >}}) `server-config.yml`
 
-   ```yaml
+   ```yaml {.copy}
    address: 0.0.0.0:7373
    root:    disabled  # We disable the root identity since we don't need it in this guide 
 
@@ -214,7 +214,7 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
 
 4. Start a KES server in a new window/tab:  
 
-   ```sh
+   ```sh {.copy}
    export APP_IDENTITY=$(kes tool identity of app.cert)
    
    kes server --config=server-config.yml --auth=off
@@ -238,13 +238,13 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
 
 5. In the other window or tab, connect to the server
  
-   ```sh
+   ```sh {.copy}
    export KES_CLIENT_CERT=app.cert
    export KES_CLIENT_KEY=app.key
    kes key create -k my-app-key
    ```
 
-   ```sh
+   ```sh {.copy}
    export APP_IDENTITY=$(kes tool identity of app.cert)
    
    kes server --config=server-config.yml --auth=off
@@ -256,14 +256,14 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
 
 6. Derive and decrypt data keys from the previously created `my-app-key`
  
-   ```sh
+   ```sh {.copy}
    kes key derive -k my-app-key
    {
      plaintext : ...
      ciphertext: ...
    }
    ```
-   ```sh
+   ```sh {.copy}
    kes key decrypt -k my-app-key <base64-ciphertext>
    ```
 

@@ -14,11 +14,11 @@ This tutorial explains how to create a `systemd` service for KES on Linux system
 
 For example on `linux/amd64`, run:
 
-```sh
+```sh {.copy}
 curl -X GET 'https://github.com/minio/kes/releases/latest/download/kes-linux-amd64' --output kes-linux-amd64
 ```
 
-```sh
+```sh {.copy}
 sudo install kes-linux-amd64  /usr/local/bin/kes
 ```
 
@@ -26,7 +26,7 @@ sudo install kes-linux-amd64  /usr/local/bin/kes
 
 Create a new unix user and group for KES:
 
-```sh
+```sh {.copy}
 useradd kes -s /sbin/nologin
 ```
 
@@ -45,7 +45,7 @@ To create a new KES server configuration file, see:
 
 The following example is the configuration file from our [FileSystem Guide](https://github.com/minio/kes/wiki/Filesystem-Keystore):
 
-```yml
+```yaml {.copy}
 address: 0.0.0.0:7373
 admin:
    identity: disabled  # We disable the admin identity since we don't need it in this guide 
@@ -72,7 +72,7 @@ keystore:
 
 Create the `systemd` service by creating a `kes.service` file under `/etc/systemd/system`
 
-```ini
+```ini {.copy}
 [Unit]
 Description=KES
 Documentation=https://github.com/minio/kes/wiki
@@ -113,7 +113,7 @@ WantedBy=multi-user.target
 
 If you intend to run KES on a privileged port number (one less than `1024`) with the service running as a regular non-`root` user, add the bind capability via the  `AmbientCapabilities` directive in the `kes.service` file:
 
-```ini
+```ini {.copy}
 [Service]
 AmbientCapabilities=CAP_NET_BIND_SERVICE
 ```
@@ -122,14 +122,14 @@ AmbientCapabilities=CAP_NET_BIND_SERVICE
 
 To automatically start KES after rebooting run:
 
-```sh
+```sh {.copy}
 systemctl enable kes.service
 ```
 
 {{< admonition title="Disable `kes.service` on start" type="tip" >}}
 Prevent KES from starting after reboot by running: 
 
-```sh
+```sh {.copy}
 systemctl disable kes.service
 ```
 {{< /admonition >}}
@@ -138,11 +138,11 @@ systemctl disable kes.service
 
 To start KES run:
 
-```sh
+```sh {.copy}
 systemctl start kes.service
 ```
 
 To stop KES run:
-```sh
+```sh {.copy}
 systemctl stop kes.service
 ```

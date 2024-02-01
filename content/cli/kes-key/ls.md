@@ -61,12 +61,12 @@ A string surrounded by single quotes to match when listing keys.
 
 List all cryptographic keys for the KES server.
 
-```sh
+```sh {.copy}
 kes key ls
 ```
 
 List cryptographic keys for the KES server that start with `my-key`.
 
-```sh
+```sh {.copy}
 kes key ls 'my-key*'
 ```

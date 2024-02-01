@@ -1,7 +1,7 @@
 The following yaml file provides an example configuration file with notes for use.
 For the latest example file, see the [GitHub repository](https://raw.githubusercontent.com/minio/kes/master/server-config.yaml).
 
-```yaml
+```yaml {.copy}
 # The config file version. Currently this field is optional but future
 # KES versions will require it. The only valid value is "v1". 
 version: v1

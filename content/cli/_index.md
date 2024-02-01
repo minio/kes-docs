@@ -29,19 +29,19 @@ Download the binary for your OS and system architecture.
 
 Download the binary using `curl`.
 Replace `<OS>` and `<ARCH>` with your operating system and CPU architecture.
-```sh
+```sh {.copy}
 curl -sSL --tlsv1.2 'https://github.com/minio/kes/releases/latest/download/kes-<OS>-<ARCH>' -o ./kes
 ```
-```sh
+```sh {.copy}
 chmod +x ./kes
 ```
 
 You can also verify the binary with [minisign](https://jedisct1.github.io/minisign/) by downloading the corresponding [`.minisig`](https://github.com/minio/kes/releases/latest) signature file. 
 Run:
-```sh
+```sh {.copy}
 curl -sSL --tlsv1.2 'https://github.com/minio/kes/releases/latest/download/kes-<OS>-<ARCH>.minisig' -o ./kes.minisig
 ```
-```sh
+```sh {.copy}
 minisign -Vm ./kes -P RWTx5Zr1tiHQLwG9keckT0c45M3AGeHD6IvimQHpyRywVWGbP1aVSGav
 ```
 
@@ -50,7 +50,7 @@ minisign -Vm ./kes -P RWTx5Zr1tiHQLwG9keckT0c45M3AGeHD6IvimQHpyRywVWGbP1aVSGav
 {{< tab "Docker" >}}   
 
 Pull the latest release via:
-```
+``` {.copy}
 docker pull minio/kes
 ```
 {{< /tab >}}
@@ -58,7 +58,7 @@ docker pull minio/kes
 {{< tab "Homebrew" >}}
 MacOS users can use [Homebrew](https://brew.sh/) to install KES:
 
-```sh
+```sh {.copy}
 brew install minio/stable/kes
 ```
 {{< /tab >}}
@@ -67,7 +67,7 @@ brew install minio/stable/kes
 
 Download and install the binary via your Go toolchain:
 
-```sh
+```sh {.copy}
 go install github.com/minio/kes/cmd/kes@latest
 ```
 

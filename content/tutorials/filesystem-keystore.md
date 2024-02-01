@@ -73,7 +73,7 @@ Remember to adjust the `tls` config section.
    Create the KES server configuration file: `config.yml`.
    Ensure the identity in the `policy` section matches your `client.crt` identity.
    
-   ```yaml
+   ```yaml {.copy}
    address: 0.0.0.0:7373 # Listen on all network interfaces on port 7373
    
    admin:
@@ -99,8 +99,8 @@ Remember to adjust the `tls` config section.
 
 4. Start KES Server
    
-   ```
-   $ kes server --config config.yml --auth off
+   ```sh  {.copy}
+   kes server --config config.yml --auth off
    ```
    
    {{< admonition title="Linux Swap Protection" type="tip" >}}
@@ -110,14 +110,14 @@ Remember to adjust the `tls` config section.
    
    Use the following command to allow KES to use the mlock syscall without running with `root` privileges:
 
-   ```sh
-   $ sudo setcap cap_ipc_lock=+ep $(readlink -f $(which kes))
+   ```sh {.copy}
+   sudo setcap cap_ipc_lock=+ep $(readlink -f $(which kes))
    ```
 
    Start a KES server instance with memory protection:
    
-   ```
-   $ kes server --config config.yml --auth off --mlock
+   ``` {.copy}
+   kes server --config config.yml --auth off --mlock
    ```
    {{< /admonition >}}
 
@@ -128,19 +128,19 @@ Remember to adjust the `tls` config section.
 
    This variable tells the KES CLI which KES server to access.
 
-   ```sh
-   $ export KES_SERVER=https://127.0.0.1:7373
+   ```sh {.copy}
+   export KES_SERVER=https://127.0.0.1:7373
    ```
 
 2. Use Client Credentials
 
    These variables tell the KES CLI which credentials to use to access to a KES server.
 
-   ```sh
-   $ export KES_CLIENT_CERT=client.crt
+   ```sh {.copy}
+   export KES_CLIENT_CERT=client.crt
    ```
-   ```sh
-   $ export KES_CLIENT_KEY=client.key
+   ```sh {.copy}
+   export KES_CLIENT_KEY=client.key
    ```
 
 3. Perform Operations
@@ -153,14 +153,14 @@ Remember to adjust the `tls` config section.
    
    For example we can create a key:
 
-   ```sh
-   $ kes key create my-key-1 -k
+   ```sh {.copy}
+   kes key create my-key-1 -k
    ```
    
    Then, we can use that key to generate a new data encryption key:
    
-   ```sh
-   $ kes key dek my-key-1 -k
+   ```sh {.copy}
+   kes key dek my-key-1 -k
    {
      plaintext : UGgcVBgyQYwxKzve7UJNV5x8aTiPJFoR+s828reNjh0=
      ciphertext: eyJhZWFkIjoiQUVTLTI1Ni1HQ00tSE1BQy1TSEEtMjU2IiwiaWQiOiIxMTc1ZjJjNDMyMjNjNjNmNjY1MDk5ZDExNmU3Yzc4NCIsIml2IjoiVHBtbHpWTDh5a2t4VVREV1RSTU5Tdz09Iiwibm9uY2UiOiJkeGl0R3A3bFB6S21rTE5HIiwiYnl0ZXMiOiJaaWdobEZrTUFuVVBWSG0wZDhSYUNBY3pnRWRsQzJqWFhCK1YxaWl2MXdnYjhBRytuTWx0Y3BGK0RtV1VoNkZaIn0=

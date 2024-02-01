@@ -98,7 +98,7 @@ On KES servers that accept requests from TLS proxies:
 
 The following NGINX configuration template routes client requests to `https://your.domain.com` to a KES server running on `localhost:7373`:
 
-```nginx
+```nginx {.copy}
 server {
     listen         443 ssl http2;
     server_name    your.domain.com;
@@ -169,7 +169,7 @@ You must add the NGINX identify to the list of TLS proxies on the KES server.
 
 1. Obtain the identity of NGINX:
    
-   ```sh
+   ```sh {.copy}
    kes tool identity of </path/to/the/nginx-client.cert>
    ```
 
@@ -178,7 +178,7 @@ You must add the NGINX identify to the list of TLS proxies on the KES server.
 
 2. Use the following KES configuration template to add the identity to your KES config file:
 
-   ```yaml
+   ```yaml {.copy}
    tls:
      proxy:
        # Add the identity of your Nginx proxy to the list of TLS proxies.
@@ -199,7 +199,7 @@ You must add the NGINX identify to the list of TLS proxies on the KES server.
 
      To set the environment variable, use the following command, replacing your-domain.com with the address for your NGINX endpoint.
 
-     ```sh
+     ```sh {.copy}
      export KES_SERVER=https://your-domain.com
      ```
 
@@ -207,7 +207,7 @@ You must add the NGINX identify to the list of TLS proxies on the KES server.
 
      For example, to list all policies:
 
-     ```sh
+     ```sh {.copy}
      kes policy list -k
      ```
      {{< admonition type="note">}}

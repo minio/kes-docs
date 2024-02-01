@@ -16,7 +16,7 @@ Use the following steps to get started monitoring KES with Prometheus.
 
    Create credentials for the Prometheus server to use to authenticate to KES.
 
-   ```sh
+   ```sh {.copy}
    $ kes identity new --key client.key --cert client.crt prometheus
 
      Private key:  client.key
@@ -28,7 +28,7 @@ Use the following steps to get started monitoring KES with Prometheus.
 
    Create a policy on the KES server that allows Prometheus to scrape the metrics.
    
-   ```yaml
+   ```yaml {.copy}
    policy:
      prometheus:
        allow:
@@ -44,7 +44,7 @@ Use the following steps to get started monitoring KES with Prometheus.
 
    Configure Prometheus to use the TLS client certificate when scraping the KES metrics.
 
-   ```yaml
+   ```yaml {.copy}
    global:
      scrape_interval:     15s
      evaluation_interval: 15s

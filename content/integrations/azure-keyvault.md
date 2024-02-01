@@ -166,7 +166,7 @@ As an external application, you must register KES in [Azure Active Directory](ht
    Create the KES [server configuration file]({{< relref "/tutorials/configuration.md#config-file" >}}): `config.yml`.
    Make sure that the identity in the policy section matches your `client.crt` identity.
    
-   ```yaml
+   ```yaml {.copy}
    address: 0.0.0.0:7373 # Listen on all network interfaces on port 7373
    
    admin:
@@ -199,8 +199,8 @@ As an external application, you must register KES in [Azure Active Directory](ht
    
    {{< tabs "Azure-initialization" >}}
    {{< tab "Linux" >}}
-   ```
-   $ kes server --config config.yml --auth off
+   ```sh {.copy}
+   kes server --config config.yml --auth off
    ```
    
    {{< admonition title="Linux Swap Protection" type="tip" >}}
@@ -211,13 +211,13 @@ As an external application, you must register KES in [Azure Active Directory](ht
    Use the following command to allow KES to use the mlock syscall without running with `root` privileges:
 
    ```sh
-   $ sudo setcap cap_ipc_lock=+ep $(readlink -f $(which kes))
+   sudo setcap cap_ipc_lock=+ep $(readlink -f $(which kes))
    ```
 
    Start a KES server instance with memory protection:
    
-   ```
-   $ kes server --config config.yml --auth off --mlock
+   ```sh {.copy}
+   kes server --config config.yml --auth off --mlock
    ```
    {{< /admonition >}}
 
@@ -273,19 +273,19 @@ As an external application, you must register KES in [Azure Active Directory](ht
 
    The following environment variable specifies the server the KES CLI should talk to:
 
-   ```sh
-   $ export KES_SERVER=https://127.0.0.1:7373
+   ```sh {.copy}
+   export KES_SERVER=https://127.0.0.1:7373
    ```
 
 2. Define the Client Credentials
 
    The following environment variables set the access credentials the client uses to talk to a KES server:
    
-   ```sh
-   $ export KES_CLIENT_CERT=client.crt
+   ```sh {.copy}
+   export KES_CLIENT_CERT=client.crt
    ```
-   ```sh
-   $ export KES_CLIENT_KEY=client.key
+   ```sh {.copy}
+   export KES_CLIENT_KEY=client.key
    ```
 
 3. Test the Configuration
@@ -294,14 +294,18 @@ As an external application, you must register KES in [Azure Active Directory](ht
    
    For example, create a key:
 
-   ```sh
-   $ kes key create my-key-1
+   ```sh {.copy}
+   kes key create my-key-1
    ```
    
    Use the key to generate a new data encryption key:
 
+   ```sh {.copy}
+   kes key dek my-key-1
+   ```
+
+   The result resembles the following:
    ```sh
-   $ kes key dek my-key-1
    {
      plaintext : UGgcVBgyQYwxKzve7UJNV5x8aTiPJFoR+s828reNjh0=
      ciphertext: eyJhZWFkIjoiQUVTLTI1Ni1HQ00tSE1BQy1TSEEtMjU2IiwiaWQiOiIxMTc1ZjJjNDMyMjNjNjNmNjY1MDk5ZDExNmU3Yzc4NCIsIml2IjoiVHBtbHpWTDh5a2t4VVREV1RSTU5Tdz09Iiwibm9uY2UiOiJkeGl0R3A3bFB6S21rTE5HIiwiYnl0ZXMiOiJaaWdobEZrTUFuVVBWSG0wZDhSYUNBY3pnRWRsQzJqWFhCK1YxaWl2MXdnYjhBRytuTWx0Y3BGK0RtV1VoNkZaIn0=

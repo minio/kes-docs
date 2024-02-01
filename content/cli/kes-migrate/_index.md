@@ -80,7 +80,7 @@ kes migrate --from vault-config.yml --to aws-config.yml
 To migrate a subset of all master keys, specify a pattern.
 Only master keys that match the pattern migrate.
 
-```sh
+```sh {.copy}
 kes migrate --from <source.yml> --target <target.yml> <pattern>
 ```
 
@@ -94,7 +94,7 @@ kes migrate --from source.yml --target target.yml my-key*
 
 To migrate a single master key, specify the key name.
 
-```sh
+```sh {.copy}
 kes migrate --from <source.yml> --target <target.yml> <key-name>
 ```
 

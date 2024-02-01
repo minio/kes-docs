@@ -77,7 +77,7 @@ For production use, choose any supported KMS implementation that meets your requ
    Create the KES server configuration file: `config.yml`.
    Ensure the identity in the `policy` section matches your `client.crt` identity.
 
-   ```yaml
+   ```yaml {.copy}
    address: 0.0.0.0:7373 # Listen on all network interfaces on port 7373
    
    admin:
@@ -103,8 +103,8 @@ For production use, choose any supported KMS implementation that meets your requ
 
 4. Start KES Server
 
-   ```
-   $ kes server --config config.yml --auth off
+   ```sh  {.copy}
+   kes server --config config.yml --auth off
    ```
    
    {{< admonition title="Linux Swap Protection" type="tip" >}}
@@ -114,14 +114,14 @@ For production use, choose any supported KMS implementation that meets your requ
    
    Use the following command to allow KES to use the mlock syscall without running with `root` privileges:
 
-   ```sh
-   $ sudo setcap cap_ipc_lock=+ep $(readlink -f $(which kes))
+   ```sh {.copy}
+   sudo setcap cap_ipc_lock=+ep $(readlink -f $(which kes))
    ```
 
    Start a KES server instance with memory protection:
    
-   ```
-   $ kes server --config config.yml --auth off --mlock
+   ``` {.copy}
+   kes server --config config.yml --auth off --mlock
    ```
    {{< /admonition >}}
 
@@ -141,7 +141,7 @@ The environment variables defined in steps 2-6 below can be defined as part of t
 
    This environment variable tells MinIO which KES server to access:
    
-   ```sh
+   ```sh {.copy}
    export MINIO_KMS_KES_ENDPOINT=https://127.0.0.1:7373
    ```
 
@@ -149,11 +149,11 @@ The environment variables defined in steps 2-6 below can be defined as part of t
 
    These environment variables set the access credentials MinIO uses to access the KES server:
    
-   ```sh
+   ```sh {.copy}
    export MINIO_KMS_KES_CERT_FILE=client.crt
    ```
    
-   ```sh
+   ```sh {.copy}
    export MINIO_KMS_KES_KEY_FILE=client.key
    ```
 
@@ -161,7 +161,7 @@ The environment variables defined in steps 2-6 below can be defined as part of t
 
    This environment variable sets the default key for MinIO to use if its S3 client does not specify an encryption key.
 
-   ```sh
+   ```sh {.copy}
    export MINIO_KMS_KES_KEY_NAME=minio-default-key
    ```
    
@@ -176,7 +176,7 @@ The environment variables defined in steps 2-6 below can be defined as part of t
    When using self-signed certificates, MinIO cannot verify the the KES server certificate. 
    This environment variable establishes the trust relationship manually. 
    
-   ```sh
+   ```sh {.copy}
    export MINIO_KMS_KES_CAPATH=public.crt
    ```
    
@@ -184,7 +184,7 @@ The environment variables defined in steps 2-6 below can be defined as part of t
 
 6. Set the MinIO root credentials:
 
-   ```sh
+   ```sh {.copy}
    export MINIO_ROOT_USER=minio
    export MINIO_ROOT_PASSWORD=minio123
    ```

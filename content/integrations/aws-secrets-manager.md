@@ -42,7 +42,7 @@ You need an [AWS access key and AWS secret key pair](https://docs.aws.amazon.com
 
    Your AWS IAM user needs to have to following permissions:
 
-   ```json
+   ```json {.copy}
    {
      "Version": "2012-10-17",
      "Statement": [
@@ -134,7 +134,7 @@ You need an [AWS access key and AWS secret key pair](https://docs.aws.amazon.com
    Create the KES server [configuration file]({{< relref "/tutorials/configuration.md#config-file" >}}): `config.yml`.
    The identity **must** match what is in the policy section of the  `client.crt` identity.
 
-   ```yaml
+   ```yaml {.copy}
    address: 0.0.0.0:7373 # Listen on all network interfaces on port 7373
    
    admin:
@@ -244,7 +244,7 @@ You need an [AWS access key and AWS secret key pair](https://docs.aws.amazon.com
 
    This environment variable tells the KES CLI which server it should talk to.
 
-   ```sh
+   ```sh {.copy}
    $ export KES_SERVER=https://127.0.0.1:7373
    ```
 
@@ -252,10 +252,10 @@ You need an [AWS access key and AWS secret key pair](https://docs.aws.amazon.com
 
    The following environment variables set the access credentials the KES CLI uses to talk to a KES server.
 
-   ```sh
+   ```sh {.copy}
    $ export KES_CLIENT_CERT=client.crt
    ```
-   ```sh
+   ```sh {.copy}
    $ export KES_CLIENT_KEY=client.key
    ```
 
@@ -264,7 +264,7 @@ You need an [AWS access key and AWS secret key pair](https://docs.aws.amazon.com
    Perform any API operation that is allowed based on the policy we assigned above. 
    
    For example, to create a key:
-   ```sh
+   ```sh {.copy}
    $ kes key create my-key-1
    ```
    
