@@ -165,26 +165,17 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
    
    MinIO recommends the K/V `v1` engine.
 
-   {{< tabs "aws-config" >}}
-   {{< tab "Vault Engine v1" >}}
-
    The following command enables the K/V `v1` secret engine:
 
    ```sh {.copy}
    vault secrets enable -version=1 kv
    ```
    
-   {{< /tab >}}
-
-   {{< tab "Vault Engine v2" >}}
-
    The following command enables the K/V `v2` secret engine:
    
    ```sh {.copy}
    $ vault secrets enable -version=2 kv
    ```
-   {{< /tab> }}
-   {{< /tabs >}}
 
    {{< admonition type="note" >}}
    Note that the Vault policy for KES depends on the chosen K/V engine version.

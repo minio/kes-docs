@@ -96,7 +96,7 @@ kes migrate --from <source.yml> --target <target.yml>
 To migrate a subset of all master keys, specify a pattern.
 Only master keys that match the pattern migrate.
 
-```sh {copy}
+```sh {.copy}
 kes migrate --from <source.yml> --target <target.yml> <pattern>
 ```
 

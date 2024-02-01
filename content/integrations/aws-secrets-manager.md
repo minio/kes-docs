@@ -165,8 +165,6 @@ You need an [AWS access key and AWS secret key pair](https://docs.aws.amazon.com
    ```
 
 4. Start KES Server
-   {{< tabs "AWS Initialization" >}}
-   {{< tab "Linux" >}} 
 
    ```
    $ kes server --config config.yml --auth off
@@ -189,54 +187,6 @@ You need an [AWS access key and AWS secret key pair](https://docs.aws.amazon.com
    kes server --config config.yml --auth off --mlock
    ```
    {{< /admonition >}}
-
-   {{ /tab }}
-
-   {{< tab "Container" >}}
-
-   The instructions use [Podman](https://podman.io/) to manage the containers.
-   You can accomplish similar with Docker, if preferred.
-
-   Modify addresses and file paths as needed for your deployment.
-   
-   ```sh {.copy}
-   sudo podman pod create  \
-     -p 9000:9000 -p 9001:9001 -p 7373:7373  \
-     -v ~/minio-kes-aws/certs:/certs  \
-     -v ~/minio-kes-aws/minio:/mnt/minio  \
-     -v ~/minio-kes-aws/config:/etc/default/  \
-     -n minio-kes-aws
-   
-   sudo podman run -dt  \
-     --cap-add IPC_LOCK  \
-     --name kes-server  \
-     --pod "minio-kes-aws"  \
-     -e KES_SERVER=https://127.0.0.1:7373  \
-     -e KES_CLIENT_KEY=/certs/kes-server.key  \
-     -e KES_CLIENT_CERT=/certs/kes-server.cert  \
-     quay.io/minio/kes:2024-01-11T13-09-29Z server  \
-       --auth  \
-       --config=/etc/default/kes-config.yaml  \
-   
-   sudo podman run -dt  \
-     --name minio-server  \
-     --pod "minio-kes-aws"  \
-     -e "MINIO_CONFIG_ENV_FILE=/etc/default/minio"  \
-     quay.io/minio/minio:RELEASE.2024-01-31T20-20-33Z server  \
-       --console-address ":9001"
-   ```
-
-   You can verify the status of the containers using the following command.
-   The command should show three pods, one for hte Pod, one for KES, and one for MinIO.
-
-   ```sh {.copy}
-   sudo podman container list
-   ```
-
-   {{< /tab >}}
-   
-   {{< /tabs >}}
-
 
 ## KES CLI Access
 
