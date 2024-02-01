@@ -230,6 +230,14 @@ This starts a KES server on `127.0.0.1:7373` and stores keys in memory.
    }
    ```
 
+## Upgrading KES
+
+To upgrade KES, follow the getting started steps and replace the KES binary with the newer version on each KES server node.
+
+{{< admonition type="important" >}}
+You cannot revert to a previous version of KES after upgrading.
+{{< /admonition >}}
+
 ## References
 
 - [**Server API Doc**]({{< relref "server-api" >}})

@@ -165,15 +165,26 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
    
    MinIO recommends the K/V `v1` engine.
 
+   {{< tabs "aws-config" >}}
+   {{< tab "Vault Engine v1" >}}
+
    The following command enables the K/V `v1` secret engine:
-   ```
-   $ vault secrets enable -version=1 kv
+
+   ```sh {.copy}
+   vault secrets enable -version=1 kv
    ```
    
+   {{< /tab >}}
+
+   {{< tab "Vault Engine v2" >}}
+
    The following command enables the K/V `v2` secret engine:
-   ```
+   
+   ```sh {.copy}
    $ vault secrets enable -version=2 kv
    ```
+   {{< /tab> }}
+   {{< /tabs >}}
 
    {{< admonition type="note" >}}
    Note that the Vault policy for KES depends on the chosen K/V engine version.
@@ -340,9 +351,12 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
    ```
 
 4. Start KES Server
+  
+   {{ tabs "Vault Initializatio" }}
+   {{ tab "Linux" }}
 
-   ```
-   $ kes server --config config.yml --auth off
+   ```sh {.copy}
+   kes server --config config.yml --auth off
    ```
 
    {{< admonition title="Linux Swap Protection" type="tip" >}}
@@ -352,7 +366,7 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
    
    Use the following command to allow KES to use the mlock syscall without running with `root` privileges:
 
-   ```sh
+   ```sh {.copy}
    $ sudo setcap cap_ipc_lock=+ep $(readlink -f $(which kes))
    ```
 
@@ -362,6 +376,53 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
    $ kes server --config config.yml --auth off --mlock
    ```
    {{< /admonition >}}
+
+   {{ /tab }}
+
+   {{ tab "Container" }}
+
+   The instructions use [Podman](https://podman.io/) to manage the containers.
+   You can accomplish similar with Docker, if preferred.
+
+   Modify addresses and file paths as needed for your deployment.
+
+   ```sh {.copy}
+   sudo podman pod create  \
+     -p 9000:9000 -p 9001:9001 -p 7373:7373  \
+     -v ~/minio-kes-vault/certs:/certs  \
+     -v ~/minio-kes-vault/minio:/mnt/minio  \
+     -v ~/minio-kes-vault/config:/etc/default/  \
+     -n minio-kes-vault
+   
+   sudo podman run -dt  \
+     --cap-add IPC_LOCK  \
+     --name kes-server  \
+     --pod "minio-kes-vault"  \
+     -e KES_SERVER=https://127.0.0.1:7373  \
+     -e KES_CLIENT_KEY=/certs/kes-server.key  \
+     -e KES_CLIENT_CERT=/certs/kes-server.cert  \
+     quay.io/minio/kes:2024-01-11T13-09-29Z server  \
+       --auth  \
+       --config=/etc/default/kes-config.yaml  \
+   
+   sudo podman run -dt  \
+     --name minio-server  \
+     --pod "minio-kes-vault"  \
+     -e "MINIO_CONFIG_ENV_FILE=/etc/default/minio"  \
+     quay.io/minio/minio:RELEASE.2024-01-31T20-20-33Z server  \
+       --console-address ":9001"
+   ```
+
+   You can verify the status of the containers using the following command.
+   The command should show three pods, one for hte Pod, one for KES, and one for MinIO.
+
+   ```sh {.copy}
+   sudo podman container list
+   ```
+
+
+   {{ /tab }}
+   {{ /tabs }}
 
 ## KES CLI Access
 
@@ -419,6 +480,163 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
 MinIO Server requires KES to set up server-side data encryption.
 
 See the [KES for MinIO instruction guide]({{< relref "/tutorials/kes-for-minio.md" >}}) for additional steps needed to use your new KES Server with a MinIO Server.
+
+## Configuration References
+
+The following section describes each of the Key Encryption Service (KES) configuration settings for using AWS Secrets Manager and AWS Key Management System as the root KMS for Server Side Encryption with KES.
+
+{{< admonition title="MinIO Server Requires Expanded Permissions" type="important" >}}
+Starting with [MinIO Server RELEASE.2023-02-17T17-52-43Z](https://github.com/minio/minio/releases/tag/RELEASE.2023-02-17T17-52-43Z), MinIO requires expanded KES permissions for functionality. 
+The example configuration in this section contains all required permissions.
+{{< /admonition >}}
+
+
+{{< tabs "vault-config" >}}
+{{< tab "YAML Overview" >}}
+Fields with `${<STRING>}` use the environment variable matching the `<STRING>` value. 
+You can use this functionality to set credentials without writing them to the configuration file.
+
+The YAML assumes a minimal set of permissions for the MinIO deployment accessing KES. 
+As an alternative, you can omit the `policy.minio-server` section and instead set the `${MINIO_IDENTITY}` hash as the `${ROOT_IDENTITY}`.
+
+```yaml {.copy}
+address: 0.0.0.0:7373
+root: ${ROOT_IDENTITY}
+
+tls:
+  key: kes-server.key
+  cert: kes-server.cert
+
+api:
+  /v1/ready:
+    skip_auth: false
+    timeout:   15s
+
+policy:
+  minio-server:
+    allow:
+    - /v1/key/create/*
+    - /v1/key/generate/*
+    - /v1/key/decrypt/*
+    - /v1/key/bulk/decrypt
+    - /v1/key/list/*
+    - /v1/status
+    - /v1/metrics
+    - /v1/log/audit
+    - /v1/log/error
+    deny:
+    - /v1/key/generate/my-app-internal*
+    - /v1/key/decrypt/my-app-internal*
+    identities:
+    - ${MINIO_IDENTITY}
+
+    my-app:
+    allow:
+    - /v1/key/create/my-app*
+    - /v1/key/generate/my-app*
+    - /v1/key/decrypt/my-app*
+    deny:
+    - /v1/key/generate/my-app-internal*
+    - /v1/key/decrypt/my-app-internal*
+    identities:
+    - df7281ca3fed4ef7d06297eb7cb9d590a4edc863b4425f4762bb2afaebfd3258
+    - c0ecd5962eaf937422268b80a93dde4786dc9783fb2480ddea0f3e5fe471a731
+
+keys:
+  - name: "minio-encryption-key-alpha"
+  - name: "minio-encryption-key-baker"
+  - name: "minio-encryption-key-charlie"
+
+cache:
+  expiry:
+    any: 5m0s
+    unused: 20s
+    offline: 0s
+
+# The following log configuration only affects logging to console.
+log:
+
+  # Enable/Disable logging error events to STDERR. Valid values
+  # are "on" or "off". If not set the default is "on". If no error
+  # events should be logged to STDERR it has to be set explicitly
+  # to: "off".
+  error: on
+
+  # Enable/Disable logging audit events to STDOUT. Valid values
+  # are "on" and "off". If not set the default is "off".
+  # Logging audit events to STDOUT may flood your console since
+  # there will be one audit log event per request-response pair.
+  audit: off
+
+keystore:
+  vault:
+    endpoint: ""  # The Vault endpoint - e.g. https://127.0.0.1:8200
+    engine: ""    # The path of the K/V engine - e.g. secrets. If empty, defaults to: kv. (Vault default)
+    version: ""   # The K/V engine version - either "v1" or "v2". The "v1" engine is recommended.
+    namespace: "" # An optional Vault namespace. See: https://www.vaultproject.io/docs/enterprise/namespaces/index.html
+    prefix: ""    # An optional K/V prefix. The server will store keys under this prefix.
+    transit:      # Optionally encrypt keys stored on the K/V engine with a Vault-managed key.
+      engine: ""  # The path of the transit engine - e.g. "my-transit". If empty, defaults to: transit (Vault default)
+      key: ""     # The key name that should be used to encrypt entries stored on the K/V engine.
+    approle:    # AppRole credentials. See: https://www.vaultproject.io/docs/auth/approle.html
+      namespace: "" # Optional Vault namespace used just for authentication. A single "/" is an alias for the Vault root namespace.
+      engine: ""    # The path of the AppRole engine - e.g. authenticate. If empty, defaults to: approle. (Vault default)
+      id: ""        # Your AppRole Role ID
+      secret: ""    # Your AppRole Secret ID
+    kubernetes: # Kubernetes credentials. See: https://www.vaultproject.io/docs/auth/kubernetes
+      namespace: "" # Optional Vault namespace used just for authentication. A single "/" is an alias for the Vault root namespace.
+      engine: ""    # The path of the Kubernetes engine e.g. authenticate. If empty, defaults to: kubernetes. (Vault default)
+      role: ""      # The Kubernetes JWT role
+      jwt:  ""      # Either the JWT provided by K8S or a path to a K8S secret containing the JWT.
+    tls:        # The Vault client TLS configuration for mTLS authentication and certificate verification
+      key: ""     # Path to the TLS client private key for mTLS authentication to Vault
+      cert: ""    # Path to the TLS client certificate for mTLS authentication to Vault
+      ca: ""      # Path to one or multiple PEM root CA certificates
+    status:     # Vault status configuration. The server will periodically reach out to Vault to check its status.
+      ping: 10s   # Duration until the server checks Vault's status again.
+```
+
+{{< /tab >}}
+
+{{< tab "Reference" >}}
+
+For complete documentation, see the [configuration page]({{< relref "/tutorials/configuration.md" >}}).
+
+| <div style="width:150px"> Key  </div>                        | Description                    |
+|-----------------------------|--------------------------------|
+| `address`                     | The network address and port the KES server listens to on startup. Defaults to port `7373` on all host network interfaces. |
+| `root`                        | The identity for the KES superuser (`root`) identity. Clients connecting with a TLS certificate whose hash (`kes identity of client.cert`) matches this value have access to all KES API operations. Specify `disabled` to remove the root identity and rely only on the `policy` configuration for controlling identity and access management to KES. |
+| `tls`                         | The TLS private key and certificate used by KES for establishing TLS-secured communications. Specify the full path for both the private `.key` and public `.cert` to the `key` and `cert` fields, respectively. |
+| `policy`                      | Specify one or more [policies]({{< relref "/tutorials/configuration.md#policy-configuration" >}}) to control access to the KES server. MinIO SSE requires access to the following KES cryptographic APIs: <br><br> `/v1/key/create/*` <br> `/v1/key/generate/*` <br> `/v1/key/decrypt/*` <br><br> Specifying additional keys does not expand MinIO SSE functionality and may violate security best practices around providing unnecessary client access to cryptographic key operations. <br><br> You can restrict the range of key names MinIO can create as part of performing SSE by specifying a prefix before the `*.` For example, `minio-sse-*` only grants access to `create`, `generate`, or `decrypt` keys using the `minio-sse-` prefix. <br><br>KES uses mTLS to authorize connecting clients by comparing the hash of the TLS certificate against the `identities` of each configured policy. Use the `kes identity of` command to compute the identity of the MinIO mTLS certificate and add it to the `policy.<NAME>.identities` array to associate MinIO to the `<NAME>` policy. |
+| `keys`                        | Specify an array of keys which *must* exist on the root KMS for KES to successfully start. KES attempts to create the keys if they do not exist and exits with an error if it fails to create any key. KES does not accept any client requests until it completes validation of all specified keys.|
+| `cache`                       | Specify expiration of cached keys in `#d#h#m#s` format. Unexpired keys may be used in the event the KMS becomes temporarily unavailable. <br><br> Entries may be set for `any` key, `unused` keys, or `offline` keys. <br><br> If not set, KES uses values of `5m` for all keys, `20s` for unused keys, and `0s` for offline keys. |
+| `log`                         | Enable or disable output for `error` and `audit` type logging events to the console. |
+| `keystore.vault.endpoint` | The Vault endpoint. For example, `https://127.0.0.1:8200` |
+| `keystore.vault.engine` | The path of the K/V engine. For example, `secrets`. <br><br> If empty, defaults to: `kv` (Vault default).  |
+| `keystore.vault.version` | The K/V engine version, either `v1` or `v2`. `v1` engine is recommended. |
+| `keystore.vault.namespace` | An optional [Vault namespace](https://www.vaultproject.io/docs/enterprise/namespaces/index.html). |
+| `keystore.vault.prefix` | An optional K/V prefix. The server stores keys under this prefix. |
+| `keystore.vault.transit` | Optionally encrypt keys stored on the K/V engine with a Vault-managed key. |
+| `keystore.vault.transit.engine` | The path of the transit engine. For example, `my-transit`. <br><br> If empty, it defaults to: `transit` (Vault default). |
+| `keystore.vault.transit.key` | The key name to use to encrypt entries stored on the K/V engine. |
+| `keystore.vault.approle` | [AppRole credentials](https://www.vaultproject.io/docs/auth/approle.html). |
+| `keystore.vault.approle.namespace` | Optional Vault namespace used just for authentication. A single `/` is an alias for the Vault `root` namespace. |
+| `keystore.vault.approle.engine` | The path of the AppRole engine. For example, `authenticate`. <br><br> If empty, defaults to: `approle` (Vault default). |
+| `keystore.vault.approle.id` | Your AppRole Role ID |
+| `keystore.vault.approle.secret` | Your AppRole ID's secret |
+| `keystore.vault.kubernetes` | [Kubernetes credentials](https://www.vaultproject.io/docs/auth/kubernetes). |
+| `keystore.vault.kubernetes.namespace` | Optional Vault namespace used just for authentication. A single `/` is an alias for the Vault `root` namespace. |
+| `keystore.vault.kubernetes.engine` | The path of the Kubernetes engine. For example, `authenticate`. If empty, defaults to: `kubernetes` (Vault default). |
+| `keystore.vault.kubernetes.role` | The Kubernetes JWT's role |
+| `keystore.vault.kubernetes.jwt` | Either the JWT provided by Kubernetes or a path to a [Kubernetes secret](https://kubernetes.io/docs/concepts/configuration/secret/) containing the JWT. |
+| `keystore.vault.tls` | The Vault client TLS configuration for mTLS authentication and certificate verification. |
+| `keystore.vault.tls.key` | Path to the TLS client private key for mTLS authentication to Vault. |
+| `keystore.vault.tls.cert` | Path to the TLS client certificate for mTLS authentication to Vault. |
+| `keystore.vault.tls.ca` | Path to one or multiple PEM root CA certificates. |
+| `keystore.vault.status` | Vault status configuration. The server will periodically reach out to Vault to check its status. |
+| `keystore.vault.status.ping` | Duration until the server checks Vault's status again. For example, `10s`. |
+{{< /tab >}}
+{{< /tabs >}}
 
 ## Advanced Configuration
 

@@ -138,6 +138,9 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
 
 4. Start a KES server in a new window/tab:  
 
+   {{< tabs "Google initialization" >}}
+   {{< tab "Linux" >}}
+
    ```sh
    export APP_IDENTITY=$(kes tool identity of app.cert)
    
@@ -147,6 +150,52 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
    {{< admonition type="note">}}
    The command uses `--auth=off` because our `root.cert` and `app.cert` certificates are self-signed.
    {{< /admonition >}}
+
+   {{< /tab >}}
+
+   {{< tab "Containers" >}}
+
+   The instructions use [Podman](https://podman.io/) to manage the containers.
+   You can accomplish similar with Docker, if preferred.
+
+   Modify addresses and file paths as needed for your deployment.
+
+   ```sh {.copy}
+   sudo podman pod create  \
+     -p 9000:9000 -p 9001:9001 -p 7373:7373  \
+     -v ~/minio-kes-gcp/certs:/certs  \
+     -v ~/minio-kes-gcp/minio:/mnt/minio  \
+     -v ~/minio-kes-gcp/config:/etc/default/  \
+     -n minio-kes-gcp
+   
+   sudo podman run -dt  \
+     --cap-add IPC_LOCK  \
+     --name kes-server  \
+     --pod "minio-kes-gcp"  \
+     -e KES_SERVER=https://127.0.0.1:7373  \
+     -e KES_CLIENT_KEY=/certs/kes-server.key  \
+     -e KES_CLIENT_CERT=/certs/kes-server.cert  \
+     quay.io/minio/kes:2024-01-11T13-09-29Z server  \
+       --auth  \
+       --config=/etc/default/kes-config.yaml  \
+   
+   sudo podman run -dt  \
+     --name minio-server  \
+     --pod "minio-kes-gcp"  \
+     -e "MINIO_CONFIG_ENV_FILE=/etc/default/minio"  \
+     quay.io/minio/minio:RELEASE.2024-01-31T20-20-33Z server  \
+       --console-address ":9001"
+   ```
+
+   You can verify the status of the containers using the following command.
+   The command should show three pods, one for hte Pod, one for KES, and one for MinIO.
+
+   ```sh {.copy}
+   sudo podman container list
+   ```
+
+   {{< /tab >}}
+   {{< /tabs >}}
 
 5. In the other window or tab, connect to the server
  
@@ -186,3 +235,142 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
 MinIO Server requires KES to set up server-side data encryption.
 
 See the [KES for MinIO instruction guide]({{< relref "/tutorials/kes-for-minio.md" >}}) for additional steps needed to use your new KES Server with a MinIO Server.
+
+## Configuration References
+
+The following section describes each of the Key Encryption Service (KES) configuration settings for using AWS Secrets Manager and AWS Key Management System as the root KMS for Server Side Encryption with KES.
+
+{{< admonition title="MinIO Server Requires Expanded Permissions" type="important" >}}
+Starting with [MinIO Server RELEASE.2023-02-17T17-52-43Z](https://github.com/minio/minio/releases/tag/RELEASE.2023-02-17T17-52-43Z), MinIO requires expanded KES permissions for functionality. 
+The example configuration in this section contains all required permissions.
+{{< /admonition >}}
+
+
+{{< tabs "gcs-config" >}}
+{{< tab "YAML Overview" >}}
+Fields with `${<STRING>}` use the environment variable matching the `<STRING>` value. 
+You can use this functionality to set credentials without writing them to the configuration file.
+
+The YAML assumes a minimal set of permissions for the MinIO deployment accessing KES. 
+As an alternative, you can omit the `policy.minio-server` section and instead set the `${MINIO_IDENTITY}` hash as the `${ROOT_IDENTITY}`.
+
+```yaml {.copy}
+address: 0.0.0.0:7373
+root: ${ROOT_IDENTITY}
+
+tls:
+  key: kes-server.key
+  cert: kes-server.cert
+
+api:
+  /v1/ready:
+    skip_auth: false
+    timeout:   15s
+
+policy:
+  minio-server:
+    allow:
+    - /v1/key/create/*
+    - /v1/key/generate/*
+    - /v1/key/decrypt/*
+    - /v1/key/bulk/decrypt
+    - /v1/key/list/*
+    - /v1/status
+    - /v1/metrics
+    - /v1/log/audit
+    - /v1/log/error
+    deny:
+    - /v1/key/generate/my-app-internal*
+    - /v1/key/decrypt/my-app-internal*
+    identities:
+    - ${MINIO_IDENTITY}
+
+    my-app:
+    allow:
+    - /v1/key/create/my-app*
+    - /v1/key/generate/my-app*
+    - /v1/key/decrypt/my-app*
+    deny:
+    - /v1/key/generate/my-app-internal*
+    - /v1/key/decrypt/my-app-internal*
+    identities:
+    - df7281ca3fed4ef7d06297eb7cb9d590a4edc863b4425f4762bb2afaebfd3258
+    - c0ecd5962eaf937422268b80a93dde4786dc9783fb2480ddea0f3e5fe471a731
+
+keys:
+  - name: "minio-encryption-key-alpha"
+  - name: "minio-encryption-key-baker"
+  - name: "minio-encryption-key-charlie"
+
+cache:
+  expiry:
+    any: 5m0s
+    unused: 20s
+    offline: 0s
+
+# The following log configuration only affects logging to console.
+log:
+
+  # Enable/Disable logging error events to STDERR. Valid values
+  # are "on" or "off". If not set the default is "on". If no error
+  # events should be logged to STDERR it has to be set explicitly
+  # to: "off".
+  error: on
+
+  # Enable/Disable logging audit events to STDOUT. Valid values
+  # are "on" and "off". If not set the default is "off".
+  # Logging audit events to STDOUT may flood your console since
+  # there will be one audit log event per request-response pair.
+  audit: off
+
+keystore:
+  gcp:
+    # The Google Cloud Platform secret manager.
+    # For more information take a look at:
+    # https://cloud.google.com/secret-manager
+    secretmanager:
+      # The project ID is a unique, user-assigned ID that can be used by Google APIs.
+      # The project ID must be a unique string of 6 to 30 lowercase letters, digits, or hyphens.
+      # It must start with a letter, and cannot have a trailing hyphen.
+      # See: https://cloud.google.com/resource-manager/docs/creating-managing-projects#before_you_begin
+      project_id: ""
+      # An optional GCP SecretManager endpoint. If not set, defaults to: secretmanager.googleapis.com:443
+      endpoint: ""
+      # An optional list of GCP OAuth2 scopes. For a list of GCP scopes refer to: https://developers.google.com/identity/protocols/oauth2/scopes
+      # If not set, the GCP default scopes are used.
+      scopes: 
+      - ""
+      # The credentials for your GCP service account. If running inside GCP (app engine) the credentials
+      # can be empty and will be fetched from the app engine environment automatically.
+      credentials:
+        client_email:   "" # The service account email                          - e.g. <account>@<project-ID>.iam.gserviceaccount.com
+        client_id:      "" # The service account client ID                      - e.g. 113491952745362495489"
+        private_key_id: "" # The service account private key                    - e.g. 381514ebd3cf45a64ca8adc561f0ce28fca5ec06
+        private_key:    "" # The raw encoded private key of the service account - e.g "-----BEGIN PRIVATE KEY-----\n ... \n-----END PRIVATE KEY-----\n
+
+```
+
+{{< /tab >}}
+
+{{< tab "Reference" >}}
+
+For complete documentation, see the [configuration page]({{< relref "/tutorials/configuration.md" >}}).
+
+| <div style="width:150px"> Key  </div>                        | Description                    |
+|-----------------------------|--------------------------------|
+| `address`                     | The network address and port the KES server listens to on startup. Defaults to port `7373` on all host network interfaces. |
+| `root`                        | The identity for the KES superuser (`root`) identity. Clients connecting with a TLS certificate whose hash (`kes identity of client.cert`) matches this value have access to all KES API operations. Specify `disabled` to remove the root identity and rely only on the `policy` configuration for controlling identity and access management to KES. |
+| `tls`                         | The TLS private key and certificate used by KES for establishing TLS-secured communications. Specify the full path for both the private `.key` and public `.cert` to the `key` and `cert` fields, respectively. |
+| `policy`                      | Specify one or more [policies]({{< relref "/tutorials/configuration.md#policy-configuration" >}}) to control access to the KES server. MinIO SSE requires access to the following KES cryptographic APIs: <br><br> `/v1/key/create/*` <br> `/v1/key/generate/*` <br> `/v1/key/decrypt/*` <br><br> Specifying additional keys does not expand MinIO SSE functionality and may violate security best practices around providing unnecessary client access to cryptographic key operations. <br><br> You can restrict the range of key names MinIO can create as part of performing SSE by specifying a prefix before the `*.` For example, `minio-sse-*` only grants access to `create`, `generate`, or `decrypt` keys using the `minio-sse-` prefix. <br><br>KES uses mTLS to authorize connecting clients by comparing the hash of the TLS certificate against the `identities` of each configured policy. Use the `kes identity of` command to compute the identity of the MinIO mTLS certificate and add it to the `policy.<NAME>.identities` array to associate MinIO to the `<NAME>` policy. |
+| `keys`                        | Specify an array of keys which *must* exist on the root KMS for KES to successfully start. KES attempts to create the keys if they do not exist and exits with an error if it fails to create any key. KES does not accept any client requests until it completes validation of all specified keys.|
+| `cache`                       | Specify expiration of cached keys in `#d#h#m#s` format. Unexpired keys may be used in the event the KMS becomes temporarily unavailable. <br><br> Entries may be set for `any` key, `unused` keys, or `offline` keys. <br><br> If not set, KES uses values of `5m` for all keys, `20s` for unused keys, and `0s` for offline keys. |
+| `log`                         | Enable or disable output for `error` and `audit` type logging events to the console. |
+| `keystore.gcp.secretmanager.project_id` | The [project ID](https://cloud.google.com/resource-manager/docs/creating-managing-projects#before_you_begin) is a unique, user-assigned ID that can be used by Google APIs. The project ID must be a unique string of 6 to 30 lowercase letters, digits, or hyphens. It must start with a letter, and cannot have a trailing hyphen. |
+| `keystore.gcp.secretmanager.endpoint` | An optional GCP SecretManager endpoint. If not set, defaults to: `secretmanager.googleapis.com:443`. |
+| `keystore.gcp.secretmanager.scopes` | An optional list of [GCP OAuth2 scopes](https://developers.google.com/identity/protocols/oauth2/scopes). If not set, the GCP default scopes are used. |
+| `keystore.gcp.secretmanager.credentials.client_email` | The service account email. For example, `<account>@<project-ID>.iam.gserviceaccount.com`. |
+| `keystore.gcp.secretmanager.credentials.client_id` | The service account client ID. For example, `113491952745362495489` |
+| `keystore.gcp.secretmanager.credentials.private_key_id` | The service account private key. For example, `381514ebd3cf45a64ca8adc561f0ce28fca5ec06`. |
+| `keystore.gcp.secretmanager.credentials.private_key` | The raw encoded private key of the service account. For example, `-----BEGIN PRIVATE KEY-----\n ... \n-----END PRIVATE KEY-----\n`. |
+{{< /tab >}}
+{{< /tabs >}}
