@@ -138,8 +138,7 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
 
 4. Start a KES server in a new window/tab:  
 
-   {{< tabs "Google initialization" >}}
-   {{< tab "Linux" >}}
+   **Linux**
 
    ```sh {.copy}
    export APP_IDENTITY=$(kes tool identity of app.cert)
@@ -151,12 +150,11 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
    The command uses `--auth=off` because our `root.cert` and `app.cert` certificates are self-signed.
    {{< /admonition >}}
 
-   {{< /tab >}}
 
-   {{< tab "Containers" >}}
+   **Containers**
 
-   The instructions use [Podman](https://podman.io/) to manage the containers.
-   You can accomplish similar with Docker, if preferred.
+   The following instructions use [Podman](https://podman.io/) to manage the containers.
+   You can also use Docker.
 
    Modify addresses and file paths as needed for your deployment.
 
@@ -194,9 +192,6 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
    sudo podman container list
    ```
 
-   {{< /tab >}}
-   {{< /tabs >}}
-
 5. In the other window or tab, connect to the server
  
    ```sh {.copy}
@@ -232,13 +227,13 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
 
 ## Using KES with a MinIO Server
 
-MinIO Server requires KES to set up server-side data encryption.
+MinIO Server requires KES to enable server-side data encryption.
 
 See the [KES for MinIO instruction guide]({{< relref "/tutorials/kes-for-minio.md" >}}) for additional steps needed to use your new KES Server with a MinIO Server.
 
 ## Configuration References
 
-The following section describes each of the Key Encryption Service (KES) configuration settings for using AWS Secrets Manager and AWS Key Management System as the root KMS for Server Side Encryption with KES.
+The following section describes the Key Encryption Service (KES) configuration settings to use Google Cloud Secret Manager as the root KMS for Server Side Encryption.
 
 {{< admonition title="MinIO Server Requires Expanded Permissions" type="important" >}}
 Starting with [MinIO Server RELEASE.2023-02-17T17-52-43Z](https://github.com/minio/minio/releases/tag/RELEASE.2023-02-17T17-52-43Z), MinIO requires expanded KES permissions for functionality. 
@@ -308,45 +303,32 @@ cache:
     unused: 20s
     offline: 0s
 
-# The following log configuration only affects logging to console.
 log:
 
-  # Enable/Disable logging error events to STDERR. Valid values
-  # are "on" or "off". If not set the default is "on". If no error
-  # events should be logged to STDERR it has to be set explicitly
-  # to: "off".
+  # Log error events to STDERR. Valid values are "on" or "off". 
+  # Default is "on".
   error: on
 
-  # Enable/Disable logging audit events to STDOUT. Valid values
-  # are "on" and "off". If not set the default is "off".
-  # Logging audit events to STDOUT may flood your console since
-  # there will be one audit log event per request-response pair.
+  # Log audit events to STDOUT. Valid values are "on" and "off". 
+  # Default is "off".
   audit: off
 
 keystore:
   gcp:
-    # The Google Cloud Platform secret manager.
-    # For more information take a look at:
     # https://cloud.google.com/secret-manager
     secretmanager:
-      # The project ID is a unique, user-assigned ID that can be used by Google APIs.
-      # The project ID must be a unique string of 6 to 30 lowercase letters, digits, or hyphens.
-      # It must start with a letter, and cannot have a trailing hyphen.
       # See: https://cloud.google.com/resource-manager/docs/creating-managing-projects#before_you_begin
       project_id: ""
-      # An optional GCP SecretManager endpoint. If not set, defaults to: secretmanager.googleapis.com:443
       endpoint: ""
-      # An optional list of GCP OAuth2 scopes. For a list of GCP scopes refer to: https://developers.google.com/identity/protocols/oauth2/scopes
+      # Refer to: https://developers.google.com/identity/protocols/oauth2/scopes
       # If not set, the GCP default scopes are used.
       scopes: 
       - ""
-      # The credentials for your GCP service account. If running inside GCP (app engine) the credentials
-      # can be empty and will be fetched from the app engine environment automatically.
       credentials:
-        client_email:   "" # The service account email                          - e.g. <account>@<project-ID>.iam.gserviceaccount.com
-        client_id:      "" # The service account client ID                      - e.g. 113491952745362495489"
-        private_key_id: "" # The service account private key                    - e.g. 381514ebd3cf45a64ca8adc561f0ce28fca5ec06
-        private_key:    "" # The raw encoded private key of the service account - e.g "-----BEGIN PRIVATE KEY-----\n ... \n-----END PRIVATE KEY-----\n
+        client_email: 
+        client_id:    
+        private_key_id: 
+        private_key:   
 
 ```
 
@@ -362,7 +344,7 @@ For complete documentation, see the [configuration page]({{< relref "/tutorials/
 | `root`                        | The identity for the KES superuser (`root`) identity. Clients connecting with a TLS certificate whose hash (`kes identity of client.cert`) matches this value have access to all KES API operations. Specify `disabled` to remove the root identity and rely only on the `policy` configuration for controlling identity and access management to KES. |
 | `tls`                         | The TLS private key and certificate used by KES for establishing TLS-secured communications. Specify the full path for both the private `.key` and public `.cert` to the `key` and `cert` fields, respectively. |
 | `policy`                      | Specify one or more [policies]({{< relref "/tutorials/configuration.md#policy-configuration" >}}) to control access to the KES server. MinIO SSE requires access to the following KES cryptographic APIs: <br><br> `/v1/key/create/*` <br> `/v1/key/generate/*` <br> `/v1/key/decrypt/*` <br><br> Specifying additional keys does not expand MinIO SSE functionality and may violate security best practices around providing unnecessary client access to cryptographic key operations. <br><br> You can restrict the range of key names MinIO can create as part of performing SSE by specifying a prefix before the `*.` For example, `minio-sse-*` only grants access to `create`, `generate`, or `decrypt` keys using the `minio-sse-` prefix. <br><br>KES uses mTLS to authorize connecting clients by comparing the hash of the TLS certificate against the `identities` of each configured policy. Use the `kes identity of` command to compute the identity of the MinIO mTLS certificate and add it to the `policy.<NAME>.identities` array to associate MinIO to the `<NAME>` policy. |
-| `keys`                        | Specify an array of keys which *must* exist on the root KMS for KES to successfully start. KES attempts to create the keys if they do not exist and exits with an error if it fails to create any key. KES does not accept any client requests until it completes validation of all specified keys.|
+| `keys`                        | Specify an array of keys which *must* exist on the root KMS for KES to successfully start. KES attempts to create the keys if they do not exist and exits with an error if it fails to create one or more key. KES does not accept any client requests until it completes validation of all specified keys.|
 | `cache`                       | Specify expiration of cached keys in `#d#h#m#s` format. Unexpired keys may be used in the event the KMS becomes temporarily unavailable. <br><br> Entries may be set for `any` key, `unused` keys, or `offline` keys. <br><br> If not set, KES uses values of `5m` for all keys, `20s` for unused keys, and `0s` for offline keys. |
 | `log`                         | Enable or disable output for `error` and `audit` type logging events to the console. |
 | `keystore.gcp.secretmanager.project_id` | The [project ID](https://cloud.google.com/resource-manager/docs/creating-managing-projects#before_you_begin) is a unique, user-assigned ID that can be used by Google APIs. The project ID must be a unique string of 6 to 30 lowercase letters, digits, or hyphens. It must start with a letter, and cannot have a trailing hyphen. |

@@ -158,13 +158,13 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
 
 ## Using KES with a MinIO Server
 
-MinIO Server requires KES to set up server-side data encryption.
+MinIO Server requires KES to enable server-side data encryption.
 
 See the [KES for MinIO instruction guide]({{< relref "/tutorials/kes-for-minio.md" >}}) for additional steps needed to use your new KES Server with a MinIO Server.
 
 ## Configuration References
 
-The following section describes each of the Key Encryption Service (KES) configuration settings for using AWS Secrets Manager and AWS Key Management System as the root KMS for Server Side Encryption with KES.
+The following section describes the Key Encryption Service (KES) configuration settings to use Fortanix SDKMS as the root KMS for Server Side Encryption.
 
 {{< admonition title="MinIO Server Requires Expanded Permissions" type="important" >}}
 Starting with [MinIO Server RELEASE.2023-02-17T17-52-43Z](https://github.com/minio/minio/releases/tag/RELEASE.2023-02-17T17-52-43Z), MinIO requires expanded KES permissions for functionality. 
@@ -234,33 +234,26 @@ cache:
     unused: 20s
     offline: 0s
 
-# The following log configuration only affects logging to console.
 log:
 
-  # Enable/Disable logging error events to STDERR. Valid values
-  # are "on" or "off". If not set the default is "on". If no error
-  # events should be logged to STDERR it has to be set explicitly
-  # to: "off".
+  # Log error events to STDERR. Valid values are "on" or "off". 
+  # Default is "on".
   error: on
 
-  # Enable/Disable logging audit events to STDOUT. Valid values
-  # are "on" and "off". If not set the default is "off".
-  # Logging audit events to STDOUT may flood your console since
-  # there will be one audit log event per request-response pair.
+  # Log audit events to STDOUT. Valid values are "on" and "off". 
+  # Default is "off".
   audit: off
 
 keystore:
   fortanix:
-    # The Fortanix SDKMS key store. The server will store secret keys at the Fortanix SDKMS.
-    # See: https://www.fortanix.com/products/data-security-manager/key-management-service
+    # https://www.fortanix.com/products/data-security-manager/key-management-service
     sdkms: 
-      endpoint: ""   # The Fortanix SDKMS endpoint - for example: https://sdkms.fortanix.com
-      group_id: ""   # An optional group ID newly created keys will be placed at. For example: ce08d547-2a82-411e-ae2d-83655a4b7617 
-                     # If empty, the applications default group is used. 
-      credentials:   # The Fortanix SDKMS access credentials
-        key: ""      # The application's API key - for example: NWMyMWZlNzktZDRmZS00NDFhLWFjMzMtNjZmY2U0Y2ViMThhOnJWQlh0M1lZaDcxZC1NNnh4OGV2MWNQSDVVSEt1eXEyaURqMHRrRU1pZDg=
-      tls:           # The KeySecure client TLS configuration
-        ca: ""       # Path to one or multiple PEM-encoded CA certificates for verifying the Fortanix SDKMS TLS certificate. 
+      endpoint: "" 
+      group_id: "" 
+      credentials: 
+        key: ""    
+      tls:         
+        ca: ""     
 ```
 
 {{< /tab >}}
@@ -275,7 +268,7 @@ For complete documentation, see the [configuration page]({{< relref "/tutorials/
 | `root`                        | The identity for the KES superuser (`root`) identity. Clients connecting with a TLS certificate whose hash (`kes identity of client.cert`) matches this value have access to all KES API operations. Specify `disabled` to remove the root identity and rely only on the `policy` configuration for controlling identity and access management to KES. |
 | `tls`                         | The TLS private key and certificate used by KES for establishing TLS-secured communications. Specify the full path for both the private `.key` and public `.cert` to the `key` and `cert` fields, respectively. |
 | `policy`                      | Specify one or more [policies]({{< relref "/tutorials/configuration.md#policy-configuration" >}}) to control access to the KES server. MinIO SSE requires access to the following KES cryptographic APIs: <br><br> `/v1/key/create/*` <br> `/v1/key/generate/*` <br> `/v1/key/decrypt/*` <br><br> Specifying additional keys does not expand MinIO SSE functionality and may violate security best practices around providing unnecessary client access to cryptographic key operations. <br><br> You can restrict the range of key names MinIO can create as part of performing SSE by specifying a prefix before the `*.` For example, `minio-sse-*` only grants access to `create`, `generate`, or `decrypt` keys using the `minio-sse-` prefix. <br><br>KES uses mTLS to authorize connecting clients by comparing the hash of the TLS certificate against the `identities` of each configured policy. Use the `kes identity of` command to compute the identity of the MinIO mTLS certificate and add it to the `policy.<NAME>.identities` array to associate MinIO to the `<NAME>` policy. |
-| `keys`                        | Specify an array of keys which *must* exist on the root KMS for KES to successfully start. KES attempts to create the keys if they do not exist and exits with an error if it fails to create any key. KES does not accept any client requests until it completes validation of all specified keys.|
+| `keys`                        | Specify an array of keys which *must* exist on the root KMS for KES to successfully start. KES attempts to create the keys if they do not exist and exits with an error if it fails to create one or more key. KES does not accept any client requests until it completes validation of all specified keys.|
 | `cache`                       | Specify expiration of cached keys in `#d#h#m#s` format. Unexpired keys may be used in the event the KMS becomes temporarily unavailable. <br><br> Entries may be set for `any` key, `unused` keys, or `offline` keys. <br><br> If not set, KES uses values of `5m` for all keys, `20s` for unused keys, and `0s` for offline keys. |
 | `log`                         | Enable or disable output for `error` and `audit` type logging events to the console. |
 | `keystore.fortanix.sdkms.endpoint` | The Fortanix SDKMS endpoint - for example: https://sdkms.fortanix.com |
@@ -283,6 +276,6 @@ For complete documentation, see the [configuration page]({{< relref "/tutorials/
 | `keystore.fortanix.sdkms.credentials` | The Fortanix SDKMS access credentials |
 | `keystore.fortanix.sdkms.credentials.key` | The application's API key. For example: `NWMyMWZlNzktZDRmZS00NDFhLWFjMzMtNjZmY2U0Y2ViMThhOnJWQlh0M1lZaDcxZC1NNnh4OGV2MWNQSDVVSEt1eXEyaURqMHRrRU1pZDg=` |
 | `keystore.fortanix.sdkms.tls` | The KeySecure client TLS configuration |
-| `keystore.fortanix.sdkms.tls.ca` | Path to one or multiple PEM-encoded CA certificates for verifying the Fortanix SDKMS TLS certificate. |
+| `keystore.fortanix.sdkms.tls.ca` | Path to one or more PEM-encoded CA certificates for verifying the Fortanix SDKMS TLS certificate. |
 {{< /tab >}}
 {{< /tabs >}}

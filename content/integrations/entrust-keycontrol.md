@@ -209,7 +209,7 @@ kes server --config config.yml --auth off
 In Linux environments, KES can use the [`mlock`](http://man7.org/linux/man-pages/man2/mlock.2.html) syscall to prevent the OS from writing in-memory data to disk (swapping). 
 This prevents leaking sensitive data.
    
-Use the following command to allow KES to use the mlock syscall without running with `root` privileges:
+Use the following command to allow KES to use the `mlock` syscall without running with `root` privileges:
 
 ```sh {.copy}
 sudo setcap cap_ipc_lock=+ep $(readlink -f $(which kes))
@@ -267,13 +267,13 @@ kes server --config config.yml --auth off --mlock
 
 ## Using KES with a MinIO Server
 
-MinIO Server requires KES to set up server-side data encryption.
+MinIO Server requires KES to enable server-side data encryption.
 
 See the [KES for MinIO instruction guide]({{< relref "/tutorials/kes-for-minio.md" >}}) for additional steps needed to use your new KES Server with a MinIO Server.
 
 ## Configuration References
 
-The following section describes each of the Key Encryption Service (KES) configuration settings for using AWS Secrets Manager and AWS Key Management System as the root KMS for Server Side Encryption with KES.
+The following section describes the Key Encryption Service (KES) configuration settings to use Entrust KeyControl as the root KMS for Server Side Encryption.
 
 {{< admonition title="MinIO Server Requires Expanded Permissions" type="important" >}}
 Starting with [MinIO Server RELEASE.2023-02-17T17-52-43Z](https://github.com/minio/minio/releases/tag/RELEASE.2023-02-17T17-52-43Z), MinIO requires expanded KES permissions for functionality. 
@@ -343,37 +343,28 @@ cache:
     unused: 20s
     offline: 0s
 
-# The following log configuration only affects logging to console.
 log:
 
-  # Enable/Disable logging error events to STDERR. Valid values
-  # are "on" or "off". If not set the default is "on". If no error
-  # events should be logged to STDERR it has to be set explicitly
-  # to: "off".
+  # Log error events to STDERR. Valid values are "on" or "off". 
+  # Default is "on".
   error: on
 
-  # Enable/Disable logging audit events to STDOUT. Valid values
-  # are "on" and "off". If not set the default is "off".
-  # Logging audit events to STDOUT may flood your console since
-  # there will be one audit log event per request-response pair.
+  # Log audit events to STDOUT. Valid values are "on" and "off". 
+  # Default is "off".
   audit: off
 
 keystore:
   entrust:
-    # The Entrust KeyControl configuration.
-    # For more information take a look at:
     # https://www.entrust.com/digital-security/key-management/keycontrol
     keycontrol:
-      endpoint: ""     # The KeyControl endpoint - e.g. https://keycontrol.my-org.com
-      vault_id: ""     # The Vault ID            - e.g. e30497c1-bff7-4e81-beb7-fb35c4b7410c
-      box_id:   ""     # The Box name or ID      - e.g. tenant-1
-      # The KeyControl access credentials
+      endpoint: "" 
+      vault_id: "" 
+      box_id:   "" 
       credentials:
-        username: ""   # The username able to access the Vault and Box.
-        password: ""   # The user password
-      # The KeyControl client TLS configuration
+        username: ""  
+        password: ""  
       tls:
-        ca: ""         # Path to one or multiple PEM-encoded CA certificates for verifying the KeyControl TLS certificate.
+        ca: ""
 
 ```
 
@@ -389,7 +380,7 @@ For complete documentation, see the [configuration page]({{< relref "/tutorials/
 | `root`                        | The identity for the KES superuser (`root`) identity. Clients connecting with a TLS certificate whose hash (`kes identity of client.cert`) matches this value have access to all KES API operations. Specify `disabled` to remove the root identity and rely only on the `policy` configuration for controlling identity and access management to KES. |
 | `tls`                         | The TLS private key and certificate used by KES for establishing TLS-secured communications. Specify the full path for both the private `.key` and public `.cert` to the `key` and `cert` fields, respectively. |
 | `policy`                      | Specify one or more [policies]({{< relref "/tutorials/configuration.md#policy-configuration" >}}) to control access to the KES server. MinIO SSE requires access to the following KES cryptographic APIs: <br><br> `/v1/key/create/*` <br> `/v1/key/generate/*` <br> `/v1/key/decrypt/*` <br><br> Specifying additional keys does not expand MinIO SSE functionality and may violate security best practices around providing unnecessary client access to cryptographic key operations. <br><br> You can restrict the range of key names MinIO can create as part of performing SSE by specifying a prefix before the `*.` For example, `minio-sse-*` only grants access to `create`, `generate`, or `decrypt` keys using the `minio-sse-` prefix. <br><br>KES uses mTLS to authorize connecting clients by comparing the hash of the TLS certificate against the `identities` of each configured policy. Use the `kes identity of` command to compute the identity of the MinIO mTLS certificate and add it to the `policy.<NAME>.identities` array to associate MinIO to the `<NAME>` policy. |
-| `keys`                        | Specify an array of keys which *must* exist on the root KMS for KES to successfully start. KES attempts to create the keys if they do not exist and exits with an error if it fails to create any key. KES does not accept any client requests until it completes validation of all specified keys.|
+| `keys`                        | Specify an array of keys which *must* exist on the root KMS for KES to successfully start. KES attempts to create the keys if they do not exist and exits with an error if it fails to create one or more key. KES does not accept any client requests until it completes validation of all specified keys.|
 | `cache`                       | Specify expiration of cached keys in `#d#h#m#s` format. Unexpired keys may be used in the event the KMS becomes temporarily unavailable. <br><br> Entries may be set for `any` key, `unused` keys, or `offline` keys. <br><br> If not set, KES uses values of `5m` for all keys, `20s` for unused keys, and `0s` for offline keys. |
 | `log`                         | Enable or disable output for `error` and `audit` type logging events to the console. |
 | `keystore.entrust.keycontrol.endpoint` | The KeyControl endpoint. For example, `https://keycontrol.my-org.com`. |
@@ -397,7 +388,7 @@ For complete documentation, see the [configuration page]({{< relref "/tutorials/
 | `keystore.entrust.keycontrol.box_id` | The Box name or ID. For example, `tenant-1`. |
 | `keystore.entrust.keycontrol.credentials.username` | The username able to access the Vault and Box. |
 | `keystore.entrust.keycontrol.credentials.password` | The user password. |
-| `keystore.entrust.keycontrol.tls.ca` | Path to one or multiple PEM-encoded CA certificates for verifying the KeyControl TLS certificate. |
+| `keystore.entrust.keycontrol.tls.ca` | Path to one or more PEM-encoded CA certificates for verifying the KeyControl TLS certificate. |
 
 {{< /tab >}}
 {{< /tabs >}}

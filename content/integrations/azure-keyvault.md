@@ -197,8 +197,8 @@ As an external application, you must register KES in [Azure Active Directory](ht
 
 4. Start the KES Server
    
-   {{< tabs "Azure-initialization" >}}
-   {{< tab "Linux" >}}
+   **Linux**
+
    ```sh {.copy}
    kes server --config config.yml --auth off
    ```
@@ -208,7 +208,7 @@ As an external application, you must register KES in [Azure Active Directory](ht
    In Linux environments, KES can use the [`mlock`](http://man7.org/linux/man-pages/man2/mlock.2.html) syscall to prevent the OS from writing in-memory data to disk (swapping). 
    This prevents leaking sensitive data.
    
-   Use the following command to allow KES to use the mlock syscall without running with `root` privileges:
+   Use the following command to allow KES to use the `mlock` syscall without running with `root` privileges:
 
    ```sh
    sudo setcap cap_ipc_lock=+ep $(readlink -f $(which kes))
@@ -221,12 +221,10 @@ As an external application, you must register KES in [Azure Active Directory](ht
    ```
    {{< /admonition >}}
 
-   {{< /tab >}}
+   **Containers**
 
-   {{< tab "Containers" >}}
-
-   The instructions use [Podman](https://podman.io/) to manage the containers.
-   You can accomplish similar with Docker, if preferred.
+   The following instructions use [Podman](https://podman.io/) to manage the containers.
+   You can also use Docker.
 
    Modify addresses and file paths as needed for your deployment.
 
@@ -258,14 +256,11 @@ As an external application, you must register KES in [Azure Active Directory](ht
    ```
 
    You can verify the status of the containers using the following command.
-   The command should show three pods, one for hte Pod, one for KES, and one for MinIO.
+   The command should show three pods, one for the Pod, one for KES, and one for MinIO.
 
    ```sh {.copy}
    sudo podman container list
    ```
-
-   {{< /tab >}}
-   {{< /tabs >}}
 
 ## KES CLI Access
 
@@ -314,14 +309,14 @@ As an external application, you must register KES in [Azure Active Directory](ht
    
 ## Using KES with a MinIO Server
 
-MinIO Server requires KES to set up server-side data encryption.
+MinIO Server requires KES to enable server-side data encryption.
 
 See the [KES for MinIO instruction guide]({{< relref "/tutorials/kes-for-minio.md" >}}) for additional steps needed to use your new KES Server with a MinIO Server.
 
 
 ## Configuration References
 
-The following section describes each of the Key Encryption Service (KES) configuration settings for using AWS Secrets Manager and AWS Key Management System as the root KMS for Server Side Encryption with KES.
+The following section describes the Key Encryption Service (KES) configuration settings to use Azure Key Vault as the root KMS for Server Side Encryption.
 
 {{< admonition title="MinIO Server Requires Expanded Permissions" type="important" >}}
 Starting with [MinIO Server RELEASE.2023-02-17T17-52-43Z](https://github.com/minio/minio/releases/tag/RELEASE.2023-02-17T17-52-43Z), MinIO requires expanded KES permissions for functionality. 
@@ -391,39 +386,27 @@ cache:
     unused: 20s
     offline: 0s
 
-# The following log configuration only affects logging to console.
 log:
 
-  # Enable/Disable logging error events to STDERR. Valid values
-  # are "on" or "off". If not set the default is "on". If no error
-  # events should be logged to STDERR it has to be set explicitly
-  # to: "off".
+  # Log error events to STDERR. Valid values are "on" or "off". 
+  # Default is "on".
   error: on
 
-  # Enable/Disable logging audit events to STDOUT. Valid values
-  # are "on" and "off". If not set the default is "off".
-  # Logging audit events to STDOUT may flood your console since
-  # there will be one audit log event per request-response pair.
+  # Log audit events to STDOUT. Valid values are "on" and "off". 
+  # Default is "off".
   audit: off
 
 keystore:
   azure:
-    # The Azure KeyVault configuration.
-    # For more information take a look at:
-    # https://azure.microsoft.com/services/key-vault
+    # See: https://azure.microsoft.com/services/key-vault
     keyvault:
-      endpoint: ""      # The KeyVault endpoint - e.g. https://my-instance.vault.azure.net
-      # Azure client credentials used to
-      # authenticate to Azure KeyVault.
+      endpoint: "" 
       credentials:
-        tenant_id: ""      # The ID of the tenant the client belongs to - i.e. a UUID.
-        client_id: ""      # The ID of the client - i.e. a UUID.
-        client_secret: ""  # The value of the client secret.
-      # Azure managed identity used to
-      # authenticate to Azure KeyVault
-      # with Azure managed credentials.
+        tenant_id: "" 
+        client_id: "" 
+        client_secret: "" 
       managed_identity:
-        client_id: ""      # The Azure managed identity of the client - i.e. a UUID.
+        client_id: "" 
 
 ```
 
@@ -439,14 +422,14 @@ For complete documentation, see the [configuration page]({{< relref "/tutorials/
 | `root`                        | The identity for the KES superuser (`root`) identity. Clients connecting with a TLS certificate whose hash (`kes identity of client.cert`) matches this value have access to all KES API operations. Specify `disabled` to remove the root identity and rely only on the `policy` configuration for controlling identity and access management to KES. |
 | `tls`                         | The TLS private key and certificate used by KES for establishing TLS-secured communications. Specify the full path for both the private `.key` and public `.cert` to the `key` and `cert` fields, respectively. |
 | `policy`                      | Specify one or more [policies]({{< relref "/tutorials/configuration.md#policy-configuration" >}}) to control access to the KES server. MinIO SSE requires access to the following KES cryptographic APIs: <br><br> `/v1/key/create/*` <br> `/v1/key/generate/*` <br> `/v1/key/decrypt/*` <br><br> Specifying additional keys does not expand MinIO SSE functionality and may violate security best practices around providing unnecessary client access to cryptographic key operations. <br><br> You can restrict the range of key names MinIO can create as part of performing SSE by specifying a prefix before the `*.` For example, `minio-sse-*` only grants access to `create`, `generate`, or `decrypt` keys using the `minio-sse-` prefix. <br><br>KES uses mTLS to authorize connecting clients by comparing the hash of the TLS certificate against the `identities` of each configured policy. Use the `kes identity of` command to compute the identity of the MinIO mTLS certificate and add it to the `policy.<NAME>.identities` array to associate MinIO to the `<NAME>` policy. |
-| `keys`                        | Specify an array of keys which *must* exist on the root KMS for KES to successfully start. KES attempts to create the keys if they do not exist and exits with an error if it fails to create any key. KES does not accept any client requests until it completes validation of all specified keys.|
+| `keys`                        | Specify an array of keys which *must* exist on the root KMS for KES to successfully start. KES attempts to create the keys if they do not exist and exits with an error if it fails to create one or more key. KES does not accept any client requests until it completes validation of all specified keys.|
 | `cache`                       | Specify expiration of cached keys in `#d#h#m#s` format. Unexpired keys may be used in the event the KMS becomes temporarily unavailable. <br><br> Entries may be set for `any` key, `unused` keys, or `offline` keys. <br><br> If not set, KES uses values of `5m` for all keys, `20s` for unused keys, and `0s` for offline keys. |
 | `log`                         | Enable or disable output for `error` and `audit` type logging events to the console. |
 | `keystore.azure.keyvault.endpoint` | The KeyVault endpoint. For example, `https://my-instance.vault.azure.net`. |
-| `keystore.azure.keyvault.credentials.tenant_id` | The ID of the tenant the client belongs to to use to authenticate to KeyVault, that is a UUID. |
-| `keystore.azure.keyvault.credentials.client_id` | The ID of the client to use to authenticate to KeyVault, that is a UUID. |
+| `keystore.azure.keyvault.credentials.tenant_id` | The ID (UUID) of the tenant the client belongs used to authenticate to KeyVault. |
+| `keystore.azure.keyvault.credentials.client_id` | The ID (UUID) of the client used to authenticate to KeyVault. |
 | `keystore.azure.keyvault.credentials.client_secret` | The value of the client secret. |
-| `keystore.azure.keyvault.managed_identity.client_id` | The Azure-managed identity of the client, that is a UUID. |
+| `keystore.azure.keyvault.managed_identity.client_id` | The Azure-managed identity (UUID) of the client. |
 
 {{< /tab >}}
 {{< /tabs >}}

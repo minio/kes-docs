@@ -112,7 +112,7 @@ For production use, choose any supported KMS implementation that meets your requ
    In Linux environments, KES can use the [`mlock`](http://man7.org/linux/man-pages/man2/mlock.2.html) syscall to prevent the OS from writing in-memory data to disk (swapping). 
    This prevents leaking sensitive data.
    
-   Use the following command to allow KES to use the mlock syscall without running with `root` privileges:
+   Use the following command to allow KES to use the `mlock` syscall without running with `root` privileges:
 
    ```sh {.copy}
    sudo setcap cap_ipc_lock=+ep $(readlink -f $(which kes))
