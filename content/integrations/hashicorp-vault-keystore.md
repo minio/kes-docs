@@ -402,7 +402,7 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
    ```
 
    You can verify the status of the containers using the following command.
-   The command should show three pods, one for hte Pod, one for KES, and one for MinIO.
+   The command should show three pods, one for the Pod, one for KES, and one for MinIO.
 
    ```sh {.copy}
    sudo podman container list
@@ -467,7 +467,7 @@ See the [KES for MinIO instruction guide]({{< relref "/tutorials/kes-for-minio.m
 
 ## Configuration References
 
-The following section describes the Key Encryption Service (KES) configuration settings to use Hashicorp Vault Keystore as the root KMS for Server Side Encryption.
+The following section describes the Key Encryption Service (KES) configuration settings to use Hashicorp Vault Keystore as the root KMS to store external keys, such as the keys used for Server-Side Encryption on a MinIO Server.
 
 {{< admonition title="MinIO Server Requires Expanded Permissions" type="important" >}}
 Starting with [MinIO Server RELEASE.2023-02-17T17-52-43Z](https://github.com/minio/minio/releases/tag/RELEASE.2023-02-17T17-52-43Z), MinIO requires expanded KES permissions for functionality. 
@@ -587,7 +587,7 @@ For complete documentation, see the [configuration page]({{< relref "/tutorials/
 | `root`                        | The identity for the KES superuser (`root`) identity. Clients connecting with a TLS certificate whose hash (`kes identity of client.cert`) matches this value have access to all KES API operations. Specify `disabled` to remove the root identity and rely only on the `policy` configuration for controlling identity and access management to KES. |
 | `tls`                         | The TLS private key and certificate used by KES for establishing TLS-secured communications. Specify the full path for both the private `.key` and public `.cert` to the `key` and `cert` fields, respectively. |
 | `policy`                      | Specify one or more [policies]({{< relref "/tutorials/configuration.md#policy-configuration" >}}) to control access to the KES server. MinIO SSE requires access to the following KES cryptographic APIs: <br><br> `/v1/key/create/*` <br> `/v1/key/generate/*` <br> `/v1/key/decrypt/*` <br><br> Specifying additional keys does not expand MinIO SSE functionality and may violate security best practices around providing unnecessary client access to cryptographic key operations. <br><br> You can restrict the range of key names MinIO can create as part of performing SSE by specifying a prefix before the `*.` For example, `minio-sse-*` only grants access to `create`, `generate`, or `decrypt` keys using the `minio-sse-` prefix. <br><br>KES uses mTLS to authorize connecting clients by comparing the hash of the TLS certificate against the `identities` of each configured policy. Use the `kes identity of` command to compute the identity of the MinIO mTLS certificate and add it to the `policy.<NAME>.identities` array to associate MinIO to the `<NAME>` policy. |
-| `keys`                        | Specify an array of keys which *must* exist on the root KMS for KES to successfully start. KES attempts to create the keys if they do not exist and exits with an error if it fails to create one or more key. KES does not accept any client requests until it completes validation of all specified keys.|
+| `keys`                        | Specify an array of keys which *must* exist on the root KMS for KES to successfully start. KES attempts to create the keys if they do not exist and exits with an error if it fails to create one or more keys. KES does not accept any client requests until it completes validation of all specified keys.|
 | `cache`                       | Specify expiration of cached keys in `#d#h#m#s` format. Unexpired keys may be used in the event the KMS becomes temporarily unavailable. <br><br> Entries may be set for `any` key, `unused` keys, or `offline` keys. <br><br> If not set, KES uses values of `5m` for all keys, `20s` for unused keys, and `0s` for offline keys. |
 | `log`                         | Enable or disable output for `error` and `audit` type logging events to the console. |
 | `keystore.vault.endpoint` | The Vault endpoint. For example, `https://127.0.0.1:8200` |
@@ -599,12 +599,12 @@ For complete documentation, see the [configuration page]({{< relref "/tutorials/
 | `keystore.vault.transit.engine` | The path of the transit engine. For example, `my-transit`. <br><br> If empty, it defaults to: `transit` (Vault default). |
 | `keystore.vault.transit.key` | The key name to use to encrypt entries stored on the K/V engine. |
 | `keystore.vault.approle` | [AppRole credentials](https://www.vaultproject.io/docs/auth/approle.html). |
-| `keystore.vault.approle.namespace` | Optional Vault namespace used just for authentication. A single `/` is an alias for the Vault `root` namespace. |
+| `keystore.vault.approle.namespace` | Optional Vault namespace used only for authentication. For the Vault root namespace, use `/`. |
 | `keystore.vault.approle.engine` | The path of the AppRole engine. For example, `authenticate`. <br><br> If empty, defaults to: `approle` (Vault default). |
 | `keystore.vault.approle.id` | Your AppRole Role ID |
 | `keystore.vault.approle.secret` | Your AppRole ID's secret |
 | `keystore.vault.kubernetes` | [Kubernetes credentials](https://www.vaultproject.io/docs/auth/kubernetes). |
-| `keystore.vault.kubernetes.namespace` | Optional Vault namespace used just for authentication. A single `/` is an alias for the Vault `root` namespace. |
+| `keystore.vault.kubernetes.namespace` | Optional Vault namespace used only for authentication. For the Vault root namespace, use "/". |
 | `keystore.vault.kubernetes.engine` | The path of the Kubernetes engine. For example, `authenticate`. If empty, defaults to: `kubernetes` (Vault default). |
 | `keystore.vault.kubernetes.role` | The Kubernetes JWT's role |
 | `keystore.vault.kubernetes.jwt` | Either the JWT provided by Kubernetes or a path to a [Kubernetes secret](https://kubernetes.io/docs/concepts/configuration/secret/) containing the JWT. |

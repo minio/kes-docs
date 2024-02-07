@@ -71,7 +71,7 @@ For production use, choose any supported KMS implementation that meets your requ
 
 3. Configure KES Server
    
-   The information here is very generic.
+   This procedure provides a baseline set of steps that may require significant alteration to fit your goals.
    For detailed instructions on configuring the KES Server for a specific Key Management System provider, see the integration page for [supported targets]({{< relref "_index.md#supported-kms-targets" >}}).
 
    Create the KES server configuration file: `config.yml`.

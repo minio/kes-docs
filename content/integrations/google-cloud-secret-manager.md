@@ -30,7 +30,7 @@ The [Google Cloud Secret Manager](https://cloud.google.com/secret-manager) is a 
    
 5. Assign one or more roles to the new account 
 
-   If you just want to get started quickly, assign the `Secret Manager Admin` role. 
+   If you want to get started quickly, assign the `Secret Manager Admin` role. 
    However, this grants more permissions than KES needs.
 
    Alternatively, [create a new role for KES](https://console.cloud.google.com/iam-admin/roles) with the minimal permissions required:
@@ -186,7 +186,7 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
    ```
 
    You can verify the status of the containers using the following command.
-   The command should show three pods, one for hte Pod, one for KES, and one for MinIO.
+   The command should show three pods, one for the Pod, one for KES, and one for MinIO.
 
    ```sh {.copy}
    sudo podman container list
@@ -233,7 +233,7 @@ See the [KES for MinIO instruction guide]({{< relref "/tutorials/kes-for-minio.m
 
 ## Configuration References
 
-The following section describes the Key Encryption Service (KES) configuration settings to use Google Cloud Secret Manager as the root KMS for Server Side Encryption.
+The following section describes the Key Encryption Service (KES) configuration settings to use Google Cloud Secret Manager as the root KMS to store external keys, such as the keys used for Server-Side Encryption on a MinIO Server.
 
 {{< admonition title="MinIO Server Requires Expanded Permissions" type="important" >}}
 Starting with [MinIO Server RELEASE.2023-02-17T17-52-43Z](https://github.com/minio/minio/releases/tag/RELEASE.2023-02-17T17-52-43Z), MinIO requires expanded KES permissions for functionality. 
@@ -344,7 +344,7 @@ For complete documentation, see the [configuration page]({{< relref "/tutorials/
 | `root`                        | The identity for the KES superuser (`root`) identity. Clients connecting with a TLS certificate whose hash (`kes identity of client.cert`) matches this value have access to all KES API operations. Specify `disabled` to remove the root identity and rely only on the `policy` configuration for controlling identity and access management to KES. |
 | `tls`                         | The TLS private key and certificate used by KES for establishing TLS-secured communications. Specify the full path for both the private `.key` and public `.cert` to the `key` and `cert` fields, respectively. |
 | `policy`                      | Specify one or more [policies]({{< relref "/tutorials/configuration.md#policy-configuration" >}}) to control access to the KES server. MinIO SSE requires access to the following KES cryptographic APIs: <br><br> `/v1/key/create/*` <br> `/v1/key/generate/*` <br> `/v1/key/decrypt/*` <br><br> Specifying additional keys does not expand MinIO SSE functionality and may violate security best practices around providing unnecessary client access to cryptographic key operations. <br><br> You can restrict the range of key names MinIO can create as part of performing SSE by specifying a prefix before the `*.` For example, `minio-sse-*` only grants access to `create`, `generate`, or `decrypt` keys using the `minio-sse-` prefix. <br><br>KES uses mTLS to authorize connecting clients by comparing the hash of the TLS certificate against the `identities` of each configured policy. Use the `kes identity of` command to compute the identity of the MinIO mTLS certificate and add it to the `policy.<NAME>.identities` array to associate MinIO to the `<NAME>` policy. |
-| `keys`                        | Specify an array of keys which *must* exist on the root KMS for KES to successfully start. KES attempts to create the keys if they do not exist and exits with an error if it fails to create one or more key. KES does not accept any client requests until it completes validation of all specified keys.|
+| `keys`                        | Specify an array of keys which *must* exist on the root KMS for KES to successfully start. KES attempts to create the keys if they do not exist and exits with an error if it fails to create one or more keys. KES does not accept any client requests until it completes validation of all specified keys.|
 | `cache`                       | Specify expiration of cached keys in `#d#h#m#s` format. Unexpired keys may be used in the event the KMS becomes temporarily unavailable. <br><br> Entries may be set for `any` key, `unused` keys, or `offline` keys. <br><br> If not set, KES uses values of `5m` for all keys, `20s` for unused keys, and `0s` for offline keys. |
 | `log`                         | Enable or disable output for `error` and `audit` type logging events to the console. |
 | `keystore.gcp.secretmanager.project_id` | The [project ID](https://cloud.google.com/resource-manager/docs/creating-managing-projects#before_you_begin) is a unique, user-assigned ID that can be used by Google APIs. The project ID must be a unique string of 6 to 30 lowercase letters, digits, or hyphens. It must start with a letter, and cannot have a trailing hyphen. |
