@@ -34,6 +34,6 @@ The short name of the KES enclave to output information about.
 
 The following command deletes the KES enclave named `tenant-1`.
 
-```sh
+```sh {.copy}
 kes enclave rm tenant-1
 ```

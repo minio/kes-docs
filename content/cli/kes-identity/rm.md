@@ -28,6 +28,6 @@ kes identity rm                     \
 
 ## Examples
 
-```sh
+```sh {.copy}
 kes identity rm 736bf58626441e3e134a2daf2e6a8441b40e1abc0eac510878168c8aac9f2b0b
 ```

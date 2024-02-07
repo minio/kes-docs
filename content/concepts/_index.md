@@ -90,7 +90,7 @@ If your setup is not working as expected, check that the certificates contain th
 {{< admonition type="tip" >}}
 View a certificate in a human-readable format with the following command:
 
-```sh
+```sh {.copy}
 openssl x509 -noout -text -in <your-certificate.cert>
 ```
 {{< /admonition >}}
@@ -177,7 +177,7 @@ A KES server evaluates a policy as follows:
 
 Let's take a look at an example policy:
 
-```yaml
+```yaml {.copy}
 policy:
   my-policy:
     allow:

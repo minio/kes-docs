@@ -58,6 +58,6 @@ You create contexts in the `kubeconfig` file of a Kubernetes deployment to defin
 
 ## Examples
 
-```sh
+```sh {.copy}
 kes key dek my-key
 ```

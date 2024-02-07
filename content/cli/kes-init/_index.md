@@ -32,6 +32,6 @@ Overwrite any existing data.
 
 Start a stateful KES server using the `init.yml` configuration file using the path `~/kes`.
 
-```sh
+```sh {.copy}
 kes init --config init.yml ~/kes
 ```

@@ -1,7 +1,7 @@
 The following yaml file provides an example configuration file with notes for use.
 For the latest example file, see the [GitHub repository](https://raw.githubusercontent.com/minio/kes/master/server-config.yaml).
 
-```yaml
+```yaml {.copy}
 # The config file version. Currently this field is optional but future
 # KES versions will require it. The only valid value is "v1". 
 version: v1
@@ -13,7 +13,7 @@ admin:
   # The admin identity identifies the public/private key pair
   # that can perform any API operation.
   # The admin account can be disabled by setting a value that
-  # cannot match any public key - e.g. "foobar" or "disabled".
+  # cannot match any public key - for example, "foobar" or "disabled".
   identity: c84cc9b91ae2399b043da7eca616048d4b4200edf2ff418d8af3835911db945d
 
 # The TLS configuration for the KES server. A KES server
@@ -24,7 +24,7 @@ tls:
   key:      ./server.key   # Path to the TLS private key
   cert:     ./server.cert  # Path to the TLS certificate
   password: ""             # An optional password to decrypt the TLS private key
-  
+
   # Specify how/whether the KES server verifies certificates presented
   # by clients. Valid values are "on" and "off". Defaults to off, which
   # is recommended for most use cases.
@@ -67,8 +67,8 @@ tls:
 # Only customize the APIs if there is a real need.
 # 
 # Disabling authentication for an API must be carefully evaluated.
-# One example when disabling authentication may be justified could
-# be the readiness probe in a Kubernetes environment.
+# One example, when disabling authentication may be justified, would
+# be the liveness and readiness probes in a Kubernetes environment.
 #
 # When authentication is disabled, the particular API can be
 # accessed by any client that can send HTTPS requests to the
@@ -112,7 +112,7 @@ api:
 # of the following form:
 #   <API-version>/<API>/<operation>/[<argument-0>/<argument-1>/...]>
 #
-# Each KES server API has an unique path - e.g. /v1/key/create/<key-name>.
+# Each KES server API has an unique path - for example, /v1/key/create/<key-name>.
 # A client request is allowed if and only if no deny pattern AND at least one
 # allow pattern matches the request URL path.
 #
@@ -168,7 +168,7 @@ cache:
     # are discarded.
     # It determines how long the KES server can serve stateless
     # requests when the KMS key store has become unavailable -
-    # e.g. due to a network outage.
+    # for example, due to a network outage.
     #
     # If not set, KES will disable the offline cache.
     #
@@ -237,55 +237,35 @@ keystore:
   # and development. It should not be used for production.
   fs:
     path: "" # Path to directory. Keys will be stored as files.
-
-  # Configuration for storing keys on a KES server.
-  kes:
-    endpoint: 
-    - ""           # The endpoint (or list of endpoints) to the KES server(s)
-    enclave: ""    # An optional enclave name. If empty, the default enclave will be used
-    tls:           # The KES mTLS authentication credentials - i.e. client certificate.
-      cert: ""     # Path to the TLS client certificate for mTLS authentication
-      key: ""      # Path to the TLS client private key for mTLS authentication
-      ca: ""       # Path to one or multiple PEM root CA certificates
     
-  # Configuration for storing keys via a KES KeyStore plugin or at
-  # a KeyStore that exposes an API compatible to the KES KeyStore
-  # plugin specification: https://github.com/minio/kes/blob/master/internal/generic/spec-v1.md
-  generic:
-    endpoint: "" # The plugin endpoint - e.g. https://127.0.0.1:7001
-    tls:         # The KES client TLS configuration for mTLS authentication and certificate verification.
-      key: ""    # Path to the TLS client private key for mTLS authentication
-      cert: ""   # Path to the TLS client certificate for mTLS authentication
-      ca: ""     # Path to one or multiple PEM root CA certificates
-
   # Hashicorp Vault configuration. The KES server will store/fetch
   # secret keys at/from Vault's key-value backend.
   #
   # For more information take a look at:
   # https://www.vaultproject.io/api/secret/kv/kv-v1.html
   vault:
-    endpoint: ""  # The Vault endpoint - e.g. https://127.0.0.1:8200
-    engine: ""    # The path of the K/V engine - e.g. secrets. If empty, defaults to: kv. (Vault default)
+    endpoint: ""  # The Vault endpoint - for example, https://127.0.0.1:8200
+    engine: ""    # The path of the K/V engine - for example, secrets. If empty, defaults to: kv. (Vault default)
     version: ""   # The K/V engine version - either "v1" or "v2". The "v1" engine is recommended.
     namespace: "" # An optional Vault namespace. See: https://www.vaultproject.io/docs/enterprise/namespaces/index.html
     prefix: ""    # An optional K/V prefix. The server will store keys under this prefix.
     transit:      # Optionally encrypt keys stored on the K/V engine with a Vault-managed key.
-      engine: ""  # The path of the transit engine - e.g. "my-transit". If empty, defaults to: transit (Vault default)
+      engine: ""  # The path of the transit engine - for example, "my-transit". If empty, defaults to: transit (Vault default)
       key: ""     # The key name that should be used to encrypt entries stored on the K/V engine.
     approle:    # AppRole credentials. See: https://www.vaultproject.io/docs/auth/approle.html
-      engine: ""  # The path of the AppRole engine - e.g. authenticate. If empty, defaults to: approle. (Vault default)
-      id: ""      # Your AppRole Role ID
-      secret: ""  # Your AppRole Secret ID
-      retry: 15s  # Duration until the server tries to re-authenticate after connection loss.
+      namespace: "" # Optional Vault namespace used only for authentication. For the Vault root namespace, use "/".
+      engine: ""    # The path to the AppRole engine, for example: authenticate. If empty, defaults to: approle. (Vault default)
+      id: ""        # Your AppRole Role ID
+      secret: ""    # Your AppRole Secret ID
     kubernetes: # Kubernetes credentials. See: https://www.vaultproject.io/docs/auth/kubernetes
-      engine: ""  # The path of the Kubernetes engine e.g. authenticate. If empty, defaults to: kubernetes. (Vault default)
-      role: ""    # The Kubernetes JWT role
-      jwt:  ""    # Either the JWT provided by K8S or a path to a K8S secret containing the JWT.
-      retry: 15s  # Duration until the server tries to re-authenticate after connection loss.
+      namespace: "" # Optional Vault namespace used only for authentication. For the Vault root namespace, use "/".
+      engine: ""    # The path to the Kubernetes engine, for example: authenticate. If empty, defaults to: kubernetes. (Vault default)
+      role: ""      # The Kubernetes JWT role
+      jwt:  ""      # Either the JWT provided by K8S or a path to a K8S secret containing the JWT.
     tls:        # The Vault client TLS configuration for mTLS authentication and certificate verification
       key: ""     # Path to the TLS client private key for mTLS authentication to Vault
       cert: ""    # Path to the TLS client certificate for mTLS authentication to Vault
-      ca: ""      # Path to one or multiple PEM root CA certificates
+      ca: ""      # Path to one or more PEM root CA certificates
     status:     # Vault status configuration. The server will periodically reach out to Vault to check its status.
       ping: 10s   # Duration until the server checks Vault's status again.
 
@@ -299,14 +279,14 @@ keystore:
       credentials:   # The Fortanix SDKMS access credentials
         key: ""      # The application's API key - for example: NWMyMWZlNzktZDRmZS00NDFhLWFjMzMtNjZmY2U0Y2ViMThhOnJWQlh0M1lZaDcxZC1NNnh4OGV2MWNQSDVVSEt1eXEyaURqMHRrRU1pZDg=
       tls:           # The KeySecure client TLS configuration
-        ca: ""       # Path to one or multiple PEM-encoded CA certificates for verifying the Fortanix SDKMS TLS certificate. 
+        ca: ""       # Path to one or more PEM-encoded CA certificates for verifying the Fortanix SDKMS TLS certificate. 
   aws:
     # The AWS SecretsManager key store. The server will store
     # secret keys at the AWS SecretsManager encrypted with
     # AWS-KMS. See: https://aws.amazon.com/secrets-manager
     secretsmanager:
-      endpoint: ""   # The AWS SecretsManager endpoint      - e.g.: secretsmanager.us-east-2.amazonaws.com
-      region: ""     # The AWS region of the SecretsManager - e.g.: us-east-2
+      endpoint: ""   # The AWS SecretsManager endpoint      - for example, secretsmanager.us-east-2.amazonaws.com
+      region: ""     # The AWS region of the SecretsManager - for example, us-east-2
       kmskey: ""     # The AWS-KMS key ID used to en/decrypt secrets at the SecretsManager. By default (if not set) the default AWS-KMS key will be used.
       credentials:   # The AWS credentials for accessing secrets at the AWS SecretsManager.
         accesskey: ""  # Your AWS Access Key
@@ -317,13 +297,13 @@ keystore:
     # The Gemalto KeySecure key store. The server will store
     # keys as secrets on the KeySecure instance.
     keysecure:
-      endpoint: ""    # The KeySecure endpoint - e.g. https://127.0.0.1
+      endpoint: ""    # The KeySecure endpoint - for example, https://127.0.0.1
       credentials:    # The authentication to access the KeySecure instance.
         token: ""     # The refresh token to obtain new short-lived authentication tokens.
         domain: ""    # The KeySecure domain for which the refresh token is valid. If empty, defaults to the root domain.
         retry: 15s    # The time the KES server waits before it tries to re-authenticate after connection loss.
       tls:            # The KeySecure client TLS configuration
-        ca: ""        # Path to one or multiple PEM-encoded CA certificates for verifying the KeySecure TLS certificate.
+        ca: ""        # Path to one or more PEM-encoded CA certificates for verifying the KeySecure TLS certificate.
 
   gcp:
     # The Google Cloud Platform secret manager.
@@ -344,26 +324,42 @@ keystore:
       # The credentials for your GCP service account. If running inside GCP (app engine) the credentials
       # can be empty and will be fetched from the app engine environment automatically.
       credentials:
-        client_email:   "" # The service account email                          - e.g. <account>@<project-ID>.iam.gserviceaccount.com
-        client_id:      "" # The service account client ID                      - e.g. 113491952745362495489"
-        private_key_id: "" # The service account private key                    - e.g. 381514ebd3cf45a64ca8adc561f0ce28fca5ec06
-        private_key:    "" # The raw encoded private key of the service account - e.g "-----BEGIN PRIVATE KEY-----\n ... \n-----END PRIVATE KEY-----\n
+        client_email:   "" # The service account email                          - for example, <account>@<project-ID>.iam.gserviceaccount.com
+        client_id:      "" # The service account client ID                      - for example, 113491952745362495489"
+        private_key_id: "" # The service account private key                    - for example, 381514ebd3cf45a64ca8adc561f0ce28fca5ec06
+        private_key:    "" # The raw encoded private key of the service account - for example, "-----BEGIN PRIVATE KEY-----\n ... \n-----END PRIVATE KEY-----\n
 
   azure:
     # The Azure KeyVault configuration.
     # For more information take a look at:
     # https://azure.microsoft.com/services/key-vault
     keyvault:
-      endpoint: ""      # The KeyVault endpoint - e.g. https://my-instance.vault.azure.net
+      endpoint: ""      # The KeyVault endpoint - for example, https://my-instance.vault.azure.net
       # Azure client credentials used to
       # authenticate to Azure KeyVault.
       credentials:
-        tenant_id: ""      # The ID of the tenant the client belongs to - i.e. a UUID.
-        client_id: ""      # The ID of the client - i.e. a UUID.
+        tenant_id: ""      # The ID of the tenant the client belongs to - that is, a UUID.
+        client_id: ""      # The ID of the client - that is, a UUID.
         client_secret: ""  # The value of the client secret.
       # Azure managed identity used to
       # authenticate to Azure KeyVault
       # with Azure managed credentials.
       managed_identity:
-        client_id: ""      # The Azure managed identity of the client - i.e. a UUID.
+        client_id: ""      # The Azure managed identity of the client - that is, a UUID.
+
+  entrust:
+    # The Entrust KeyControl configuration.
+    # For more information take a look at:
+    # https://www.entrust.com/digital-security/key-management/keycontrol
+    keycontrol:
+      endpoint: ""     # The KeyControl endpoint - for example, https://keycontrol.my-org.com
+      vault_id: ""     # The Vault ID            - for example, e30497c1-bff7-4e81-beb7-fb35c4b7410c
+      box_id:   ""     # The Box name or ID      - for example, tenant-1
+      # The KeyControl access credentials
+      credentials:
+        username: ""   # A username with access to the Vault and Box.
+        password: ""   # The user password
+      # The KeyControl client TLS configuration
+      tls:
+        ca: ""         # Path to one or more PEM-encoded CA certificates for verifying the KeyControl TLS certificate.
 ```

@@ -23,15 +23,15 @@ You can provide these values in different ways, such as through environment vari
 From the command line, use the following environment variables to define the three basic settings.
 
 - The KES server endpoint:
-  ```sh
+  ```sh {.copy}
   export KES_SERVER=https://127.0.0.1:7373
   ```
 - The client X.509 certificate:
-  ```sh
+  ```sh {.copy}
   export KES_CLIENT_CERT=$HOME/root.cert
   ```
 - The private key that corresponds to the public key embedded in the certificate:
-  ```sh
+  ```sh {.copy}
   export KES_CLIENT_KEY=$HOME/root.key
   ```
 
@@ -39,7 +39,7 @@ From the command line, use the following environment variables to define the thr
 
 When using an SDK, provide a server endpoint and fetch the client's private key and certificate:
 
-```Go
+```Go {.copy}
 package main
 
 import (
@@ -83,7 +83,7 @@ If you do not specify the TCP address, the KES server listens on all available n
 
 The following command starts a KES server listening on all network interfaces on port `7373` with the X.509 TLS certificate `server.crt`, the corresponding private key `server.key`, and the root identity taken from the environment variable `$ROOT_IDENTITY`:
 
-```sh
+```sh {.copy}
 kes server --cert server.crt --key private.key --root $ROOT_IDENTITY
 ```
 
@@ -105,7 +105,7 @@ The config file is separated into various sections:
 
 Use the TLS configuration section to specify the X.509 certificate of the KES server and the corresponding private key:
 
-```yaml
+```yaml {.copy}
 tls:
   cert: server.crt
   key:  server.key
@@ -138,7 +138,7 @@ You can disable authentication for the following API endpoints:
 
 For example, to skip authentication for the endpoints that allow readiness probes and status checks, add the following to the configuration file:
 
-```yaml
+```yaml {.copy}
 api:
   /v1/ready:
     skip_auth: true
@@ -154,7 +154,7 @@ See [link text]({{< relref "concepts/server-api.md" >}}) for information on the 
 
 Use the cache configuration section to specify how the KES server should cache keys fetched from the external KMS.
 
-```yaml
+```yaml {.copy}
 cache:
   expiry:
     any:    5m0s
@@ -191,7 +191,7 @@ For example, the KES Server logs an error event when fetching a key from the KMS
 The KES Server produce an audit event whenever it accepts a client request.
 The audit event describes the request-response pair and contains information about who issued the request.
 
-```yaml
+```yaml {.copy}
 log:
   error: on  # To disable error logging to STDERR - explicitly set it to off
   audit: off # To enable audit logging to STDOUT - explicitly set it to on
@@ -209,7 +209,7 @@ The policy section can contain arbitrary many policy definitions.
 Each policy must have an unique name - e.g. `my-policy`. 
 Let's take a look at an example policy:
 
-```yaml
+```yaml {.copy}
 policy:
   my-policy:
     allow:
@@ -256,7 +256,7 @@ Specifying the exact request paths is quite inflexible.
 Therefore, a policy path is a glob pattern. 
 Let's adjust the `my-policy` policy as following:
 
-```yaml
+```yaml {.copy}
 policy:
   my-policy:
     allow:
@@ -300,7 +300,7 @@ For more details, see the comprehensive list at the [server APIs page]({{< relre
 Use the policy section to define which policy applies to which identity. 
 An identity can be computed from the X.509 certificate as follows:
 
-```sh
+```sh {.copy}
 kes identity of <path-to-certificate-file>
 ```
 
@@ -312,7 +312,7 @@ You can specify an identity in two ways:
  
 If you use an environment variable, the KES server inserts the value on startup.
 
-```yaml
+```yaml {.copy}
 policy:
   my-policy:
     allow:
@@ -334,7 +334,7 @@ The server starts even if an environment variable is not present or does not con
 
 Use the key configuration section to declare cryptographic keys that should exist *before* the KES server starts accepting requests. 
 
-```yaml
+```yaml {.copy}
 keys:
   - name: "my-key"
   - name: "my-key-2"
@@ -354,7 +354,7 @@ This is only useful for testing or development setups, as all master keys are lo
 
 To create a persistent testing or development setup, specify a filesystem key store in the config file: 
 
-```yaml
+```yaml {.copy}
 keystore:
   fs:
     path: ./keys # The key store directory. Keys will be created inside ./keys/

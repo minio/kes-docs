@@ -13,12 +13,12 @@ Returns the identity of either an api key or a certificate.
 ## Syntax
 
 Return the identity from an api-key:
-```sh
+```sh {.copy}
 kes identity of <api-key>
 ```
 
 Return the identity from a certificate:
-```sh
+```sh {.copy}
 kes identity of <path-to-certificate>
 ```
 
@@ -31,12 +31,12 @@ Supply either the api key or the path of a certificate.
 
 Obtain the identity from an API key:
 
-```sh
+```sh {.copy}
 kes identity of kes:v1:ACQpoGqx3rHHjT938Hfu5hVVQJHZWSqVI2Xp1KlYxFVw
 ```
 
 Obtain the identity from a certificate:
 
-```sh
+```sh {.copy}
 kes identity of client.crt
 ```

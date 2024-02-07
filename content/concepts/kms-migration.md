@@ -63,12 +63,12 @@ To minimize the risk of errors during the migration process, follow these best p
 2. Verify valid KES configurations for both the source and target KMS 
 3. Verify that each KES server can access their KMS instance. 
    In particular, check that the following command starts a KES server successfully:
-   ```sh
+   ```sh {.copy}
    kes server --config <your-config-file.yml>
    ```
 4. If your user permissions allow [listing keys](https://github.com/minio/kes/wiki/Server-API#List-Keys) or you have `root` access, you can list the keys that should be migrated via:
  
-   ```sh
+   ```sh {.copy}
    export KES_SERVER=https://<KES-endpoint>
    export KES_CLIENT_KEY=<your-private-key>
    export KES_CLIENT_CERT=<your-certificate>
@@ -87,7 +87,7 @@ To minimize the risk of errors during the migration process, follow these best p
 
 The following command migrates all keys from the source server to the target server.
 
-```
+```sh {.copy}
 kes migrate --from <source.yml> --target <target.yml>
 ```
 
@@ -96,13 +96,13 @@ kes migrate --from <source.yml> --target <target.yml>
 To migrate a subset of all master keys, specify a pattern.
 Only master keys that match the pattern migrate.
 
-```
+```sh {.copy}
 kes migrate --from <source.yml> --target <target.yml> <pattern>
 ```
 
 For example:
 
-```
+```sh {.copy}
 kes migrate --from source.yml --target target.yml my-key*
 ```
    
@@ -110,13 +110,13 @@ kes migrate --from source.yml --target target.yml my-key*
 
 To migrate a single master key, specify the key name.
 
-```
+```sh {.copy}
 kes migrate --from <source.yml> --target <target.yml> <key-name>
 ```
 
 For example: 
 
-```
+```sh {.copy}
 kes migrate --from source.yml --target target.yml my-master-key
 ```
 

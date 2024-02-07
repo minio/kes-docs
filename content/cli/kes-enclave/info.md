@@ -45,6 +45,6 @@ The short name of the KES enclave to output information about.
 
 The following command displays the identity information for the enclave named `tenant-1`.
 
-```sh
+```sh {.copy}
 kes enclave info tenant-1
 ```

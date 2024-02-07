@@ -61,7 +61,7 @@ kes policy add my-policy ./policy.json
 
 A yaml-formatted file could resemble the following:
 
-```yaml
+```yaml {.copy}
 policy:
   my-policy:
     allow:

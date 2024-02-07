@@ -57,10 +57,10 @@ The UUID of a specific identity to retrieve information about.
 
 The following command displays the identity information for the enclave named `tenant-1`.
 
-```sh
+```sh {.copy}
 kes identity info`
 ```
 
-```sh
+```sh {.copy}
 kes identity info 3ecfcdf38fcbe141ae26a1030f81e96b753365a46760ae6b578698a97c59fd22
 ```

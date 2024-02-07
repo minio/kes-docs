@@ -53,7 +53,7 @@ If any endpoint does not require a certificate, failed calls result in an HTTP e
 Get the KES server version information.
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \
@@ -81,7 +81,7 @@ Returns `200 OK` if KES is ready.
 You can disable the requirement for a valid certificate when calling this endpoint in the KES [configuration file]({{< relref "tutorials/configuration.md#api-configuration" >}}).
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     -I \
     --key root.key \
@@ -108,7 +108,7 @@ Get a list of API endpoints supported by the server.
 You can disable the requirement for a valid certificate when calling this endpoint in the KES [configuration file]({{< relref "tutorials/configuration.md#api-configuration" >}}).
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \
@@ -288,7 +288,7 @@ kes_system_up_time 0
 ```
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \
@@ -357,7 +357,7 @@ The information the response returns includes the following:
 You can disable the requirement for a valid certificate when calling this endpoint in the KES [configuration file]({{< relref "tutorials/configuration.md#api-configuration" >}}).
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \
@@ -391,7 +391,7 @@ Create a new cryptographic key.
 
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \
@@ -408,7 +408,7 @@ $ curl \
 Import a cryptographic key into the KES server.
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \
@@ -430,7 +430,7 @@ You cannot decrypt any data encrypted by a key after deleting the key.
 This operation may cause data loss.
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \
@@ -447,7 +447,7 @@ $ curl \
 List all key names. Specify an optional prefix to list only key names starting with that prefix.
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \
@@ -480,7 +480,7 @@ An application should use the plaintext DEK for a cryptographic operation.
 The application should remember both the ciphertext DEK and which key `<name>` was used. 
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \
@@ -518,7 +518,7 @@ $ curl \
 ```
 
 #### Sample Response
-```json
+```json {.copy}
 {
   "ciphertext": "eyJhZWFkIjoiQUVTLTI1Ni1HQ00tSE1BQy1TSEEtMjU2IiwiaXYiOiIwUXJ0alUvWDJtUEtUK3A1R3JwdktRPT0iLCJub25jZSI6ImpxOGliYXVxKzY0dEZBM0kiLCJieXRlcyI6Im1MQ21hdzVxQW9acXpwOTJoMjZuRTJWR01BVkdCTTlJalNtT05SYz0ifQ=="
 }
@@ -534,7 +534,7 @@ Decrypts a ciphertext with the cryptographic key.
 Returns the corresponding plaintext if and only if the ciphertext is authentic and has been produced by the named key.
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \
@@ -562,7 +562,7 @@ Describes a policy by returning its metadata.
 For example, retrieves who created the policy and when did they create it.
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \
@@ -588,7 +588,7 @@ $ curl \
 Get a policy from the KES server.
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \
@@ -618,7 +618,7 @@ $ curl \
 List all policy names. Specify an optional prefix to list only policy names starting with that prefix.
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \
@@ -646,7 +646,7 @@ Describes an identity by returning its metadata.
 For example, use this endpoint to determine the currently assigned policy or whether it is an admin identity.
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \
@@ -678,7 +678,7 @@ The self-describe API endpoint is publicly available and does not require any sp
 Any client can query its own identity and policy information.
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \
@@ -708,7 +708,7 @@ $ curl \
 List all identities. Specify an optional prefix to list only identities starting with that prefix.
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \
@@ -738,7 +738,7 @@ $ curl \
 Connect to the KES server audit log such that all new audit events stream to the client.
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \
@@ -763,7 +763,7 @@ $ curl \
 Connect to the KES server error log such that all new error events stream to the client.
 
 #### Sample Request
-```bash
+```bash {.copy}
 $ curl \
     --key root.key \
     --cert root.cert \

@@ -91,7 +91,7 @@ $ kes key ls -k
 
 Start a new KES server with a config file on `127.0.0.1:7000`.
 
-```sh
+```sh {.copy}
 kes server --addr :7000 --config ./kes/config.yml
 ```
 
@@ -100,7 +100,7 @@ kes server --addr :7000 --config ./kes/config.yml
 Start a new KES server on `127.0.0.1:7373` in development mode.
 Keys are volatile and stored in-memory.
 
-```sh
+```sh {.copy}
 kes server --dev
 ```
 

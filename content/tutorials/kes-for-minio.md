@@ -70,11 +70,14 @@ For production use, choose any supported KMS implementation that meets your requ
    ```
 
 3. Configure KES Server
+   
+   This procedure provides a baseline set of steps that may require significant alteration to fit your goals.
+   For detailed instructions on configuring the KES Server for a specific Key Management System provider, see the integration page for [supported targets]({{< relref "_index.md#supported-kms-targets" >}}).
 
    Create the KES server configuration file: `config.yml`.
    Ensure the identity in the `policy` section matches your `client.crt` identity.
 
-   ```yaml
+   ```yaml {.copy}
    address: 0.0.0.0:7373 # Listen on all network interfaces on port 7373
    
    admin:
@@ -98,11 +101,10 @@ For production use, choose any supported KMS implementation that meets your requ
        path: ./keys # Choose a directory for the secret keys
    ```
 
-
 4. Start KES Server
 
-   ```
-   $ kes server --config config.yml --auth off
+   ```sh  {.copy}
+   kes server --config config.yml --auth off
    ```
    
    {{< admonition title="Linux Swap Protection" type="tip" >}}
@@ -110,24 +112,28 @@ For production use, choose any supported KMS implementation that meets your requ
    In Linux environments, KES can use the [`mlock`](http://man7.org/linux/man-pages/man2/mlock.2.html) syscall to prevent the OS from writing in-memory data to disk (swapping). 
    This prevents leaking sensitive data.
    
-   Use the following command to allow KES to use the mlock syscall without running with `root` privileges:
+   Use the following command to allow KES to use the `mlock` syscall without running with `root` privileges:
 
-   ```sh
-   $ sudo setcap cap_ipc_lock=+ep $(readlink -f $(which kes))
+   ```sh {.copy}
+   sudo setcap cap_ipc_lock=+ep $(readlink -f $(which kes))
    ```
 
    Start a KES server instance with memory protection:
    
-   ```
-   $ kes server --config config.yml --auth off --mlock
+   ``` {.copy}
+   kes server --config config.yml --auth off --mlock
    ```
    {{< /admonition >}}
 
 ## MinIO Server Setup
 
+The environment variables defined in steps 2-6 below can be defined as part of the MinIO Server [environment variable file](https://min.io/docs/minio/linux/operations/install-deploy-manage/deploy-minio-multi-node-multi-drive.html#create-the-service-environment-file?ref=kes-docs).
+
 1. Install MinIO
 
    You can either download a [static binary](https://min.io/download) or follow the [MinIO Quickstart Guide](https://min.io/docs/minio/linux/index.html).
+
+   For more detailed instructions on setting up a MinIO Server on other topologies, such as with multiple drives or multiple nodes, see the [installation documentation](https://min.io/docs/minio/linux/operations/installation.html?ref=kes-docs).
 
    Select the tab for your operating system for an OS-specific quickstart.
 
@@ -135,7 +141,7 @@ For production use, choose any supported KMS implementation that meets your requ
 
    This environment variable tells MinIO which KES server to access:
    
-   ```sh
+   ```sh {.copy}
    export MINIO_KMS_KES_ENDPOINT=https://127.0.0.1:7373
    ```
 
@@ -143,11 +149,11 @@ For production use, choose any supported KMS implementation that meets your requ
 
    These environment variables set the access credentials MinIO uses to access the KES server:
    
-   ```sh
+   ```sh {.copy}
    export MINIO_KMS_KES_CERT_FILE=client.crt
    ```
    
-   ```sh
+   ```sh {.copy}
    export MINIO_KMS_KES_KEY_FILE=client.key
    ```
 
@@ -155,7 +161,7 @@ For production use, choose any supported KMS implementation that meets your requ
 
    This environment variable sets the default key for MinIO to use if its S3 client does not specify an encryption key.
 
-   ```sh
+   ```sh {.copy}
    export MINIO_KMS_KES_KEY_NAME=minio-default-key
    ```
    
@@ -170,7 +176,7 @@ For production use, choose any supported KMS implementation that meets your requ
    When using self-signed certificates, MinIO cannot verify the the KES server certificate. 
    This environment variable establishes the trust relationship manually. 
    
-   ```sh
+   ```sh {.copy}
    export MINIO_KMS_KES_CAPATH=public.crt
    ```
    
@@ -178,18 +184,21 @@ For production use, choose any supported KMS implementation that meets your requ
 
 6. Set the MinIO root credentials:
 
-   ```sh
+   ```sh {.copy}
    export MINIO_ROOT_USER=minio
    export MINIO_ROOT_PASSWORD=minio123
    ```
 
 7. Start the MinIO Server
-    
-   ```sh
+   
+   {{< admonition type="important" >}}
+   The KES server **must** be running *before* you start the MinIO Server.
+   The MinIO Server requires access to the KES server as part of the start-up process.
+   {{< /admonition >}}    
+
+   ```sh {.copy}
    minio server /data
    ```
-
-</details>
 
 ## Encrypt Bucket
 
@@ -200,21 +209,23 @@ This can be done with the [MinIO Client](https://min.io/docs/minio/linux/referen
 
    For a full reference, see the [`mc admin kms key` documentation](https://min.io/docs/minio/linux/reference/minio-mc-admin/mc-admin-kms-key.html).
 
-   ```sh
-   mc admin kms key create <alias> minio-my-bucket
+   ```sh {.copy}
+   mc admin kms key create <alias> minio-key-name
    ```
 
-   Replace `minio-my-bucket` with your MinIO [server alias](https://min.io/docs/minio/linux/reference/minio-mc/mc-alias.html).
+   Replace `minio-key-name` with the name to use for your key.
 
 2. Configure Bucket
 
    Add a server-side encryption configuration to your bucket with [`mc encrypt set`](https://min.io/docs/minio/linux/reference/minio-mc/mc-encrypt-set.html). 
    
    For example:
-   ```sh
-   mc encrypt set sse-kms minio-my-bucket <alias>/my-bucket
+
+   ```sh {.copy}
+   mc encrypt set sse-kms minio-key-name <alias>/my-bucket
    ```
-   Replace `minio-my-bucket` with your MinIO [server alias](https://min.io/docs/minio/linux/reference/minio-mc/mc-alias.html).
+   
+   Replace `minio-key-name` with the name of the key you created in the previous step.
 
 ## References
 
