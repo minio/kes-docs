@@ -307,4 +307,4 @@ relativeURLs = "True"
      [[menu.docs]]
         name = "DirectPV Documentation"
         url = "https://min.io/docs/directpv"
-        weight = 3
+        weight = 4
