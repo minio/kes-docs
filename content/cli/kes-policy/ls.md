@@ -22,7 +22,6 @@ Date Created        Policy
 ```sh
 kes policy ls                       \
            [--color <string>]       \
-           [--enclave, -e <name>]   \
            [--insecure, -k]         \
            [--json]                 \
            [<'pattern'>]
@@ -33,10 +32,6 @@ kes policy ls                       \
 ### `--color`
 
 {{< include "_includes/params/color.md" >}}
-
-### `--enclave, -e`
-
-{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 

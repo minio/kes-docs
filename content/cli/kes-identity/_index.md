@@ -25,7 +25,6 @@ This page provides reference information for the `kes identity` commands.
 |[`ls`]({{< relref "/cli/kes-identity/ls" >}})     |List KES identities                       |
 |[`new`]({{< relref "/cli/kes-identity/new" >}})   |Create a KES identity                     |
 |[`of`]({{< relref "/cli/kes-identity/of" >}})     |Compute a KES identity from a certificate |
-|[`rm`]({{< relref "/cli/kes-identity/rm" >}})     |Delete a KES identity                     |
 
 
 ## Related Content

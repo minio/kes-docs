@@ -17,7 +17,6 @@ You can display a list of all secrets or a list that match a specific pattern.
 ```sh
 kes secret ls                       \
            [--color <string>]       \
-           [--enclave, -e <name>]   \
            [--insecure, -k]         \
            [--json]                 \
            [<'pattern'>]
@@ -30,10 +29,6 @@ kes secret ls                       \
 ### `--color`
 
 {{< include "_includes/params/color.md" >}}
-
-### `--enclave, -e`
-
-{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 

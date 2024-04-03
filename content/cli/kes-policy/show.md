@@ -37,7 +37,6 @@ Created by: 3ecfcdf38fcbe141ae26a1030f81e96b753365a46760ae6b578698a97c59fd22
 ```sh
 kes policy show                   \
            <name>                 \
-           [--enclave, -e <name>] \
            [--insecure, -k]       \
            [--json]
 ```
@@ -49,10 +48,6 @@ kes policy show                   \
 _Required_
 
 The short name of the policy about which to output information.
-
-### `--enclave, -e`
-
-{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 

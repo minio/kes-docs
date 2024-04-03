@@ -16,7 +16,6 @@ Once removed, the secret is no longer valid for the KES server.
 ```sh
 kes secret rm                       \
            <name>                   \
-           [--enclave, -e <name>]   \
            [--insecure, -k]
 ```
 
@@ -27,10 +26,6 @@ kes secret rm                       \
 _Required_
 
 The short name of the secret to remove.
-
-### `--enclave, -e`
-
-{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 

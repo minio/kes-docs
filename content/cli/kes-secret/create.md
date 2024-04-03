@@ -16,7 +16,6 @@ Add a new secret to use on the KES server.
 kes secrete create                  \
             <name>                  \
             <value>                 \
-            [--enclave, -e <name>]  \
             [--file <path>]         \
             [--insecure, -e]
 ```
@@ -28,10 +27,6 @@ kes secrete create                  \
 _Required_
 
 A short name to use to refer to the secret.
-
-### `--enclave, -e`
-
-{{< include "_includes/params/enclave.md" >}}
 
 ### `--file`
 

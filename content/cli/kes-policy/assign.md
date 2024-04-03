@@ -16,7 +16,6 @@ Assign a KES policy to identities.
 kes policy assign                   \
            <policy>                 \
            <identity>               \
-           [--enclave, -e <name>]   \
            [--insecure, -k]
 ```
 
@@ -31,10 +30,6 @@ Use `kes policy ls` to find the name.
 ## `identity`
 
 The name of the identity to which to assign the policy.
-
-### `--enclave, -e`
-
-{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 

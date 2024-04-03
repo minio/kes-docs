@@ -30,7 +30,8 @@ If any endpoint does not require a certificate, failed calls result in an HTTP e
 | [`/v1/key/list`](#list-keys)                            | List cryptographic keys.                                    |
 | [`/v1/key/generate`](#generate-key)                     | Generate a new plain/encrypted data encryption key pair.    |
 | [`/v1/key/encrypt`](#encrypt-key)                       | Encrypt a (small) plaintext with a key.                     |
-| [`/v1/key/decrypt`](#decrypt-ley)                       | Decrypt a (small) ciphertext with a key.                    |
+| [`/v1/key/decrypt`](#decrypt-key)                       | Decrypt a (small) ciphertext with a key.                    |
+| [`/v1/key/hmac`](#hmac)                                 | 
 | [**Policy API**](#Policy-API)                           |                                                             |
 | [`/v1/policy/describe`](#describe-policy)               | Fetch information about a policy.                           |
 | [`/v1/policy/read`](#read-policy)                       | Fetch a policy.                                             |
@@ -547,6 +548,32 @@ $ curl \
 ```json
 {
   "plaintext": "TIDXCHZxPr84r7ktggCCW7otoz5T4zsRENi4THCjXPo="
+}
+```
+
+### HMAC
+
+
+| Method   | Path                  | Content-Type       |
+|:--------:|:---------------------:|:------------------:|
+| `PUT`    | `/v1/key/hmac/`       | `application/json` |
+
+Compute a message authentication code (MAC) for some provided data. 
+Use this to verify that messages are authentic or to generate the same pseudo-random secret on startup.
+
+#### Sample Request
+```bash {.copy}
+$ curl \
+    --key root.key \
+    --cert root.cert \
+    --request PUT \
+    --data '{"message":"Data to use to generate the HMAC secret"}'
+```
+
+#### Sample Response
+```json
+{
+  "hmac": "5ded46b0e5450b0790637d71e453bce1fdae61f25a34c211216906a99791c6a5"
 }
 ```
 

@@ -22,7 +22,6 @@ Avoid storing the plaintext on disk, as it allows decryption of data without req
 kes key encrypt                \
         <name>                 \
         <message>              \
-        [--enclave, e <name>]  \
         [--insecure,-k]
 ```
 
@@ -37,10 +36,6 @@ kes key encrypt                \
 _Required_
 
 The string to encrypt.
-
-### `--enclave, -e`
-
-{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 

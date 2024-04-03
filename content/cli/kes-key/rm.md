@@ -21,7 +21,6 @@ Removing a Secret Key renders all data encrypted using that key permanently unre
 ```sh
 kes key rm                \
         <name>            \
-        [--enclave, -e]   \
         [--insecure, -k]
 ```
 
@@ -33,10 +32,6 @@ _Required_
 
 The name of the existing key to remove.
 To remove more than one key, separate each key with a space.
-
-### `--enclave, -e`
-
-{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 

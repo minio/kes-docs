@@ -25,7 +25,6 @@ Created By  3ecfcdf38fcbe141ae26a1030f81e96b753365a46760ae6b578698a97c59fd22
 kes key info               \
         <name>             \
         [--color <string>] \
-        [--enclave, -e]    \
         [--insecure, -k]   \
         [--json]
 ```
@@ -39,10 +38,6 @@ kes key info               \
 ### `--color`
 
 {{< include "_includes/params/color.md" >}}
-
-### `--enclave, -e`
-
-{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 

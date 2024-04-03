@@ -63,6 +63,15 @@ Use the following steps to get started monitoring KES with Prometheus.
 
 After the KES and Prometheus servers start, Prometheus should detect and display a new KES target.
 
+## Grafana
+
+For a graphical dashboard, you can connect KES metrics scraped by Prometheus to Grafana.
+
+![An example Grafana dashboard in dark mode showing KES metrics](grafana-dashboard.png)
+
+MinIO provides an example Grafana dashboard configuration for KES.
+See the JSON file on [Github](https://github.com/minio/kes/blob/master/examples/grafana/dashboard.json).
+
 ## References
 
  - [Server API Doc]({{< relref "server-api.md" >}})

@@ -23,5 +23,4 @@ To make persistent changes to KES policies, modify the `policy` section of the K
 |[`create`]({{< relref "/cli/kes-policy/create" >}}) |Create a new policy             |
 |[`info`]({{< relref "/cli/kes-policy/info" >}})     |Get information about a policy  |
 |[`ls`]({{< relref "/cli/kes-policy/ls" >}})         |List policies                   |
-|[`rm`]({{< relref "/cli/kes-policy/rm" >}})         |Remove a policy                 |
 |[`show`]({{< relref "/cli/kes-policy/show" >}})     |Display a policy                |
