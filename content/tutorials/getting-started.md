@@ -4,6 +4,7 @@ date: 2023-02-08
 lastmod: :git
 draft: false
 tableOfContents: true
+weight: 1
 ---
 
 This Quickstart shows you how to setup a local KES server that stores keys in-memory.

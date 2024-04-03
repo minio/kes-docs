@@ -4,6 +4,7 @@ date: 2023-02-08
 lastmod: :git
 draft: false
 tableOfContents: true
+weight: 20
 ---
 
 This tutorial shows how to setup a KES server and then configure a [MinIO deployment](https://min.io/docs/minio/linux/index.html) as a KES client for object encryption.

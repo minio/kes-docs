@@ -4,6 +4,7 @@ date: 2023-02-08
 lastmod: :git
 draft: false
 tableOfContents: true
+weight: 40
 ---
 
 This page provides information about KES configuration options for a KES Client and a KES Server.
