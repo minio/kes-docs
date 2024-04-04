@@ -558,7 +558,7 @@ $ curl \
 |:--------:|:---------------------:|:------------------:|
 | `PUT`    | `/v1/key/hmac/`       | `application/json` |
 
-Compute a message authentication code (MAC) for some provided data. 
+Compute a message authentication code (MAC) for the data passed in the request. 
 Use this to verify that messages are authentic or to generate the same pseudo-random secret on startup.
 
 #### Sample Request

@@ -60,7 +60,7 @@ Valid operating systems:
 
 - `darwin` 
 
-  Use for MacOS.
+  Use for macOS.
 - `linux`
 - `windows`
 
@@ -88,7 +88,7 @@ Download an older binary version and replace the current one:
 kes update --downgrade v.0.19.0
 ```
 
-Download the latest binary for MacOS on an `arm64` chip like the M2 and save it to a file, keeping the current binary in place:
+Download the latest binary for macOS on an `arm64` chip like the M2 and save it to a file, keeping the current binary in place:
 
 ```sh {.copy}
 kes update -o ./kes-darwin-arm64 --os darwin --arch arm64
