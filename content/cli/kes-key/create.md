@@ -16,7 +16,6 @@ KES *never* returns the generated secret to clients.
 ```sh
 kes key create                  \
         <name>                  \
-        [--enclave, -e <name>]  \
         [--insecure, -k]
 ```
 
@@ -27,10 +26,6 @@ kes key create                  \
 {{< include "_includes/params/name.md" >}}
 
 You may add multiple names to a single command to generate multiple keys.
-
-### `--enclave, -e`
-
-{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 

@@ -56,7 +56,7 @@ docker pull minio/kes
 {{< /tab >}}
 
 {{< tab "Homebrew" >}}
-MacOS users can use [Homebrew](https://brew.sh/) to install KES:
+macOS users can use [Homebrew](https://brew.sh/) to install KES:
 
 ```sh {.copy}
 brew install minio/stable/kes

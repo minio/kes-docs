@@ -20,7 +20,6 @@ The `kes identity ls` command does not return admin identities.
 ```sh
 kes identity ls                         \
              [--color <string>]         \
-             [--enclave, -e <string>]   \
              [--insecure, -k]           \
              [--json]                   \
              [pattern]
@@ -31,10 +30,6 @@ kes identity ls                         \
 ### `--color`
 
 {{< include "_includes/params/color.md" >}}
-
-### `--enclave, -e`
-
-{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 

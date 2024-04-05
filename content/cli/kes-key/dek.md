@@ -30,7 +30,6 @@ Avoid storing the plaintext value of a DEK on disk, as it allows decryption of d
 key key dek
         <name>                  \
         [<context>]             \
-        [--enclave, -e <name>]  \
         [--insecure, -k]
 ```
 
@@ -47,10 +46,6 @@ _Optional_
 The context value to scope the request for a data encryption key.
 
 You create contexts in the `kubeconfig` file of a Kubernetes deployment to define a set of cluster, namespace, and user configuration to use.
-
-### `--enclave, -e`
-
-{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 

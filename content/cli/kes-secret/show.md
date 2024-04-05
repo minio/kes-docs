@@ -16,7 +16,6 @@ Output the contents of a secret.
 kes secret show                     \
            <name>                   \
            [--color <string>]       \
-           [--enclave, -e <name>]   \
            [--insecure, -k]         \
            [--json]                 \
            [--plain, -p]
@@ -33,10 +32,6 @@ The short name of the secret to remove.
 ### `--color`
 
 {{< include "_includes/params/color.md" >}}
-
-### `--enclave, -e`
-
-{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 

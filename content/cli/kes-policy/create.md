@@ -25,7 +25,6 @@ To create permanent policies, modify the `policy` section of the KES [configurat
 kes policy create                  \
             <name>                 \
             <path>                 \
-            [--enclave, -e <name>] \ 
             [--insecure, -k]
 ```
 
@@ -42,10 +41,6 @@ A short name used to refer to the policy.
 _Required_
 
 The path to the file containing the policy to use with this name.
-
-### `--enclave, -e`
-
-{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 

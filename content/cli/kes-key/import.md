@@ -16,7 +16,6 @@ Import a cryptographic key.
 kes key import                  \
         <name>                  \
         <key>                   \
-        [--enclave, -e <name>]  \
         [--insecure, -k]
 ```
 
@@ -31,10 +30,6 @@ kes key import                  \
 _Required_
 
 Key to use to decrypt the import file.
-
-### `--enclave, -e`
-
-{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 

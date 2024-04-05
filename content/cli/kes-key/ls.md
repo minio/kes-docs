@@ -27,7 +27,6 @@ Date Created        Key
 ```sh
 kes key ls                  \
         [--color <string>]  \
-        [--enclave, -e]     \
         [--insecure, -k]    \
         [--json]            \
         [<pattern>]
@@ -38,10 +37,6 @@ kes key ls                  \
 ### `--color`
 
 {{< include "_includes/params/color.md" >}}
-
-### `--enclave, -e`
-
-{{< include "_includes/params/enclave.md" >}}
 
 ### `--insecure, -k`
 

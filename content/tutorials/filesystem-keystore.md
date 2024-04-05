@@ -4,6 +4,7 @@ date: 2023-02-08
 lastmod: :git
 draft: false
 tableOfContents: true
+weight: 50
 ---
 
 Use this page to setup a KES server that uses the filesystem as persistent key store.

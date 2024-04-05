@@ -4,6 +4,7 @@ date: 2023-02-08
 lastmod: :git
 draft: false
 tableOfContents: true
+weight: 1
 ---
 
 This Quickstart shows you how to setup a local KES server that stores keys in-memory.
@@ -78,8 +79,19 @@ This starts a KES server on `127.0.0.1:7373` and stores keys in memory.
      export PATH=$PATH:@HOME/minio-binaries/
      ```
 
-   **Important:** Invoke the Windows executable file from the terminal, PowerShell, or Command Prompt.
-   You cannot double click the file from the Windows graphical user interface.
+   **Important:** 
+   
+   - For Windows: Invoke the Windows executable file from the terminal, PowerShell, or Command Prompt.
+     You cannot double click the file from the Windows graphical user interface.
+
+   - For macOS: Create an exception to allow macOS to open the executable downloaded from the Internet.
+     
+     1. Locate the binary in Finder. 
+     2. `CTRL + Click` the file, then select `Open`.
+     3. Follow the prompts to open the app and create a security exception.
+     4. Close the window that opens showing the KES help page.
+     5. Return to the Terminal and verify you can access KES with `./kes -h`. 
+
 
    {{< /tab >}}
 
@@ -235,7 +247,8 @@ This starts a KES server on `127.0.0.1:7373` and stores keys in memory.
 To upgrade KES, follow the getting started steps and replace the KES binary with the newer version on each KES server node.
 
 {{< admonition type="important" >}}
-You cannot revert to a previous version of KES after upgrading.
+Due to changes in how KES processes ciphertext, it is not possible to revert to an earlier version after upgrading to release `2024-02-29T08-12-28Z` or later.
+MinIO recommends always testing in a lower environment such as staging or development prior to upgrading production.
 {{< /admonition >}}
 
 ## References

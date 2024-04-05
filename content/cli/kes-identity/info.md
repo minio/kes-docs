@@ -23,7 +23,6 @@ Role        Admin
 ```sh
 kes identity info                   \
             [--color <string>]      \
-            [--enclave, -e <name>]  \
             [<identity>]            \
             [--insecure, -k]        \
             [--json]
@@ -34,10 +33,6 @@ kes identity info                   \
 ### `--color`
 
 {{< include "_includes/params/color.md" >}}
-
-### `--enclave, -e`
-
-{{< include "_includes/params/enclave.md" >}}
 
 ### `identity`
 
@@ -55,11 +50,13 @@ The UUID of a specific identity to retrieve information about.
 
 ## Examples
 
-The following command displays the identity information for the enclave named `tenant-1`.
+The following command displays the identity information for the kes server.
 
 ```sh {.copy}
 kes identity info`
 ```
+
+The following command displays the identity of the provided key.
 
 ```sh {.copy}
 kes identity info 3ecfcdf38fcbe141ae26a1030f81e96b753365a46760ae6b578698a97c59fd22
