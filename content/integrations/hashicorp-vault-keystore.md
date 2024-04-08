@@ -18,79 +18,61 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
 
 ## Vault Server Setup
 
-1. Generate Vault Private Key & Certificate
+KES requires Vault K/V engine [v1] or [v2] and credentials for either the AppRole or Kubernetes authentication method.
 
-   KES and Vault exchange sensitive information. 
-   In particular, KES sends and receives the secret keys from Vault's HTTP API. 
-   Therefore, it is necessary to secure the communication between KES and Vault. 
-   
-   Here, we use self-signed certificates for simplicity.
-   
-   The following command generates a new TLS private key (`vault.key`) and a self-signed X.509 certificate (`vault.crt`) issued for the IP `127.0.0.1` and DNS name `localhost`: 
-   
-   ```sh
-   $ kes identity new --key vault.key --cert vault.crt --ip "127.0.0.1" localhost
-   
-     Private key:  vault.key
-     Certificate:  vault.crt
-     Identity:     37ced4538faa0c236b9fa80826b50de9afb45cc29acf6575f069a2d10e6125af
-   ```
-   
-   {{< admonition type="note" >}}
-   If you already have a TLS private key & certificate, such as from WebPKI or an internal CA, you can use them instead. 
-   Remember to adjust the `vault-config.json` later on.
-   {{< /admonition >}}
+If you don't have a Vault cluster available you can either follow [Hashicorp Vault install guide](https://developer.hashicorp.com/vault/tutorials/getting-started/getting-started-deploy)
+or create a single node dev instance.
 
-2. Configure Vault Server
+Before starting a dev server or interacting with Vault via the Vault CLI download the [Vault binary](https://www.vaultproject.io/downloads/).
+Next, start a Vault server in dev mode:
 
-   The following `vault-config.json` starts a single Vault server instance on port `8200`: 
-   
-   ```json {.copy}
-   {
-     "api_addr": "https://127.0.0.1:8200",
-     "backend": {
-       "file": {
-         "path": "vault/file"
-       }
-     },
-   
-     "default_lease_ttl": "168h",
-     "max_lease_ttl": "720h",
-   
-     "listener": {
-       "tcp": {
-         "address": "0.0.0.0:8200",
-         "tls_cert_file": "vault.crt",
-         "tls_key_file": "vault.key",
-         "tls_min_version": "tls12"
-       }
-     }
-   }
-   ```
+```sh
+vault server -dev
 
-   {{< admonition type="note">}}
-   Note that we run Vault with a file backend. 
-   For high-availability you may want to use [etcd](https://www.vaultproject.io/docs/configuration/storage/etcd.html), [consul](https://www.vaultproject.io/docs/configuration/storage/consul.html), or Vault with [integrated storage](https://learn.hashicorp.com/vault/operations/raft-reference-architectur) instead.
-   {{< /admonition >}}
+==> Vault server configuration:
 
-3. Start Vault Server
+Administrative Namespace:
+             Api Address: http://127.0.0.1:8200
+                     Cgo: disabled
+         Cluster Address: https://127.0.0.1:8201
+   Environment Variables: 
+              Go Version: go1.21.8
+              Listener 1: tcp (addr: "127.0.0.1:8200", cluster address: "127.0.0.1:8201", disable_request_limiter: "false", max_request_duration: "
+1m30s", max_request_size: "33554432", tls: "disabled")
+               Log Level:
+                   Mlock: supported: false, enabled: false
+           Recovery Mode: false
+                 Storage: inmem
+                 Version: Vault v1.16.1, built 2024-04-03T12:35:53Z
+             Version Sha: 6b5986790d7748100de77f7f127119c4a0f78946
 
-   Download the [Vault binary](https://www.vaultproject.io/downloads/).
-   
-   {{< admonition title="Linux Swap Protection" type="note">}}
-   On linux, we can grant the binary the `ipc_lock` capability such that it can use the [`mlock`](http://man7.org/linux/man-pages/man2/mlock.2.html) syscall without root permissions:
-   
-   ```sh {.copy}
-   sudo setcap cap_ipc_lock=+ep $(readlink -f $(which vault))
-   ```
-   {{< /admonition >}}
-   
-   Start the Vault server instance:
-   ```
-   $ vault server -config vault-config.json
-   ```
+==> Vault server started! Log data will stream in below:
 
-4. Set `VAULT_ADDR` endpoint
+...
+
+WARNING! dev mode is enabled! In this mode, Vault runs entirely in-memory
+and starts unsealed with a single unseal key. The root token is already
+authenticated to the CLI, so you can immediately begin using Vault.
+
+You may need to set the following environment variables:
+
+    $ export VAULT_ADDR='http://127.0.0.1:8200'
+
+The unseal key and root token are displayed below in case you want to
+seal/unseal the Vault or re-authenticate.
+
+Unseal Key: g+epWYiEy2vj+7UP3c+YXRhoOjUMCC9PoihIzqSgB84=
+Root Token: hvs.O6QNQB33ksXtMxtlRKlRZL0R
+
+Development mode should NOT be used in production installations!
+```
+
+{{< admonition type="note" >}}
+This starts a single-node Vault server in dev mode listening on `127.0.0.1:8200`.
+A dev server is ephemeral and is not meant to be run in production.
+{{< /admonition >}}
+
+1. Set `VAULT_ADDR` endpoint
 
    The Vault CLI needs to know the Vault endpoint:
    
@@ -98,67 +80,17 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
    export VAULT_ADDR='https://127.0.0.1:8200'
    ```
    
-   {{< admonition title="Self-signed Certificates" type="tip" >}}   
-   When using a self-signed `vault.crt` the Vault CLI also needs to skip TLS certificate verification to talk to the Vault server:
-   
-   ```sh {.copy}
-   export VAULT_SKIP_VERIFY=true
-   ```
-   {{< /admonition >}}
-
-5. Initialize Vault Server
-
-   ```sh
-   $ vault operator init
-   
-   Unseal Key 1: eyW/+8ZtsgT81Cb0e8OVxzJAQP5lY7Dcamnze+JnWEDT
-   Unseal Key 2: 0tZn+7QQCxphpHwTm6/dC3LpP5JGIbYl6PK8Sy79R+P2
-   Unseal Key 3: cmhs+AUMXUuB6Lzsvgcbp3bRT6VDGQjgCBwB2xm0ANeF
-   Unseal Key 4: /fTPpec5fWpGqWHK+uhnnTNMQyAbl5alUi4iq2yNgyqj
-   Unseal Key 5: UPdDVPto+H6ko+20NKmagK40MOskqOBw4y/S51WpgVy/
-    
-   Initial Root Token: s.zaU4Gbcu0Wh46uj2V3VuUde0
-   
-   Vault is initialized with 5 key shares and a key threshold of 3. Please securely
-   distribute the key shares printed above. When the Vault is re-sealed,
-   restarted, or stopped, you must supply at least 3 of these keys to unseal it
-   before it can start servicing requests.
-   ```
-
-   {{< admonition type="warning">}}
-   Vault prints `N` (5 by default) unseal key shares.
-   Vault requires at least `M` (3 by default) unseal key shares to re-generate the actual unseal key to unseal Vault. 
-   Therefore, make sure to store them at a secure and durable location.
-   {{< /admonition >}}
-
-6. Set `VAULT_TOKEN`
+1. Set `VAULT_TOKEN`
 
    The Vault CLI needs an authentication token to perform operations.
-   The root access token is generated by `vault operator init`.
    
    ```sh {.copy}
-   export VAULT_TOKEN=s.zaU4Gbcu0Wh46uj2V3VuUde0
+   export VAULT_TOKEN=hvs.O6QNQB33ksXtMxtlRKlRZL0R
    ```
 
    Adjust the token to your own Vault access token.
 
-7. Unseal Vault Server
-
-   Once initialized, unseal the Vault using `M` out of `N` unseal key shares:
-   
-   ```sh {.copy}
-   vault operator unseal eyW/+8ZtsgT81Cb0e8OVxzJAQP5lY7Dcamnze+JnWEDT
-   ```
-   ```sh {.copy}
-   vault operator unseal 0tZn+7QQCxphpHwTm6/dC3LpP5JGIbYl6PK8Sy79R+P2
-   ```
-   ```sh {.copy}
-   vault operator unseal cmhs+AUMXUuB6Lzsvgcbp3bRT6VDGQjgCBwB2xm0ANeF
-   ```
-   
-   After submitting enough valid unseal key shares, Vault unseals and can process requests.
-
-8. Enable `K/V` Backend
+2. Enable `K/V` Backend
 
    KES stores the secret keys at the Vault K/V backend. 
    Vault provides two [K/V engines](https://www.vaultproject.io/docs/secrets/kv), `v1` and `v2`.
@@ -179,11 +111,11 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
 
    {{< admonition type="note" >}}
    Note that the Vault policy for KES depends on the chosen K/V engine version.
-   The `v2` engine requires slightly different policy rules compared to the `v1` engine. 
+   Using a policy designed for K/V `v1` with a K/V `v2` engine and vice versa will not work. 
    For more information about migrating from  `v1` to `v2` see [upgrading from v1](https://www.vaultproject.io/docs/secrets/kv/kv-v2#upgrading-from-version-1).
    {{< /admonition >}}
    
-9. Create Vault Policy
+3. Create Vault Policy
 
    The Vault policy defines the API paths the KES server can access.
    
@@ -193,11 +125,11 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
     
      ```hcl {.copy}
      path "kv/*" {
-        capabilities = [ "create", "read", "delete" ]
+        capabilities = [ "create", "read", "delete", "list" ]
      }
      ```
    
-   - For `v2` T
+   - For `v2`
      The following `kes-policy.hcl` policy should be used for the K/V `v2` backend:
   
      ```hcl {.copy}
@@ -215,7 +147,7 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
    vault policy write kes-policy kes-policy.hcl
    ```
 
-10. Enable AppRole Authentication
+4. Enable AppRole Authentication
 
     This step allows the KES server to authenticate to Vault. 
     For this tutorial, we use the AppRole authentication method. 
@@ -224,7 +156,7 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
     vault auth enable approle
     ```
     
-11. Create KES Role
+5. Create KES Role
 
     The following command adds a new role `kes-server` at Vault:
     
@@ -232,21 +164,20 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
     vault write auth/approle/role/kes-server token_num_uses=0  secret_id_num_uses=0  period=5m
     ```
 
-12. Bind Policy to Role
+6. Bind Policy to Role
 
     The following command binds `kes-server` role to the `key-policy`:
     ```sh {.copy}
     vault write auth/approle/role/kes-server policies=kes-policy
     ```
 
-13. Generate AppRole ID
+7. Generate AppRole ID
 
     Request an AppRole ID for the KES server:
     ```sh {.copy}
     vault read auth/approle/role/kes-server/role-id 
     ```
-
-14. Generate AppRole Secret
+8. Generate AppRole Secret
 
     Request an AppRole secret for the KES server:
     
@@ -261,15 +192,18 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
 
 1. Generate KES Server Private Key & Certificate
 
-   The following command generates a new TLS private key `server.key` and a self-signed X.509 certificate `server.cert` that is issued for the IP `127.0.0.1` and DNS name `localhost` (as SAN). 
-   Customize the command to match your setup.
+   The following command generates a new TLS private key `server.key` and a self-signed X.509 certificate `server.cert` that is issued for the IP `127.0.0.1` and DNS name `localhost` (as SAN).
+   If you want to refer to your KES server via another IP/DNS name, e.g. `10.1.2.3`, then adjust the `--ip` and/or `--dns` accordingly.
    
    ```sh {.copy}
-   kes tool identity new --server --key server.key --cert server.cert --ip "127.0.0.1" --dns localhost
+   kes identity new --key server.key --cert server.cert --ip "127.0.0.1" --dns localhost
    ```
    
    {{< admonition type="tip" >}}
-   Any other tooling for X.509 certificate generation works as well. 
+   The above command generates self-signed certificates. If you already have a way to issue certificates for your
+   servers you can use such certificates as well.
+  
+   Additionally, any other tooling for X.509 certificate generation works as well. 
    For example, you could use `openssl`:
    
    ```sh {.copy}
@@ -280,26 +214,38 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
    ```
    {{< /admonition >}}
 
-2. Generate Client Credentials
+2. Generate an API key
 
-   The following command generates a new TLS private/public key pair for the client application to use for the KES Server:
+   The following command generates a new KES API key.
 
    ```sh
-   $ kes identity new --key=client.key --cert=client.crt MyApp
+   $ kes identity new
+
+   Your API key:
    
-     Private key:  client.key
-     Certificate:  client.crt
-     Identity:     02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b
+      kes:v1:ABfa1xsnIV0lltXQC8tHXic8lte7J6hT7EoGv6+s5QCW
+   
+   This is the only time it is shown. Keep it secret and secure!
+   
+   Your Identity:
+   
+      cf6c535e738c1dd47a1d746366fde7f0309d1e0a8471b9f6e909833906afbbfa
+   
+   The identity is not a secret. It can be shared. Any peer
+   needs this identity in order to verify your API key.
+   
+   The identity can be computed again via:
+   
+       kes identity of kes:v1:ABfa1xsnIV0lltXQC8tHXic8lte7J6hT7EoGv6+s5QCW   
    ```
-   
-   The identity `02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b` is a unique fingerprint of the public key in `client.crt`. 
-   You can re-compute it anytime:
-   
-   ```sh
-   $ kes identity of client.crt
-   
-     Identity:  02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b
-   ```
+
+   {{< admonition type="tip" >}}
+   The generated identity is NOT a secret and can be shared publicly. It will be used
+   later on in the KES config file as admin identity or assigned to a policy.
+
+   The API key itself is a secret and should not be shared. You can always recompute
+   an API key's identity.
+   {{< /admonition >}}
 
 3. Configure KES Server
 
@@ -308,37 +254,23 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
    Make sure that the identity in the policy section matches the `client.crt` identity.
    Add the approle `role_id` and `secret_id` obtained earlier.
    
-   ```yaml {.copy}
-   address: 0.0.0.0:7373 # Listen on all network interfaces on port 7373
-   
+   ```yaml {.copy}  
    admin:
-     identity: disabled  # We disable the admin identity since we don't need it in this guide 
+     # Use the identity generated above by 'kes identity new'.
+     identity: "" # For example: cf6c535e738c1dd47a1d746366fde7f0309d1e0a8471b9f6e909833906afbbfa
       
    tls:
      key: private.key    # The KES server TLS private key
      cert: public.crt    # The KES server TLS certificate
       
-   policy:
-     my-app: 
-       allow:
-       - /v1/key/create/my-key*
-       - /v1/key/generate/my-key*
-       - /v1/key/decrypt/my-key*
-       identities:
-       - 02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b # Use the identity of your client.crt
-      
    keystore:
       vault:
         endpoint: https://127.0.0.1:8200
         version:  v1 # The K/V engine version - either "v1" or "v2".
+        engine:   kv # The engine path of the K/V engine. The default is "kv".
         approle:
           id:     "" # Your AppRole ID
           secret: "" # Your AppRole Secret
-          retry:  15s
-        status:
-          ping: 10s
-        tls:
-          ca: vault.crt # Manually trust the vault certificate since we use self-signed certificates
    ```
 
 4. Start KES Server
@@ -346,7 +278,7 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
    **Linux**
 
    ```sh {.copy}
-   kes server --config config.yml --auth off
+   kes server --config config.yml
    ```
 
    {{< admonition title="Linux Swap Protection" type="tip" >}}
@@ -358,12 +290,6 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
 
    ```sh {.copy}
    $ sudo setcap cap_ipc_lock=+ep $(readlink -f $(which kes))
-   ```
-
-   Start a KES server instance with memory protection:
-   
-   ```sh {.copy}
-   kes server --config config.yml --auth off --mlock
    ```
    {{< /admonition >}}
 
@@ -387,18 +313,8 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
      --name kes-server  \
      --pod "minio-kes-vault"  \
      -e KES_SERVER=https://127.0.0.1:7373  \
-     -e KES_CLIENT_KEY=/certs/kes-server.key  \
-     -e KES_CLIENT_CERT=/certs/kes-server.cert  \
      quay.io/minio/kes:2024-01-11T13-09-29Z server  \
-       --auth  \
-       --config=/etc/default/kes-config.yaml  \
-   
-   sudo podman run -dt  \
-     --name minio-server  \
-     --pod "minio-kes-vault"  \
-     -e "MINIO_CONFIG_ENV_FILE=/etc/default/minio"  \
-     quay.io/minio/minio:RELEASE.2024-01-31T20-20-33Z server  \
-       --console-address ":9001"
+       --config=/etc/default/kes-config.yaml 
    ```
 
    You can verify the status of the containers using the following command.
@@ -410,7 +326,7 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
 
 ## KES CLI Access
 
-1. Set `KES_SERVER` Endpoint
+1. Set `KES_SERVER` endpoint
 
    The following environment variable specifies the server the KES CLI should talk to:
 
@@ -418,38 +334,23 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
    export KES_SERVER=https://127.0.0.1:7373
    ```
 
-2. Define the Client Credentials
+2. Define the CLI access credentials
 
    The following environment variables set the access credentials the client uses to talk to a KES server:
    
    ```sh {.copy}
-   export KES_CLIENT_CERT=client.crt
-   ```
-   ```sh {.copy}
-   export KES_CLIENT_KEY=client.key
+   export KES_API_KEY=kes:v1:ABfa1xsnIV0lltXQC8tHXic8lte7J6hT7EoGv6+s5QCW
    ```
 
 3. Test the Configuration
-   
-   Perform any API operation allowed by the policy we assigned above. 
-   
+     
    For example, create a key:
 
    ```sh {.copy}
-   kes key create my-key-1
+   kes status -k
    ```
    
    Use the key to generate a new data encryption key:
-
-   ```sh
-   $ kes key dek my-key-1
-   {
-     plaintext : UGgcVBgyQYwxKzve7UJNV5x8aTiPJFoR+s828reNjh0=
-     ciphertext: eyJhZWFkIjoiQUVTLTI1Ni1HQ00tSE1BQy1TSEEtMjU2IiwiaWQiOiIxMTc1ZjJjNDMyMjNjNjNmNjY1MDk5ZDExNmU3Yzc4NCIsIml2IjoiVHBtbHpWTDh5a2t4VVREV1RSTU5Tdz09Iiwibm9uY2UiOiJkeGl0R3A3bFB6S21rTE5HIiwiYnl0ZXMiOiJaaWdobEZrTUFuVVBWSG0wZDhSYUNBY3pnRWRsQzJqWFhCK1YxaWl2MXdnYjhBRytuTWx0Y3BGK0RtV1VoNkZaIn0=
-   }
-   ```
-
-   To run KES locally for testing purposes, use the `-k` or `-insecure` flag to generate a new data encryption key:
 
    ```sh
    $ kes key dek my-key-1 -k
@@ -457,7 +358,7 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
      plaintext : UGgcVBgyQYwxKzve7UJNV5x8aTiPJFoR+s828reNjh0=
      ciphertext: eyJhZWFkIjoiQUVTLTI1Ni1HQ00tSE1BQy1TSEEtMjU2IiwiaWQiOiIxMTc1ZjJjNDMyMjNjNjNmNjY1MDk5ZDExNmU3Yzc4NCIsIml2IjoiVHBtbHpWTDh5a2t4VVREV1RSTU5Tdz09Iiwibm9uY2UiOiJkeGl0R3A3bFB6S21rTE5HIiwiYnl0ZXMiOiJaaWdobEZrTUFuVVBWSG0wZDhSYUNBY3pnRWRsQzJqWFhCK1YxaWl2MXdnYjhBRytuTWx0Y3BGK0RtV1VoNkZaIn0=
    }
-      ```
+   ```
 
 ## Using KES with a MinIO Server
 
@@ -473,109 +374,6 @@ The following section describes the Key Encryption Service (KES) configuration s
 Starting with [MinIO Server RELEASE.2023-02-17T17-52-43Z](https://github.com/minio/minio/releases/tag/RELEASE.2023-02-17T17-52-43Z), MinIO requires expanded KES permissions for functionality. 
 The example configuration in this section contains all required permissions.
 {{< /admonition >}}
-
-
-{{< tabs "vault-config" >}}
-{{< tab "YAML Overview" >}}
-Fields with `${<STRING>}` use the environment variable matching the `<STRING>` value. 
-You can use this functionality to set credentials without writing them to the configuration file.
-
-The YAML assumes a minimal set of permissions for the MinIO deployment accessing KES. 
-As an alternative, you can omit the `policy.minio-server` section and instead set the `${MINIO_IDENTITY}` hash as the `${ROOT_IDENTITY}`.
-
-```yaml {.copy}
-address: 0.0.0.0:7373
-root: ${ROOT_IDENTITY}
-
-tls:
-  key: kes-server.key
-  cert: kes-server.cert
-
-api:
-  /v1/ready:
-    skip_auth: false
-    timeout:   15s
-
-policy:
-  minio-server:
-    allow:
-    - /v1/key/create/*
-    - /v1/key/generate/*
-    - /v1/key/decrypt/*
-    - /v1/key/bulk/decrypt
-    - /v1/key/list/*
-    - /v1/status
-    - /v1/metrics
-    - /v1/log/audit
-    - /v1/log/error
-    deny:
-    - /v1/key/generate/my-app-internal*
-    - /v1/key/decrypt/my-app-internal*
-    identities:
-    - ${MINIO_IDENTITY}
-
-    my-app:
-    allow:
-    - /v1/key/create/my-app*
-    - /v1/key/generate/my-app*
-    - /v1/key/decrypt/my-app*
-    deny:
-    - /v1/key/generate/my-app-internal*
-    - /v1/key/decrypt/my-app-internal*
-    identities:
-    - df7281ca3fed4ef7d06297eb7cb9d590a4edc863b4425f4762bb2afaebfd3258
-    - c0ecd5962eaf937422268b80a93dde4786dc9783fb2480ddea0f3e5fe471a731
-
-keys:
-  - name: "minio-encryption-key-alpha"
-  - name: "minio-encryption-key-baker"
-  - name: "minio-encryption-key-charlie"
-
-cache:
-  expiry:
-    any: 5m0s
-    unused: 20s
-    offline: 0s
-
-log:
-
-  # Log error events to STDERR. Valid values are "on" or "off". 
-  # Default is "on".
-  error: on
-
-  # Log audit events to STDOUT. Valid values are "on" and "off". 
-  # Default is "off".
-  audit: off
-
-keystore:
-  vault:
-    endpoint: ""  
-    engine: ""    
-    version: ""   
-    namespace: "" 
-    prefix: ""    
-    transit:      
-      engine: ""  
-      key: ""     
-    approle:    
-      namespace: "" 
-      engine: ""    
-      id: ""        
-      secret: ""    
-    kubernetes: 
-      namespace: "" 
-      engine: ""    
-      role: ""      
-      jwt:  ""      
-    tls:        
-      key: ""   
-      cert: ""  
-      ca: ""    
-    status:     
-      ping: 10s 
-```
-
-{{< /tab >}}
 
 {{< tab "Reference" >}}
 
