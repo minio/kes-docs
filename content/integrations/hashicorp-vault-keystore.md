@@ -79,7 +79,7 @@ authenticated to the CLI, so you can immediately begin using Vault.
 
 You may need to set the following environment variables:
 
-    $ export VAULT_ADDR='http://127.0.0.1:8200'
+    export VAULT_ADDR='http://127.0.0.1:8200'
 
 The unseal key and root token are displayed below in case you want to
 seal/unseal the Vault or re-authenticate.
@@ -143,7 +143,7 @@ A dev server is ephemeral and is **not** meant to be run in production.
    The following command enables the K/V `v2` secret engine:
    
    ```sh {.copy}
-   $ vault secrets enable -version=2 kv
+   vault secrets enable -version=2 kv
    ```
 
    {{< /tab >}}
@@ -268,9 +268,9 @@ A dev server is ephemeral and is **not** meant to be run in production.
    For example, you could use `openssl`:
    
    ```sh {.copy}
-   $ openssl ecparam -genkey -name prime256v1 | openssl ec -out server.key
+   openssl ecparam -genkey -name prime256v1 | openssl ec -out server.key
    
-   $ openssl req -new -x509 -days 30 -key server.key -out server.cert \
+   openssl req -new -x509 -days 30 -key server.key -out server.cert \
        -subj "/C=/ST=/L=/O=/CN=localhost" -addext "subjectAltName = IP:127.0.0.1"
    ```
    {{< /admonition >}}
@@ -280,7 +280,7 @@ A dev server is ephemeral and is **not** meant to be run in production.
    The following command generates a new KES API key.
 
    ```sh {.copy}
-   $ kes identity new
+   kes identity new
    ```
 
    The output resembles the following:
