@@ -16,19 +16,42 @@ This tutorial shows how to setup a KES server that uses [Vault's K/V engine](htt
                  +------------------------------------+
 ```
 
-## Vault Server Setup
+### Prerequisites
 
-KES requires Vault K/V engine [v1] or [v2] and credentials for either the AppRole or Kubernetes authentication method.
+To start a development server or interact with Vault using the Vault CLI, download the [Vault binary](https://www.vaultproject.io/downloads/).
 
-If you don't have a Vault cluster available you can either follow [Hashicorp Vault install guide](https://developer.hashicorp.com/vault/tutorials/getting-started/getting-started-deploy)
-or create a single node dev instance.
+## Vault Server
 
-Before starting a dev server or interacting with Vault via the Vault CLI download the [Vault binary](https://www.vaultproject.io/downloads/).
-Next, start a Vault server in dev mode:
+KES requires Vault K/V engine [v1](https://developer.hashicorp.com/vault/docs/secrets/kv/kv-v1) or [v2](https://developer.hashicorp.com/vault/docs/secrets/kv/kv-v2) and credentials for either the [AppRole](https://developer.hashicorp.com/vault/docs/auth/approle) or Kubernetes authentication method.
+
+If you do not have an existing Vault cluster available, do one of the following:
+
+1. Follow [Hashicorp Vault install guide](https://developer.hashicorp.com/vault/tutorials/getting-started/getting-started-deploy) to create a new cluster
+2. Create a [single node dev instance](#single-node-dev-vault-instance)
+
+The docs below discuss setting up a single node dev instance for development purposes using the `AppRole` authentication method.
+
+### Single Node Dev Vault Instance
+
+The following command starts a Vault server in dev mode:
+
+{{< tabs "single-node-vault-instance" >}}
+
+{{< tab "Command" >}}
+
+```sh {.copy}
+vault server -dev
+```
+
+Select the **Output** tab above to see example command output.
+
+{{< /tab >}}
+
+{{< tab "Output" >}}
+
+The command output resembles the following:
 
 ```sh
-vault server -dev
-
 ==> Vault server configuration:
 
 Administrative Namespace:
@@ -67,10 +90,16 @@ Root Token: hvs.O6QNQB33ksXtMxtlRKlRZL0R
 Development mode should NOT be used in production installations!
 ```
 
+{{< /tab >}}
+
+{{< /tabs >}}
+
 {{< admonition type="note" >}}
 This starts a single-node Vault server in dev mode listening on `127.0.0.1:8200`.
-A dev server is ephemeral and is not meant to be run in production.
+A dev server is ephemeral and is **not** meant to be run in production.
 {{< /admonition >}}
+
+### Connect Vault to the Vault CLI
 
 1. Set `VAULT_ADDR` endpoint
 
@@ -80,7 +109,7 @@ A dev server is ephemeral and is not meant to be run in production.
    export VAULT_ADDR='https://127.0.0.1:8200'
    ```
    
-1. Set `VAULT_TOKEN`
+2. Set `VAULT_TOKEN`
 
    The Vault CLI needs an authentication token to perform operations.
    
@@ -88,14 +117,18 @@ A dev server is ephemeral and is not meant to be run in production.
    export VAULT_TOKEN=hvs.O6QNQB33ksXtMxtlRKlRZL0R
    ```
 
-   Adjust the token to your own Vault access token.
+   Replace the token value to your own Vault access token, such as the `Root token` provided in the output of the `vault server -dev` command.
 
-2. Enable `K/V` Backend
+3. Enable `K/V` Backend
 
    KES stores the secret keys at the Vault K/V backend. 
    Vault provides two [K/V engines](https://www.vaultproject.io/docs/secrets/kv), `v1` and `v2`.
    
    MinIO recommends the K/V `v1` engine.
+
+   {{< tabs "backend-vault-version" >}}
+
+   {{< tab "K/V v1" >}}
 
    The following command enables the K/V `v1` secret engine:
 
@@ -103,107 +136,135 @@ A dev server is ephemeral and is not meant to be run in production.
    vault secrets enable -version=1 kv
    ```
    
+   {{< /tab >}}
+
+   {{< tab "K/V v2" >}}
+
    The following command enables the K/V `v2` secret engine:
    
    ```sh {.copy}
    $ vault secrets enable -version=2 kv
    ```
 
+   {{< /tab >}}
+   {{< /tabs >}}
+
    {{< admonition type="note" >}}
-   Note that the Vault policy for KES depends on the chosen K/V engine version.
-   Using a policy designed for K/V `v1` with a K/V `v2` engine and vice versa will not work. 
-   For more information about migrating from  `v1` to `v2` see [upgrading from v1](https://www.vaultproject.io/docs/secrets/kv/kv-v2#upgrading-from-version-1).
+   The Vault policy for KES depends on the chosen K/V engine version.
+   A policy designed for K/V `v1` will not work with a K/V `v2` engine.
+   Likewise, a policy designed for K/V `v2` will not work with a K/V `v1` engine.
+
+   For more information about migrating from  `v1` to `v2` refer to the [Hashicorp docs on upgrading from v1](https://www.vaultproject.io/docs/secrets/kv/kv-v2#upgrading-from-version-1).
    {{< /admonition >}}
    
-3. Create Vault Policy
+### Setup KES Access to Vault
+
+1. Create Vault Policy
 
    The Vault policy defines the API paths the KES server can access.
-   
-   - For `v1` 
+   Create a text file named `kes-policy.hcl`.
+
+   The contents of the policy vary depending on the K/V engine used.
+
+   {{< tabs "vault-policy-version" >}}
+
+   {{< tab "K/V v1" >}}
+
+   Use the following `kes-policy.hcl` policy for the K/V `v1` backend:
     
-     The following `kes-policy.hcl` policy should be used for the K/V `v1` backend:
-    
-     ```hcl {.copy}
-     path "kv/*" {
-        capabilities = [ "create", "read", "delete", "list" ]
-     }
-     ```
-   
-   - For `v2`
-     The following `kes-policy.hcl` policy should be used for the K/V `v2` backend:
+   ```hcl {.copy}
+   path "kv/*" {
+      capabilities = [ "create", "read", "delete", "list" ]
+   }
+   ```
+
+   {{< /tab >}}
+
+   {{< tab "K/V v2" >}}
+
+   Use the following `kes-policy.hcl` policy for the K/V `v2` backend:
   
-     ```hcl {.copy}
-     path "kv/data/*" {
-        capabilities = [ "create", "read" ]
-     }
-     path "kv/metadata/*" {
-        capabilities = [ "list", "delete" ]       
-     }
-     ```
-   
+   ```hcl {.copy}
+   path "kv/data/*" {
+      capabilities = [ "create", "read" ]
+   }
+   path "kv/metadata/*" {
+      capabilities = [ "list", "delete" ]       
+   }
+   ```
+
+  {{< /tab >}}
+
+  {{< /tabs >}} 
+
+1. Write the policy to the Vault
+
    The following command creates the policy at Vault:
 
    ```sh {.copy}
    vault policy write kes-policy kes-policy.hcl
    ```
 
-4. Enable AppRole Authentication
+2. Enable Authentication
 
-    This step allows the KES server to authenticate to Vault. 
-    For this tutorial, we use the AppRole authentication method. 
+   This step allows the KES server to authenticate to Vault. 
+   For this tutorial, we use the `AppRole` authentication method. 
     
-    ```sh {.copy}
-    vault auth enable approle
-    ```
+   ```sh {.copy}
+   vault auth enable approle
+   ```
     
-5. Create KES Role
+3. Create KES Role
 
-    The following command adds a new role `kes-server` at Vault:
+   The following command adds a new role called `kes-server` at Vault:
     
-    ```sh {.copy}
-    vault write auth/approle/role/kes-server token_num_uses=0  secret_id_num_uses=0  period=5m
-    ```
+   ```sh {.copy}
+   vault write auth/approle/role/kes-server token_num_uses=0  secret_id_num_uses=0  period=5m
+   ```
 
-6. Bind Policy to Role
+4. Bind Policy to Role
 
-    The following command binds `kes-server` role to the `key-policy`:
-    ```sh {.copy}
-    vault write auth/approle/role/kes-server policies=kes-policy
-    ```
+   The following command binds the `kes-server` role to the `kes-policy`:
 
-7. Generate AppRole ID
+   ```sh {.copy}
+   vault write auth/approle/role/kes-server policies=kes-policy
+   ```
 
-    Request an AppRole ID for the KES server:
-    ```sh {.copy}
-    vault read auth/approle/role/kes-server/role-id 
-    ```
-8. Generate AppRole Secret
+5. Generate AppRole ID
 
-    Request an AppRole secret for the KES server:
+   Request an AppRole ID for the KES server:
+
+   ```sh {.copy}
+   vault read auth/approle/role/kes-server/role-id 
+   ```
+
+6. Generate AppRole Secret
+
+   Request an AppRole secret for the KES server:
     
-    ```sh {.copy}
-    vault write -f auth/approle/role/kes-server/secret-id 
-    ```
+   ```sh {.copy}
+   vault write -f auth/approle/role/kes-server/secret-id 
+   ```
     
-    The AppRole secret prints as `secret_id`. 
-    You can ignore the `secret_id_accessor`. 
+   The AppRole secret prints as `secret_id`. 
+   You can ignore the `secret_id_accessor`. 
 
 ## KES Server Setup
 
 1. Generate KES Server Private Key & Certificate
 
-   The following command generates a new TLS private key `server.key` and a self-signed X.509 certificate `server.cert` that is issued for the IP `127.0.0.1` and DNS name `localhost` (as SAN).
-   If you want to refer to your KES server via another IP/DNS name, e.g. `10.1.2.3`, then adjust the `--ip` and/or `--dns` accordingly.
+   The following command generates a new TLS private key `server.key` and a self-signed X.509 certificate `server.cert` for the IP `127.0.0.1` and DNS name `localhost` (as SAN).
+   If you want to refer to your KES server using another IP or DNS name, such as `10.1.2.3` or `https://kes.example.net`, adjust the `--ip` and/or `--dns` parameters accordingly.
    
    ```sh {.copy}
    kes identity new --key server.key --cert server.cert --ip "127.0.0.1" --dns localhost
    ```
    
    {{< admonition type="tip" >}}
-   The above command generates self-signed certificates. If you already have a way to issue certificates for your
-   servers you can use such certificates as well.
+   The above command generates self-signed certificates. 
+   If you already have a way to issue certificates for your servers, you can use those.
   
-   Additionally, any other tooling for X.509 certificate generation works as well. 
+   Other tooling for X.509 certificate generation also works. 
    For example, you could use `openssl`:
    
    ```sh {.copy}
@@ -218,9 +279,13 @@ A dev server is ephemeral and is not meant to be run in production.
 
    The following command generates a new KES API key.
 
-   ```sh
+   ```sh {.copy}
    $ kes identity new
+   ```
 
+   The output resembles the following:
+
+   ```sh
    Your API key:
    
       kes:v1:ABfa1xsnIV0lltXQC8tHXic8lte7J6hT7EoGv6+s5QCW
@@ -240,11 +305,11 @@ A dev server is ephemeral and is not meant to be run in production.
    ```
 
    {{< admonition type="tip" >}}
-   The generated identity is NOT a secret and can be shared publicly. It will be used
-   later on in the KES config file as admin identity or assigned to a policy.
+   The generated `identity` is **NOT** a secret and can be shared publicly. 
+   It will be used later on in the KES config file as admin identity or assigned to a policy.
 
-   The API key itself is a secret and should not be shared. You can always recompute
-   an API key's identity.
+   The `API key` itself **is** a secret and should not be shared. 
+   You can always recompute an API key's identity.
    {{< /admonition >}}
 
 3. Configure KES Server
@@ -274,14 +339,14 @@ A dev server is ephemeral and is not meant to be run in production.
    ```
 
 4. Start KES Server
-  
-   **Linux**
+
+   {{< tabs "vault-kes-start" >}}
+
+   {{< tab "Linux" >}}
 
    ```sh {.copy}
    kes server --config config.yml
    ```
-
-   {{< admonition title="Linux Swap Protection" type="tip" >}}
 
    In Linux environments, KES can use the [`mlock`](http://man7.org/linux/man-pages/man2/mlock.2.html) syscall to prevent the OS from writing in-memory data to disk (swapping). 
    This prevents leaking sensitive data.
@@ -289,11 +354,12 @@ A dev server is ephemeral and is not meant to be run in production.
    Use the following command to allow KES to use the `mlock` syscall without running with `root` privileges:
 
    ```sh {.copy}
-   $ sudo setcap cap_ipc_lock=+ep $(readlink -f $(which kes))
+   sudo setcap cap_ipc_lock=+ep $(readlink -f $(which kes))
    ```
-   {{< /admonition >}}
 
-   **Containers**
+   {{< /tab >}}
+
+   {{< tab "Containers" >}}
 
    The following instructions use [Podman](https://podman.io/) to manage the containers.
    You can also use Docker.
@@ -323,12 +389,15 @@ A dev server is ephemeral and is not meant to be run in production.
    ```sh {.copy}
    sudo podman container list
    ```
+   
+   {{< /tab >}}
+   {{< /tabs >}}
 
 ## KES CLI Access
 
 1. Set `KES_SERVER` endpoint
 
-   The following environment variable specifies the server the KES CLI should talk to:
+   The following environment variable specifies the KES server the KES CLI should talk to:
 
    ```sh {.copy}
    export KES_SERVER=https://127.0.0.1:7373
@@ -336,15 +405,18 @@ A dev server is ephemeral and is not meant to be run in production.
 
 2. Define the CLI access credentials
 
-   The following environment variables set the access credentials the client uses to talk to a KES server:
+   The following environment variable sets the key the client uses to talk to a KES server:
    
    ```sh {.copy}
    export KES_API_KEY=kes:v1:ABfa1xsnIV0lltXQC8tHXic8lte7J6hT7EoGv6+s5QCW
    ```
 
+   Replace the value with your server's API Key.
+   The server's API key displays in the output when you start the server.
+
 3. Test the Configuration
      
-   For example, create a key:
+   For example, check the status of the server:
 
    ```sh {.copy}
    kes status -k
@@ -353,7 +425,12 @@ A dev server is ephemeral and is not meant to be run in production.
    Use the key to generate a new data encryption key:
 
    ```sh
-   $ kes key dek my-key-1 -k
+   kes key dek my-key-1 -k
+   ```
+
+   The command output resembles the following:
+
+   ```sh
    {
      plaintext : UGgcVBgyQYwxKzve7UJNV5x8aTiPJFoR+s828reNjh0=
      ciphertext: eyJhZWFkIjoiQUVTLTI1Ni1HQ00tSE1BQy1TSEEtMjU2IiwiaWQiOiIxMTc1ZjJjNDMyMjNjNjNmNjY1MDk5ZDExNmU3Yzc4NCIsIml2IjoiVHBtbHpWTDh5a2t4VVREV1RSTU5Tdz09Iiwibm9uY2UiOiJkeGl0R3A3bFB6S21rTE5HIiwiYnl0ZXMiOiJaaWdobEZrTUFuVVBWSG0wZDhSYUNBY3pnRWRsQzJqWFhCK1YxaWl2MXdnYjhBRytuTWx0Y3BGK0RtV1VoNkZaIn0=
@@ -375,11 +452,115 @@ Starting with [MinIO Server RELEASE.2023-02-17T17-52-43Z](https://github.com/min
 The example configuration in this section contains all required permissions.
 {{< /admonition >}}
 
+{{< tabs "vault-config" >}}
+
+{{< tab "YAML Overview" >}}
+
+Fields with `${<STRING>}` use the environment variable matching the `<STRING>` value. 
+You can use this functionality to set credentials without writing them to the configuration file.
+
+The YAML assumes a minimal set of permissions for the MinIO deployment accessing KES. 
+As an alternative, you can omit the `policy.minio-server` section and instead set the `${MINIO_IDENTITY}` hash as the `${ROOT_IDENTITY}`.
+
+```yaml {.copy}
+address: 0.0.0.0:7373
+root: ${ROOT_IDENTITY}
+
+tls:
+  key: kes-server.key
+  cert: kes-server.cert
+
+api:
+  /v1/ready:
+    skip_auth: false
+    timeout:   15s
+
+policy:
+  minio-server:
+    allow:
+    - /v1/key/create/*
+    - /v1/key/generate/*
+    - /v1/key/decrypt/*
+    - /v1/key/bulk/decrypt
+    - /v1/key/list/*
+    - /v1/status
+    - /v1/metrics
+    - /v1/log/audit
+    - /v1/log/error
+    deny:
+    - /v1/key/generate/my-app-internal*
+    - /v1/key/decrypt/my-app-internal*
+    identities:
+    - ${MINIO_IDENTITY}
+
+    my-app:
+    allow:
+    - /v1/key/create/my-app*
+    - /v1/key/generate/my-app*
+    - /v1/key/decrypt/my-app*
+    deny:
+    - /v1/key/generate/my-app-internal*
+    - /v1/key/decrypt/my-app-internal*
+    identities:
+    - df7281ca3fed4ef7d06297eb7cb9d590a4edc863b4425f4762bb2afaebfd3258
+    - c0ecd5962eaf937422268b80a93dde4786dc9783fb2480ddea0f3e5fe471a731
+
+keys:
+  - name: "minio-encryption-key-alpha"
+  - name: "minio-encryption-key-baker"
+  - name: "minio-encryption-key-charlie"
+
+cache:
+  expiry:
+    any: 5m0s
+    unused: 20s
+    offline: 0s
+
+log:
+
+  # Log error events to STDERR. Valid values are "on" or "off". 
+  # Default is "on".
+  error: on
+
+  # Log audit events to STDOUT. Valid values are "on" and "off". 
+  # Default is "off".
+  audit: off
+
+keystore:
+  vault:
+    endpoint: ""  
+    engine: ""    
+    version: ""   
+    namespace: "" 
+    prefix: ""    
+    transit:      
+      engine: ""  
+      key: ""     
+    approle:    
+      namespace: "" 
+      engine: ""    
+      id: ""        
+      secret: ""    
+    kubernetes: 
+      namespace: "" 
+      engine: ""    
+      role: ""      
+      jwt:  ""      
+    tls:        
+      key: ""   
+      cert: ""  
+      ca: ""    
+    status:     
+      ping: 10s 
+```
+
+{{< /tab >}}
+
 {{< tab "Reference" >}}
 
 For complete documentation, see the [configuration page]({{< relref "/tutorials/configuration.md" >}}).
 
-| <div style="width:150px"> Key  </div>                        | Description                    |
+| <div style="width:275px"> Key  </div>                        | Description                    |
 |-----------------------------|--------------------------------|
 | `address`                     | The network address and port the KES server listens to on startup. Defaults to port `7373` on all host network interfaces. |
 | `root`                        | The identity for the KES superuser (`root`) identity. Clients connecting with a TLS certificate whose hash (`kes identity of client.cert`) matches this value have access to all KES API operations. Specify `disabled` to remove the root identity and rely only on the `policy` configuration for controlling identity and access management to KES. |
@@ -516,12 +697,12 @@ keystore:
 ### Encrypt Vault-stored Keys
 
 Hashicorp's [Transit](https://developer.hashicorp.com/vault/docs/secrets/transit) functionality provides a means to encrypt and decrypt keys stored in the vault.
-This provides an additional layer of encryption that may be useful in specific use cases.
+This provides an additional layer of encryption that may be useful in specific cases.
 
 When enabled, Hashicorp stores a key in the Vault to encrypt or decrypt the other keys stored in the vault.
 KES then uses the vault-managed key to store or retrieve keys from the Vault.
 
-{{< admonition type="warning" >}}
+{{< admonition title="Potential data loss" type="warning" >}}
 If the specified transit key is incorrect, disabled, removed, or otherwise unaccessible, KES cannot retrieve any vault keys nor perform any en/decryption operations relying on those keys.
 {{< /admonition >}}
 
