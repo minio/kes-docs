@@ -137,6 +137,7 @@ This starts a KES server on `127.0.0.1:7373` and stores keys in memory.
 2. Generate KES Server Private Key & Certificate
 
    Generate a TLS private key and certificate for the KES server.
+   This key is used for domain name verification.
 
    A KES server is [secure-by-default](https://en.wikipedia.org/wiki/Secure_by_default) and can only be run with TLS.
    In this guide, we use self-signed certificates for simplicity.
@@ -158,8 +159,10 @@ This starts a KES server on `127.0.0.1:7373` and stores keys in memory.
  
 3. Generate Client Credentials
 
-   The client application needs credentials to access the KES server. 
-   The following command generates a new TLS private/public key pair:
+   The client application needs credentials to access the KES server.
+   Generate an API key from the client's key and certificate to verify the client application to the KES server.
+
+   The following command generates a new TLS private/public key pair for `MyApp`:
 
    ```sh
    $ kes identity new --key=client.key --cert=client.crt MyApp

@@ -29,6 +29,7 @@ For production use, choose any supported KMS implementation that meets your requ
 1. Generate KES Server Private Key & Certificate
 
    Generate a TLS private key and certificate for the KES server.
+   This key is used for domain name verification for the server address.
 
    A KES server is [secure-by-default](https://en.wikipedia.org/wiki/Secure_by_default) and can only be run with TLS.
    In this guide, we use self-signed certificates for simplicity.
@@ -51,7 +52,7 @@ For production use, choose any supported KMS implementation that meets your requ
 2. Generate MinIO Credentials
 
    MinIO needs credentials to access the KES server. 
-   The following command generates a new TLS private/public key pair:
+   The following command generates a hashed identity from a provided TLS private/public key pair:
    
    ```sh
    $ kes identity new --key=client.key --cert=client.crt MinIO
@@ -62,7 +63,9 @@ For production use, choose any supported KMS implementation that meets your requ
    ```
    
    The identity `02ef5321ca409dbc7b10e7e8ee44d1c3b91e4bf6e2198befdebee6312745267b` is a unique fingerprint of the public key in `client.crt`.
-   You can re-compute it at anytime:
+   Use this API key identity to validate the MinIO client to the KES server.
+
+   You can re-compute the identity from the same certificate at any time:
    
    ```sh
    $ kes identity of client.crt
