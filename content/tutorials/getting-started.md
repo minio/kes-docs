@@ -145,7 +145,7 @@ This starts a KES server on `127.0.0.1:7373` and stores keys in memory.
    The following command generates a new TLS private key (`private.key`) and a self-signed X.509 certificate (`public.crt`) issued for the IP `127.0.0.1` and DNS name `localhost`: 
    
    ```sh
-   $ kes identity new --ip "127.0.0.1" localhost
+   $ kes identity new --ip "127.0.0.1" --key "private.key" --cert "public.crt" localhost
    
      Private key:  private.key
      Certificate:  public.crt
