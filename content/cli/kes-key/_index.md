@@ -21,9 +21,14 @@ This set of pages provides reference information for the `kes key` commands.
 |[`create`]({{< relref "/cli/kes-key/create" >}})   |Create a new cryptographic key               |
 |[`import`]({{< relref "/cli/kes-key/import" >}})   |Import a cryptographic key                   |
 |[`info`]({{< relref "/cli/kes-key/info" >}})       |Output information about a cryptographic key |
-|[`ls`]({{< relref "/cli/kes-key/ls" >}})           |List cryptographic keys                      |
 |[`rm`]({{< relref "/cli/kes-key/rm" >}})           |Delete a cryptographic key                   |
 |                                                   |                                             |
 |[`encrypt`]({{< relref "/cli/kes-key/encrypt" >}}) |Encrypt a message                            |
 |[`decrypt`]({{< relref "/cli/kes-key/decrypt" >}}) |Decrypt an encrypted message                 |
 |[`dek`]({{< relref "/cli/kes-key/dek" >}})         |Generate a new data encryption key           |
+
+## Deprecated
+
+|Subcommands                                        |Description                                   |
+|:--------------------------------------------------|:---------------------------------------------|
+|[`ls`]({{< relref "/cli/deprecated/key-ls" >}})    |Use [`kes ls`]({{< relref "/cli/kes-ls/" >}}) |

@@ -122,7 +122,7 @@ $ kes identity new
 Create an identity that uses either of two IP addresses as a subject alternate name (SAN).
 
 ```sh {.copy}
-$ kes identity new --ip "192.168.0.182" --ip "10.0.0.92" Client-1
+$ kes identity new --ip "192.168.0.182" --ip "10.0.0.92" --key private.key --cert public.crt Client-1
 ```
 
 Create an encrypted identity that expires in the default time of 30 days.

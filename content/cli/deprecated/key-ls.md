@@ -6,6 +6,11 @@ draft: false
 tableOfContents: true
 ---
 
+{{< admonition title="Command deprecated" type="important" >}}
+The `kes identity ls` command has been deprecated as of KES release `2024-06-17T15-47-05Z`.
+Use [`kes ls`]({{< relref "/cli/kes-ls/" >}}) instead.
+{{< /admonition >}}
+
 ## Overview
 
 Return a list of existing cryptographic keys.

@@ -22,5 +22,11 @@ To make persistent changes to KES policies, modify the `policy` section of the K
 |[`assign`]({{< relref "/cli/kes-policy/assign" >}}) |Assign a policy to identities   |
 |[`create`]({{< relref "/cli/kes-policy/create" >}}) |Create a new policy             |
 |[`info`]({{< relref "/cli/kes-policy/info" >}})     |Get information about a policy  |
-|[`ls`]({{< relref "/cli/kes-policy/ls" >}})         |List policies                   |
 |[`show`]({{< relref "/cli/kes-policy/show" >}})     |Display a policy                |
+
+
+## Deprecated
+
+|Subcommands                                        |Description                                    |
+|:--------------------------------------------------|:----------------------------------------------|
+|[`ls`]({{< relref "/cli/deprecated/policy-ls" >}}) | Use [`kes ls`]({{< relref "/cli/kes-ls/" >}}) |
