@@ -34,3 +34,13 @@ MinIO uses this key for the following:
 - Encrypting backend data ( [IAM](https://min.io/docs/minio/linux/administration/identity-access-management.html#minio-authentication-and-identity-management), server configuration).
 - The default encryption key for Server-Side Encryption with [SSE-KMS](https://min.io/docs/minio/linux/administration/server-side-encryption/server-side-encryption-sse-kms.html#minio-encryption-sse-kms).
 - The encryption key for Server-Side Encryption with [SSE-S3](https://min.io/docs/minio/linux/administration/server-side-encryption/server-side-encryption-sse-s3.html#minio-encryption-sse-s3).
+
+## `MINIO_KES_SERVER`
+
+The server endpoint a client uses to connect to KES.
+If not defined, the value defaults to `127.0.0.1:7373`.
+
+
+## `MINIO_KES_API_KEY`
+
+The API key a client uses to authenticate to the KES server.

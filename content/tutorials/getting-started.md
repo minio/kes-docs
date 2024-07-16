@@ -202,7 +202,7 @@ This starts a KES server on `127.0.0.1:7373` and stores keys in memory.
    Start the KES server instance:
 
    ```sh {.copy}
-   kes server --config config.yml --auth off
+   kes server --config config.yml
    ```
 
 ## KES CLI Access
