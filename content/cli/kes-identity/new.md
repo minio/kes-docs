@@ -38,6 +38,8 @@ The identity can be computed again via:
 
 ## Syntax
 
+
+```sh
 kes identity new
              [--cert <path>]
              [--dns <domain>]
@@ -47,6 +49,7 @@ kes identity new
              [--ip <ip>]
              [--key <path>]
              [<subject>]
+```
 
 ## Parameters
 

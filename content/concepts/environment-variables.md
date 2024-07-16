@@ -38,7 +38,7 @@ MinIO uses this key for the following:
 ## `MINIO_KES_SERVER`
 
 The server endpoint a client uses to connect to KES.
-If not defined, the value defaults to `127.0.0.1.7373`.
+If not defined, the value defaults to `127.0.0.1:7373`.
 
 
 ## `MINIO_KES_API_KEY`
