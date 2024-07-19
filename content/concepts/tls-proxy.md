@@ -170,7 +170,7 @@ You must add the NGINX identify to the list of TLS proxies on the KES server.
 1. Obtain the identity of NGINX:
    
    ```sh {.copy}
-   kes tool identity of </path/to/the/nginx-client.cert>
+   kes identity of </path/to/the/nginx-client.cert>
    ```
 
    **Note:** This is the certificate NGINX presents to KES to authenticate itself as the TLS proxy. 
@@ -210,9 +210,8 @@ You must add the NGINX identify to the list of TLS proxies on the KES server.
      ```sh {.copy}
      kes policy list -k
      ```
-     {{< admonition type="note">}}
+
      You can only perform operations if the policy attached to your identity allows them.
      If you act as the `root` identity because you have set `KES_CLIENT_TLS_CERT_FILE` to the root certificate file, then you should be able to perform any operation. 
      If you act as another identity that does not have the policy permission to list all policies then the KES server will reject the request with a `prohibited by policy` error.
-     {{< /admonition >}}
      

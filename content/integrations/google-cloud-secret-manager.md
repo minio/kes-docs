@@ -8,24 +8,24 @@ tableOfContents: true
 
 
 
-This tutorial shows how to setup a KES server that uses GCP Secret Manager as a persistent key store. 
+This tutorial shows how to setup a KES server that uses [Google Cloud Secret Manager](https://cloud.google.com/security/products/secret-manager) as a persistent key store. 
 
 ```goat
-                 +---------------------------------------------+
- .----------.    |    .----------.     .------------------.    |
-| KES Client +---+---+ KES Server +---+ GCP Secret Manager |   |
- '----------'    |    '----------'     '------------------'    |
-                 +---------------------------------------------+
+                 +------------------------------------------------------+
+ .----------.    |    .----------.     .---------------------------.    |
+| KES Client +---+---+ KES Server +---+ Google Cloud Secret Manager |   |
+ '----------'    |    '----------'     '---------------------------'    |
+                 +------------------------------------------------------+
 ``` 
 
 ## Google Cloud Secret Manager
 
 The [Google Cloud Secret Manager](https://cloud.google.com/secret-manager) is a key-value store for secrets, such as passwords, access tokens, and cryptographic keys.
 
-1. Login in to the [GCP console](https://console.cloud.google.com)
+1. Login in to the [Google Cloud console](https://console.cloud.google.com)
 2. Create a new project or select an existing project
 3. Enable the [Secret Manager service](https://console.cloud.google.com/security/secret-manager) if not already enabled for your project
-4. Go to [GCP IAM for service accounts](https://console.cloud.google.com/iam-admin/serviceaccounts) and create a new service account for KES. 
+4. Go to [Google Cloud IAM for service accounts](https://console.cloud.google.com/iam-admin/serviceaccounts) and create a new service account for KES. 
    KES uses this service account to authenticate to GCP and access the Secret Manager.
    
 5. Assign one or more roles to the new account 
@@ -45,7 +45,7 @@ The [Google Cloud Secret Manager](https://cloud.google.com/secret-manager) is a 
    
    Use the `JSON` key format.
 
-   GCP let's you download a JSON file with the following structure:
+   Google Cloud allows you download a JSON file with the following structure:
 
    ```json
    {
@@ -58,7 +58,7 @@ The [Google Cloud Secret Manager](https://cloud.google.com/secret-manager) is a 
    }
    ```
    
-   Use this credentials file to configure KES to authenticate to GCP and access the SecretManager.
+   Use this credentials file to configure KES to authenticate to Google Clout and access the Secret Manager.
 
 ## KES Server setup
 
@@ -78,7 +78,7 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
    Customize the command to match your setup.
    
    ```sh {.copy}
-   kes tool identity new --server --key server.key --cert server.cert --ip "127.0.0.1" --dns localhost
+   kes identity new --server --key server.key --cert server.cert --ip "127.0.0.1" --dns localhost
    ```
    
    {{< admonition type="tip" >}}
@@ -96,13 +96,13 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
 2. Create a private key and certificate for the application
  
    ```sh {.copy}
-   kes tool identity new --key=app.key --cert=app.cert app
+   kes identity new --key=app.key --cert=app.cert app
    ```
 
    You can compute the `app` identity at any time.
 
    ```sh {.copy}
-   kes tool identity of app.cert
+   kes identity of app.cert
    ```
 
 3. Create the [config file]({{< relref "/tutorials/configuration.md#config-file" >}}) `server-config.yml`
@@ -141,7 +141,7 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
    **Linux**
 
    ```sh {.copy}
-   export APP_IDENTITY=$(kes tool identity of app.cert)
+   export APP_IDENTITY=$(kes identity of app.cert)
    
    kes server --config=server-config.yml --auth=off
    ```
@@ -201,7 +201,7 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
    ```
 
    ```sh {.copy}
-   export APP_IDENTITY=$(kes tool identity of app.cert)
+   export APP_IDENTITY=$(kes identity of app.cert)
    
    kes server --config=server-config.yml --auth=off
    ```
@@ -210,7 +210,7 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
    The command uses `--auth=off` because our `root.cert` and `app.cert` certificates are self-signed.
    {{< /admonition >}}
    
-   Now, if you [go to the GCP Secret Manager](https://console.cloud.google.com/security/secret-manager), you should see a secret key named `my-app-key`.
+   Now, if you [go to the Google Cloud Secret Manager](https://console.cloud.google.com/security/secret-manager), you should see a secret key named `my-app-key`.
 
 6. Derive and decrypt data keys from the previously created `my-app-key`
 
@@ -348,7 +348,7 @@ For complete documentation, see the [configuration page]({{< relref "/tutorials/
 | `cache`                       | Specify expiration of cached keys in `#d#h#m#s` format. Unexpired keys may be used in the event the KMS becomes temporarily unavailable. <br><br> Entries may be set for `any` key, `unused` keys, or `offline` keys. <br><br> If not set, KES uses values of `5m` for all keys, `20s` for unused keys, and `0s` for offline keys. |
 | `log`                         | Enable or disable output for `error` and `audit` type logging events to the console. |
 | `keystore.gcp.secretmanager.project_id` | The [project ID](https://cloud.google.com/resource-manager/docs/creating-managing-projects#before_you_begin) is a unique, user-assigned ID that can be used by Google APIs. The project ID must be a unique string of 6 to 30 lowercase letters, digits, or hyphens. It must start with a letter, and cannot have a trailing hyphen. |
-| `keystore.gcp.secretmanager.endpoint` | An optional GCP SecretManager endpoint. If not set, defaults to: `secretmanager.googleapis.com:443`. |
+| `keystore.gcp.secretmanager.endpoint` | An optional Google Cloup Secret Manager endpoint. If not set, defaults to: `secretmanager.googleapis.com:443`. |
 | `keystore.gcp.secretmanager.scopes` | An optional list of [GCP OAuth2 scopes](https://developers.google.com/identity/protocols/oauth2/scopes). If not set, the GCP default scopes are used. |
 | `keystore.gcp.secretmanager.credentials.client_email` | The service account email. For example, `<account>@<project-ID>.iam.gserviceaccount.com`. |
 | `keystore.gcp.secretmanager.credentials.client_id` | The service account client ID. For example, `113491952745362495489` |
