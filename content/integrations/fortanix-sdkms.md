@@ -63,7 +63,7 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
    Customize the command to match your setup.
    
    ```sh {.copy}
-   kes tool identity new --server --key server.key --cert server.cert --ip "127.0.0.1" --dns localhost
+   kes identity new --server --key server.key --cert server.cert --ip "127.0.0.1" --dns localhost
    ```
    
    {{< admonition type="tip" >}}
@@ -81,12 +81,12 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
 2. Create a private key and certificate
 
    ```sh {.copy}
-   kes tool identity new --key=app.key --cert=app.cert app
+   kes identity new --key=app.key --cert=app.cert app
    ```
 
    You can compute the `app` identity anytime.
    ```sh {.copy}
-   kes tool identity of app.cert
+   kes identity of app.cert
    ```
 
 3. Create Configuration file
@@ -123,7 +123,7 @@ This can be either your internal CA or a public CA such as [Let's Encrypt](https
 4. Start a KES server in a new window/tab:  
    
    ```sh {.copy}
-   export APP_IDENTITY=$(kes tool identity of app.cert)
+   export APP_IDENTITY=$(kes identity of app.cert)
    
    kes server --config=server-config.yml --auth=off
    ```

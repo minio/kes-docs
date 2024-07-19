@@ -170,7 +170,7 @@ You must add the NGINX identify to the list of TLS proxies on the KES server.
 1. Obtain the identity of NGINX:
    
    ```sh {.copy}
-   kes tool identity of </path/to/the/nginx-client.cert>
+   kes identity of </path/to/the/nginx-client.cert>
    ```
 
    **Note:** This is the certificate NGINX presents to KES to authenticate itself as the TLS proxy. 
