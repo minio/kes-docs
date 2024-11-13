@@ -259,15 +259,15 @@ enableGitInfo = 'true'
         url = 'https://min.io/download'
         weight = 8
      [[menu.docs]]
-        name = "KES Documentation"
+        name = "KES"
         weight = 1
         [menu.docs.params]
             current = true
      [[menu.docs]]
-        name = "MinIO Documentation"
+        name = "MinIO Server"
         url = "https://min.io/docs/minio/kubernetes/upstream/index.html"
         weight = 2
      [[menu.docs]]
-        name = "DirectPV Documentation"
+        name = "DirectPV"
         url = "https://min.io/docs/directpv"
         weight = 3
