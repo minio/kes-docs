@@ -67,7 +67,7 @@ After the KES and Prometheus servers start, Prometheus should detect and display
 
 For a graphical dashboard, you can connect KES metrics scraped by Prometheus to Grafana.
 
-![An example Grafana dashboard in dark mode showing KES metrics](grafana-dashboard.png)
+![An example Grafana dashboard in dark mode showing KES metrics](../grafana-dashboard.png)
 
 MinIO provides an example Grafana dashboard configuration for KES.
 See the JSON file on [Github](https://github.com/minio/kes/blob/master/examples/grafana/dashboard.json).
