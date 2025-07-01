@@ -14,6 +14,18 @@ The documentation includes:
 - best practices
 - general documentation
 
+{{< admonition type="important" >}}
+MinIO deprecated and archived the Community KES project as of [Release 2025-03-12T09-35-18Z](https://github.com/minio/kes/releases/tag/2025-03-12T09-35-18Z).
+
+MinIO Enterprise users should plan migration to AIStor KES for continued maintenance updates. 
+Please open a SUBNET issue for additional guidance.
+
+MinIO also provides the [AIStor Key Manager](docs.min.io/enterprise/aistor-key-manager) as a migration path.
+
+This documentation is provided as a historical reference only.
+
+{{< /admonition >}}
+
 ## Why KES
 
 KES is a stateless and distributed key-management system for high-performance applications. 
