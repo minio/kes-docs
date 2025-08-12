@@ -31,9 +31,9 @@ The KES server grants the MinIO server access to only those operations explicitl
 The name of an external key on the Key Management system (KMS) configured on the KES server and used for performing en/decryption operations. 
 MinIO uses this key for the following:
 
-- Encrypting backend data ( [IAM](https://min.io/docs/minio/linux/administration/identity-access-management.html#minio-authentication-and-identity-management), server configuration).
-- The default encryption key for Server-Side Encryption with [SSE-KMS](https://min.io/docs/minio/linux/administration/server-side-encryption/server-side-encryption-sse-kms.html#minio-encryption-sse-kms).
-- The encryption key for Server-Side Encryption with [SSE-S3](https://min.io/docs/minio/linux/administration/server-side-encryption/server-side-encryption-sse-s3.html#minio-encryption-sse-s3).
+- Encrypting backend data ([IAM](https://docs.min.io/community/minio-object-store/administration/identity-access-management.html), server configuration).
+- The default encryption key for Server-Side Encryption with [SSE-KMS](https://docs.min.io/community/minio-object-store/administration/server-side-encryption/server-side-encryption-sse-kms.html#minio-encryption-sse-kms).
+- The encryption key for Server-Side Encryption with [SSE-S3](https://docs.min.io/community/minio-object-store/administration/server-side-encryption/server-side-encryption-sse-s3.html#minio-encryption-sse-s3).
 
 ## `MINIO_KES_SERVER`
 

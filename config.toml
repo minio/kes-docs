@@ -232,7 +232,7 @@ enableGitInfo = 'true'
             weight = 31
     [[menu.main]]
         name = 'Docs'
-        url = 'https://min.io/docs/minio/kubernetes/upstream'
+        url = 'https://docs.min.io/community/minio-object-store/index.html'
         weight = 3
     [[menu.main]]
         name = 'Blog'

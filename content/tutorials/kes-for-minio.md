@@ -7,7 +7,7 @@ tableOfContents: true
 weight: 20
 ---
 
-This tutorial shows how to setup a KES server and then configure a [MinIO deployment](https://min.io/docs/minio/linux/index.html) as a KES client for object encryption.
+This tutorial shows how to setup a KES server and then configure a [MinIO deployment](https://docs.min.io/community/minio-object-store/index.html) as a KES client for object encryption.
 
 ```goat
 +--------------------------------+ 
@@ -131,13 +131,13 @@ For production use, choose any supported KMS implementation that meets your requ
 
 ## MinIO Server Setup
 
-The environment variables defined in steps 2-6 below can be defined as part of the MinIO Server [environment variable file](https://min.io/docs/minio/linux/operations/install-deploy-manage/deploy-minio-multi-node-multi-drive.html#create-the-service-environment-file?ref=kes-docs).
+The environment variables defined in steps 2-6 below can be defined as part of the MinIO Server [environment variable file](https://docs.min.io/community/minio-object-store/operations/deployments/baremetal-deploy-minio-on-redhat-linux.html#review-the-systemd-service-file?ref=kes-docs).
 
 1. Install MinIO
 
-   You can either download a [static binary](https://min.io/download) or follow the [MinIO Quickstart Guide](https://min.io/docs/minio/linux/index.html).
+   You can either download a [static binary](https://min.io/download) or follow the [MinIO Quickstart Guide](https://docs.min.io/community/minio-object-store/operations/deployments/baremetal-deploy-minio-server.html).
 
-   For more detailed instructions on setting up a MinIO Server on other topologies, such as with multiple drives or multiple nodes, see the [installation documentation](https://min.io/docs/minio/linux/operations/installation.html?ref=kes-docs).
+   For more detailed instructions on setting up a MinIO Server on other topologies, such as with multiple drives or multiple nodes, see the [installation documentation](https://docs.min.io/community/minio-object-store/operations/deployments/baremetal-deploy-minio-on-ubuntu-linux.html?ref=kes-docs).
 
    Select the tab for your operating system for an OS-specific quickstart.
 
@@ -207,11 +207,11 @@ The environment variables defined in steps 2-6 below can be defined as part of t
 ## Encrypt Bucket
 
 Enable server-side encryption on a specific bucket using the [`PutBucketEncryption`](https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketEncryption.html) S3 API.
-This can be done with the [MinIO Client](https://min.io/docs/minio/linux/reference/minio-mc.html).
+This can be done with the [MinIO Client](https://docs.min.io/community/minio-object-store/reference/minio-mc.html).
 
 1. Create Key
 
-   For a full reference, see the [`mc admin kms key` documentation](https://min.io/docs/minio/linux/reference/minio-mc-admin/mc-admin-kms-key.html).
+   For a full reference, see the [`mc admin kms key` documentation](https://docs.min.io/community/minio-object-store/reference/minio-mc-admin/mc-admin-kms-key.html).
 
    ```sh {.copy}
    mc admin kms key create <alias> minio-key-name
@@ -221,7 +221,7 @@ This can be done with the [MinIO Client](https://min.io/docs/minio/linux/referen
 
 2. Configure Bucket
 
-   Add a server-side encryption configuration to your bucket with [`mc encrypt set`](https://min.io/docs/minio/linux/reference/minio-mc/mc-encrypt-set.html). 
+   Add a server-side encryption configuration to your bucket with [`mc encrypt set`](https://docs.min.io/community/minio-object-store/reference/minio-mc/mc-encrypt-set.html). 
    
    For example:
 
@@ -233,6 +233,6 @@ This can be done with the [MinIO Client](https://min.io/docs/minio/linux/referen
 
 ## References
 
-- [MinIO Encryption](https://min.io/docs/minio/linux/operations/server-side-encryption.html)
+- [MinIO Encryption](https://docs.min.io/community/minio-object-store/operations/server-side-encryption.html)
 - [Server API Doc]({{< relref "server-api" >}})
 - [Go SDK Doc](https://pkg.go.dev/github.com/minio/kes)
