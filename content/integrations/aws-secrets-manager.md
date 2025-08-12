@@ -347,6 +347,6 @@ For complete documentation, see the [configuration page]({{< relref "/tutorials/
 | `keystore.aws.secretsmanager.endpoint` | The endpoint for the Secrets Manager service, including the region. For example, `secretsmanager.us-east-1.amazonaws.com`. |
 | `keystore.aws.secretsmanager.region` | The AWS region to use for other AWS services. |
 | `keystore.aws.secretsmanager.kmskey` | The root KMS Key to use for cryptographic operations. Formerly known as the Customer Master Key. |
-| `keystore.aws.secretsmanager.credentials` | The AWS Credentials to use for performing authenticated operations against Secrets Manager and KMS. The specified credentials *must* have the [appropriate permissions](https://min.io/docs/minio/container/operations/server-side-encryption/configure-minio-kes-aws.html#minio-sse-aws-prereq-aws?ref=kes-docs). <br><br> Make entries for both `accesskey` and `secretkey`. The entry for `token` is typically optional. |
+| `keystore.aws.secretsmanager.credentials` | The AWS Credentials to use for performing authenticated operations against Secrets Manager and KMS. The specified credentials *must* have the [appropriate permissions](https://docs.min.io/community/minio-object-store/operations/server-side-encryption/configure-minio-kes.html?ref=kes-docs). <br><br> Make entries for both `accesskey` and `secretkey`. The entry for `token` is typically optional. |
 {{< /tab >}}
 {{< /tabs >}}

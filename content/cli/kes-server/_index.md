@@ -66,7 +66,7 @@ KMS         In Memory
 API         · https://127.0.0.1:7373/
             · https://192.168.188.79:7373/
 
-Docs        https://min.io/docs/kes
+Docs        https://docs.min.io/community/minio-kes/
 
 API Key     kes:v1:ADsGCjJoWziQ82wPUG6oHbqhhlbkajaRGP+3+JSfx5Wq
 Admin       7bbffa635fc160ef8048a344a53aab54e472e5c654c6339a9cec9223301808c7
